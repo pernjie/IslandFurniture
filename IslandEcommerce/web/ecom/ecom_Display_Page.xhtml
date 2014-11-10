@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/Default_Template.xhtml"
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                    
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+         <h:form id="form">
+             <h:form id="form2">
+               <p:row>
+                        <p:autoComplete id="selecteditemName" forceSelection="false" value="#{displayPageBean.selectedItemName}" 
+                                        completeMethod="#{displayPageBean.completeText}" var="selectedItemName" itemLabel="#{selectedItemName}" itemValue="#{selectedItemName}"
+                                         style="width:100%"> 
+                            <p:ajax event="itemSelect" process="@this"  listener="#{displayPageBean.handleSelect}" />
+                        </p:autoComplete>
+                   <p:commandButton value="Search" actionListener="#{displayPageBean.search}" ajax="false" />
+                </p:row>
+             </h:form>
+             <p:dataGrid var="furn" value="#{displayPageBean.furns}" columns="3"
+                         rows="12" paginator="true" id="furns"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="6,12,16">
+                 <p:panel style="text-align:center">
+                     <h:panelGrid columns="1" style="width:100%">
+                         <h:commandLink action="#{displayPageBean.itemDetails}">
+                             <f:setPropertyActionListener target="#{displayPageBean.itemId}" value="#{furn.item.id}"/>
+                             <img src="../resources/images/furn/#{furn.item.id}.gif" value="#{furn.item.id}" width="250" height="190"/> 
+                         </h:commandLink>
+                           <h:commandLink action="#{displayPageBean.itemDetails}">
+                             <f:setPropertyActionListener target="#{displayPageBean.itemId}" value="#{furn.item.id}"/>
+                         <h:outputText value="#{furn.item.name}" />
+                            </h:commandLink>
+                         <br/>  
+                         <h:outputText value="#{displayPageBean.calcItemPrice(furn.price, furn.region)}" />
+
+                     </h:panelGrid>
+                 </p:panel>
+
+             </p:dataGrid>
+
+</h:form>
+    </ui:define>
+
+</ui:composition>
