@@ -53,13 +53,11 @@
                     <b:navLink header="SCM" rendered="#{roleFunctionsBean.checkSCM}"/>
                     <b:navLink href="../scm/scm_generate_prod_po.xhtml" value="Generate Product Purchase Order" rendered="#{roleFunctionsBean.checkSCMGeneratePdtPO}"></b:navLink>
                     <b:navLink href="../scm/scm_generate_rawmat_po.xhtml" value="Generate Raw Material Purchase Order" rendered="#{roleFunctionsBean.checkGenerateRawMatPO}"></b:navLink>
-                    <b:navLink href="../scm/scm_deliveryschedule.xhtml" value="Generate Delivery Schedule" rendered="#{roleFunctionsBean.checkGenerateDeliverySchedule}"></b:navLink>
-                    <b:navLink href="../scm/scm_view_prod_po.xhtml" value="View Product Purchase Order" rendered="#{roleFunctionsBean.checkSCMViewPdtPO}"></b:navLink>
-                    <b:navLink href="../scm/scm_view_rawmat_po.xhtml" value="View Raw Material Purchase Order" rendered="#{roleFunctionsBean.checkViewRawMatPO}"></b:navLink>
                     <b:navLink href="../scm/scm_view_mat_distributions.xhtml" value="View Distributions Furniture" rendered="#{roleFunctionsBean.checkViewDistributnF}"></b:navLink>
                     <b:navLink href="../scm/scm_view_prod_distributions.xhtml" value="View Distributions Products" rendered="#{roleFunctionsBean.checkViewDistributnP}"></b:navLink>
-                    <b:navLink href="../scm/scm_unpaidbills_view.xhtml" value="View Unpaid Bills" rendered="#{roleFunctionsBean.checkViewUnpaidBills}"></b:navLink>
+                    <b:navLink href="../scm/scm_view_unpaid_bills.xhtml" value="View Unpaid Bills" rendered="#{roleFunctionsBean.checkViewUnpaidBills}"></b:navLink>
                     <b:navLink href="../scm/scm_add_bill.xhtml" value="Add Bills" rendered="#{roleFunctionsBean.checkAddBill}"></b:navLink>
+                    <b:navLink href="../scm/scm_production_operation.xhtml" value="Production Operation" rendered="#{roleFunctionsBean.checkProductionOperation}"></b:navLink>
                     <b:navLink></b:navLink>
                     <b:navLink header="Inventory Restock" rendered="#{roleFunctionsBean.checkSCMInvenRestock}"/>                    
                     <b:navLink href="../scm/scm_receive_supplier_inventory.xhtml" value="Receive Inventory from Supplier" rendered="#{roleFunctionsBean.checkSCMReceiveSInven}"></b:navLink>
@@ -72,9 +70,6 @@
                     <b:navLink header="Shelf Type" rendered="#{roleFunctionsBean.checkSCMShelfType}"/>
                     <b:navLink href="../scm/scm_view_shelftypes.xhtml" value="View All Shelf Type" rendered="#{roleFunctionsBean.checkSCMViewShelfType}"></b:navLink>
                     <b:navLink href="../scm/scm_add_shelftype.xhtml" value="Add New Shelf Type" rendered="#{roleFunctionsBean.checkSCMAddShelfType}"></b:navLink>
-                    <b:navLink></b:navLink>
-                    <b:navLink header="Ad Hoc Ordering" rendered="#{roleFunctionsBean.checkSCMAdHocOrdering}"/>
-                    <b:navLink href="../scm/scm_adhoc_purchase_planning.xhtml" value="Ad Hoc Production Planning" rendered="#{roleFunctionsBean.checkSCMAdHocPdtnPlan}"></b:navLink>
                 </b:listLinks>
             </b:panel>
         </b:column> 

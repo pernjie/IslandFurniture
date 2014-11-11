@@ -273,7 +273,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQty(Facility fac, Item mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -288,7 +288,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyMaterial(Facility fac, Material mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -299,7 +299,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -768,5 +768,47 @@ public class ScmBean { //implements ScmBeanRemote {
             return 3;
         }
         return 0;
+    }
+    
+    public List<MrpRecord> getMrpRecord(Facility fac, Integer week, Integer year) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT m FROM " + MrpRecord.class.getName() + " m WHERE m.week = :week AND m.yearId = :year AND m.fac = :fac");
+        query.setParameter("fac", fac);
+        query.setParameter("week", week);
+        query.setParameter("year", year);
+        return query.getResultList();
+    }
+        
+    public InventoryMaterial getInventoryMat(MrpRecord mr) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + MrpRecord.class.getName() + " m WHERE i.mat = m.mat AND i.fac = m.fac");
+        return (InventoryMaterial) query.getSingleResult();
+    }
+
+    public List<ProductionRecord> getProductionRecord(Facility fac, Integer period, Integer year) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT p FROM " + ProductionRecord.class.getName() + " p WHERE p.period = :period AND p.year = :year AND p.store = :fac");
+        query.setParameter("fac", fac);
+        query.setParameter("period", period);
+        query.setParameter("year", year);
+        return query.getResultList();
+    }
+
+
+    public InventoryMaterial getInventoryMat(DeliverySchedule ds) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + DeliverySchedule.class.getName() + " d WHERE i.mat d.mat AND d.mat = d.mat AND d.store.id = d.store AND i.fac = d.mf");
+        return (InventoryMaterial) query.getSingleResult();
+    }
+
+    public InventoryMaterial getInventoryMat(ProductionRecord pr) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + DistributionMFtoStore.class.getName() + " d WHERE i.mat = pr.mat AND d.mat = pr.mat AND d.store pr.store AND i.fac = d.mf");
+        return (InventoryMaterial) query.getSingleResult();
     }
 }

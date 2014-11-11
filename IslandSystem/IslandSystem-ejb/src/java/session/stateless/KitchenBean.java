@@ -804,7 +804,7 @@ public class KitchenBean { //implements ScmBeanRemote {
         Facility f = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
         Query query = em.createQuery("SELECT s FROM " + Shelf.class.getName() + " s WHERE s.fac = :fac AND s.location = :location");
         query.setParameter("fac", f);
-        query.setParameter("location", 5);
+        query.setParameter("location", InvenLoc.KITCHEN);
         return query.getResultList();
     }
     

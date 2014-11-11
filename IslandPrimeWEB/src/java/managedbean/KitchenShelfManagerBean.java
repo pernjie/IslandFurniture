@@ -88,6 +88,7 @@ public class KitchenShelfManagerBean  implements Serializable{
          System.out.println("email: "+ loggedInEmail);
          Staff temp =(Staff) q.getSingleResult();
           facility = temp.getFac();
+          setLocation(InvenLoc.KITCHEN);
         
         System.out.println(location);
         System.out.println(zone);
@@ -101,7 +102,6 @@ public class KitchenShelfManagerBean  implements Serializable{
         
 
         try {
-            setLocation(InvenLoc.KITCHEN);
             newShelfId = inventoryBean.addNewShelf(facLong, location, zone, shelfInt, shelfTypeLong);
             statusMessage = "New Shelf Type Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Status Result: "

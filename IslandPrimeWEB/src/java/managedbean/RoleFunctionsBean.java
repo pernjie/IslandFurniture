@@ -55,6 +55,7 @@ public class RoleFunctionsBean implements Serializable {
     private boolean checkViewDistributnP;
     private boolean checkViewUnpaidBills;
     private boolean checkAddBill;
+    private boolean checkProductionOperation;
     
     private boolean checkSCMInvenRestock;
     private boolean checkSCMReceiveSInven;
@@ -282,6 +283,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -317,6 +319,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -352,6 +355,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -1158,6 +1162,10 @@ public class RoleFunctionsBean implements Serializable {
 
     public boolean isCheckSCMAdHocPdtnPlan() {
         return getRolesSet().contains("SCMAdHocPdtnPlan");
+    }
+
+    public boolean isCheckProductionOperation() {
+        return getRolesSet().contains("ProductionOperation");
     }
 
     
