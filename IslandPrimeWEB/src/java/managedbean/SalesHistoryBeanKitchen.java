@@ -44,6 +44,7 @@ public class SalesHistoryBeanKitchen implements Serializable {
         materials = new ArrayList<>();
         distribution = mb.getDistributionKit(fac);
         for (Item d : distribution) {
+            System.out.println("kitc item: " + d.getName());
             List<Integer> forecast = mb.getForecast(1,
                     d, fac);
             List<Integer> production = mb.getProductionValues(fac, d);

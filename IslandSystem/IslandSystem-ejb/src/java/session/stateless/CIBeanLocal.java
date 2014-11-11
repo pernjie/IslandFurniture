@@ -11,14 +11,14 @@ import entity.Log;
 import entity.Staff;
 import java.util.List;
 import javax.ejb.Local;
+import javax.ejb.Remote;
 import util.exception.DetailsConflictException;
-import util.exception.ReferenceConstraintException;
 
 /**
  *
  * @author nataliegoh
  */
-@Local
+@Remote
 public interface CIBeanLocal {
     
     public int verifyUser(String email, String password);
@@ -30,8 +30,6 @@ public interface CIBeanLocal {
     public boolean staffExists(String email);
 
     public List<Staff> getAllAcounts();
-
-    public void remove(Staff staff) throws ReferenceConstraintException;
 
     public String generateRandomPassword();
 
@@ -55,5 +53,5 @@ public interface CIBeanLocal {
 
     public void changePassword(String email, String currpassword, String newpassword) throws DetailsConflictException;
     
-     public void updateStaff(Staff staff);
+    public void remove(Staff staff);
 }

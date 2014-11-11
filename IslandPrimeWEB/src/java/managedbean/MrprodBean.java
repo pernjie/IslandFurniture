@@ -64,8 +64,10 @@ public class MrprodBean {
 
                 int inv;
                 if (mrpr.isEmpty()) {
+                    System.out.println("mrp here");
                     inv = mb.getInventoryIndiv(prod.getMat(),sptf.getFac());
                 } else {
+                    System.out.println("mrp here2");
                     inv = mrpr.get(mrpr.size() - 1).getOnHand();
                 }
 
@@ -168,7 +170,7 @@ public class MrprodBean {
             mr.setFac(mf);
             mr.setMat((Item) mrprod.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5));
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrprod.getWeek1().getOnh());
             mr.setPlanned(mrprod.getWeek1().getPln());
@@ -180,7 +182,7 @@ public class MrprodBean {
             mr.setFac(mf);
             mr.setMat((Item) mrprod.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 1);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrprod.getWeek2().getOnh());
             mr.setPlanned(mrprod.getWeek2().getPln());
@@ -192,7 +194,7 @@ public class MrprodBean {
             mr.setFac(mf);
             mr.setMat((Item) mrprod.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 2);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrprod.getWeek3().getOnh());
             mr.setPlanned(mrprod.getWeek3().getPln());
@@ -204,7 +206,7 @@ public class MrprodBean {
             mr.setFac(mf);
             mr.setMat((Item) mrprod.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 3);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrprod.getWeek4().getOnh());
             mr.setPlanned(mrprod.getWeek4().getPln());

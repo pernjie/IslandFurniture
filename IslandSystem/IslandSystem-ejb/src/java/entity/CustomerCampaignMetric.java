@@ -5,7 +5,7 @@
  */
 package entity;
 
-import enumerator.BusinessArea;
+import enumerator.CustomerCampaignCat;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +41,8 @@ public class CustomerCampaignMetric implements Serializable {
     private Integer numHits;
     @Column(name = "NUM_PROMO_CODE_USED")
     private Integer numPromoCodeUsed;
+    @Column(name = "CUSTOMER_CAT")
+    private CustomerCampaignCat customerCampaignCat;
     @JoinColumn(name = "CUSTOMER", referencedColumnName = "ID")
     @ManyToOne
     private Customer customer;
@@ -87,7 +89,6 @@ public class CustomerCampaignMetric implements Serializable {
         this.campaign = campaign;
     }
 
-   
     public Customer getCustomer() {
         return customer;
     }
@@ -102,6 +103,15 @@ public class CustomerCampaignMetric implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
+
+    public CustomerCampaignCat getCustomerCampaignCat() {
+        return customerCampaignCat;
+    }
+
+    public void setCustomerCampaignCat(CustomerCampaignCat customerCampaignCat) {
+        this.customerCampaignCat = customerCampaignCat;
+    }
+
 
     @Override
     public boolean equals(Object object) {

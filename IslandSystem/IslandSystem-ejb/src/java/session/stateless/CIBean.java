@@ -12,23 +12,24 @@ import entity.Staff;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Local;
 import javax.ejb.Stateful;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.security.SecureRandom;
-import java.util.Random;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManagerFactory;
 import static session.stateless.ChatBean.PASSWORD_LENGTH;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
@@ -38,7 +39,7 @@ import util.exception.ReferenceConstraintException;
  * @author nataliegoh
  */
 @Stateful
-
+@Local
 public class CIBean implements CIBeanLocal {
 
     // Add business logic below. (Right-click in editor and choose
@@ -155,20 +156,6 @@ public class CIBean implements CIBeanLocal {
         Staff staff = (Staff) q.getSingleResult();
         //staffEntity = em.find(StaffEntity.class, id);
         return staff;
-    }
-
-    @Override
-    public void remove(Staff staff) throws ReferenceConstraintException {
-        try {
-            EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-            EntityManager em = emf.createEntityManager();
-
-            Staff removeStaff = em.merge(staff);
-            em.remove(removeStaff);
-
-        } catch (Exception e) {
-            throw new ReferenceConstraintException("Cannot delete Staff " + staff.getId() + " | " + staff.getName() + " due to Foreign Key constraints");
-        }
     }
 
     @Override
@@ -299,19 +286,12 @@ public class CIBean implements CIBeanLocal {
         
     }
     
-    public void updateStaff(Staff staff) {
-        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-        EntityManager em = emf.createEntityManager();
-
-        try {
-            em.merge(staff);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            em.close();
-
-        }
+    @Override
+    public void remove(Staff staff) {
+        Query q = em.createQuery("DELETE FROM Staff s where s.email= :param");
+        q.setParameter("param", staff.getEmail());
+        q.executeUpdate();
+        em.flush();
     }
 
 }

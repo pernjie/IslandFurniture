@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "MrpRecord.findByOnHand", query = "SELECT m FROM MrpRecord m WHERE m.onHand = :onHand"),
     @NamedQuery(name = "MrpRecord.findByPlanned", query = "SELECT m FROM MrpRecord m WHERE m.planned = :planned"),
     @NamedQuery(name = "MrpRecord.findByWeek", query = "SELECT m FROM MrpRecord m WHERE m.week = :week"),
-    @NamedQuery(name = "MrpRecord.findByYearid", query = "SELECT m FROM MrpRecord m WHERE m.yearId = :yearId")})
+    @NamedQuery(name = "MrpRecord.findByYear", query = "SELECT m FROM MrpRecord m WHERE m.year = :year")})
 public class MrpRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,12 +54,12 @@ public class MrpRecord implements Serializable {
     private Integer planned;
     @Column(name = "WEEK")
     private Integer week;
-    @Column(name = "YEARID")
-    private Integer yearId;
-    @JoinColumn(name = "MAT_ID", referencedColumnName = "ID")
+    @Column(name = "YEAR")
+    private Integer year;
+    @JoinColumn(name = "MAT", referencedColumnName = "ID")
     @ManyToOne
     private Item mat;
-    @JoinColumn(name = "FAC_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "FAC", referencedColumnName = "ID")
     @ManyToOne
     private Facility fac;
 
@@ -118,12 +118,12 @@ public class MrpRecord implements Serializable {
         this.week = week;
     }
 
-    public Integer getYearid() {
-        return yearId;
+    public Integer getYear() {
+        return year;
     }
 
-    public void setYearid(Integer yearId) {
-        this.yearId = yearId;
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public Item getMat() {

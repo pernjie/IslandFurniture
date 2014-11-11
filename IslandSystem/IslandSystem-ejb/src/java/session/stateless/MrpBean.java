@@ -37,10 +37,9 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 @Stateless
 @LocalBean
-public class MrpBean {
-       
-    
+public class MrpBean implements MrpBeanRemote {
      
+    @Override
     public boolean persistRecord(ProductionRecord pr) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -58,6 +57,7 @@ public class MrpBean {
     
     
      
+    @Override
     public boolean persistRecordProd(PurchasePlanningRecord pr) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -75,6 +75,7 @@ public class MrpBean {
     
     
      
+    @Override
     public boolean persistMrpRecords(List<MrpRecord> records) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -95,6 +96,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public Integer getMatInventory(Facility fac, Material mat) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -113,6 +115,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public Integer getProdInventory(Facility fac, Product prod) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -131,6 +134,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public List<ProductionOrder> getProductionOrders() {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -142,6 +146,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<PurchasePlanningOrder> getPurchasePlanningOrders() {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -153,6 +158,7 @@ public class MrpBean {
 
     
      
+    @Override
     public List<DistributionMFtoStore> getDistribution(Facility mf) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -166,6 +172,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<DistributionMFtoStoreProd> getDistributionProd(Facility mf) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -178,6 +185,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public List<Item> getDistributionKit(Facility fac) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -196,6 +204,7 @@ public class MrpBean {
     
     
      
+    @Override
     public Facility getFacility(long fid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -204,9 +213,8 @@ public class MrpBean {
 
         return (Facility) query.getSingleResult();
     }
-    
-    
      
+    @Override
     public Facility getFacility(String user) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -215,10 +223,9 @@ public class MrpBean {
 
         Staff staff = (Staff) query.getSingleResult();
         return staff.getFac();
-    }
-    
-    
+    }    
      
+    @Override
     public Item getMat(long itemid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -229,6 +236,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public Item getProd(long itemid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -238,6 +246,7 @@ public class MrpBean {
         return (Item) query.getSingleResult();
     }
     
+    @Override
     public Item getItem(long itemid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -247,6 +256,7 @@ public class MrpBean {
         return (Item) query.getSingleResult();
     }
      
+    @Override
     public Item getItem(String name) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -264,6 +274,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public SuppliesMatToFac getSmtf(Facility mf,Item mat) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -275,6 +286,7 @@ public class MrpBean {
         return (SuppliesMatToFac) query.getSingleResult();
     }
     
+    @Override
     public SuppliesIngrToFac getSitf(Facility fac,Item ingredient) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -286,6 +298,7 @@ public class MrpBean {
         return (SuppliesIngrToFac) query.getSingleResult();
     }
      
+    @Override
     public SuppliesProdToFac getSptf(Facility mf,Product prod) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -299,6 +312,7 @@ public class MrpBean {
     
     
      
+    @Override
     public Map<Long,Integer> calcRawMats(Map<Long,Integer> rawmats) {
         List<BasicComponent> basiclist = new ArrayList<BasicComponent>();
         Map<Long,Integer> finalrawmats = new HashMap<Long,Integer>();
@@ -354,7 +368,9 @@ public class MrpBean {
         List<Component> resultList = query.getResultList();
         
         //more components, perform recursion
+        System.out.println("main name:" + main.getName());
         if (!resultList.isEmpty()) {
+            System.out.println("main size:" + resultList.size());
             for (int i=0;i<resultList.size();i++) {
                 getBasicComps(
                         firstmatno,
@@ -388,6 +404,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<Facility> getStores(Facility mfgid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -402,10 +419,13 @@ public class MrpBean {
     //2: winter
     
      
+    @Override
     public List<Integer> getForecast(int type, Item item, Facility store) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         WeekHelper wh = new WeekHelper();
+        
+        System.out.println("forecasting:" + item.getName());
 
         List<Double> history = new ArrayList<Double>();
         for (int i = -6; i < 0; i++) {
@@ -436,6 +456,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<MrpRecord> getMrpRecord(Facility mfg,Item mat) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -447,6 +468,7 @@ public class MrpBean {
     
     
      
+    @Override
     public ProductionOrder getProductionOrder(long id) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -458,6 +480,7 @@ public class MrpBean {
     
     
      
+    @Override
     public PurchasePlanningOrder getPurchasePlanningOrder(long id) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -469,6 +492,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<ProductionRecord> getProductionRecords(Facility mf, Item mat, int year, int period) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -489,6 +513,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<PurchasePlanningRecord> getPurchasePlanningRecords(Facility mf, Product prod, int year, int period) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -509,6 +534,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<Integer> getProductionValues(Facility store, Item mat) {
         WeekHelper wh = new WeekHelper();
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
@@ -536,6 +562,7 @@ public class MrpBean {
     
     
      
+    @Override
     public List<Integer> getPurchaseValues(Facility store, Item item) {
         WeekHelper wh = new WeekHelper();
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
@@ -560,11 +587,10 @@ public class MrpBean {
         }
         return values;
     }
-
-    
      
+    @Override
     public int getInventoryIndiv(Item mat, Facility fac) {
-        return 100;
+        return 0;
     }
     
     private static List<Integer> calculateWinter(int p, List<Double> data) {
@@ -711,6 +737,7 @@ public class MrpBean {
 
     
      
+    @Override
     public boolean persistProductionRecords(List<ProductionRecord> prs) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -730,6 +757,7 @@ public class MrpBean {
     
     
      
+    @Override
     public boolean persistPurchasePlanningRecords(List<PurchasePlanningRecord> prs) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -749,6 +777,7 @@ public class MrpBean {
     
     
      
+    @Override
     public boolean checkMfDone(int year, int period, Facility mf) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -768,6 +797,7 @@ public class MrpBean {
     
     
      
+    @Override
     public boolean checkMfDoneProd(int year, int period, Facility mf) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -787,6 +817,7 @@ public class MrpBean {
 
     
      
+    @Override
     public void updateProductionOrder(ProductionOrder currOrder) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -802,6 +833,7 @@ public class MrpBean {
     
     
      
+    @Override
     public void updatePurchasePlanningOrder(PurchasePlanningOrder currOrder) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -816,6 +848,7 @@ public class MrpBean {
     }
     
      
+    @Override
     public Item getItem(Long id) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -824,11 +857,12 @@ public class MrpBean {
         return (Item) query.getSingleResult();
     }
 
+    @Override
     public boolean checkMfDoneKit(int year, int period, Facility fac) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         
-        Query query = em.createQuery("SELECT 1 FROM " + PurchasePlanningRecord.class.getName() + 
+        Query query = em.createQuery("SELECT 1 FROM " + ProductionRecord.class.getName() + 
                 " p WHERE p.year = " + year +
                         " AND p.period = " + period +
                                 " AND p.store = :store");
