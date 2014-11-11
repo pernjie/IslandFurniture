@@ -211,7 +211,7 @@ public class MrpialBean implements Serializable {
             mr.setFac(mf);
             mr.setMat(mrpial.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5));
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrpial.getWeek1().getOnh());
             mr.setPlanned(mrpial.getWeek1().getPln());
@@ -223,7 +223,7 @@ public class MrpialBean implements Serializable {
             mr.setFac(mf);
             mr.setMat(mrpial.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 1);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrpial.getWeek2().getOnh());
             mr.setPlanned(mrpial.getWeek2().getPln());
@@ -235,7 +235,7 @@ public class MrpialBean implements Serializable {
             mr.setFac(mf);
             mr.setMat(mrpial.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 2);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrpial.getWeek3().getOnh());
             mr.setPlanned(mrpial.getWeek3().getPln());
@@ -247,7 +247,7 @@ public class MrpialBean implements Serializable {
             mr.setFac(mf);
             mr.setMat(mrpial.getMat());
             mr.setWeek(wh.getPeriodFirstWeek(5) + 3);
-            mr.setYearid(wh.getYear(5));
+            mr.setYear(wh.getYear(5));
 
             mr.setOnHand(mrpial.getWeek4().getOnh());
             mr.setPlanned(mrpial.getWeek4().getPln());

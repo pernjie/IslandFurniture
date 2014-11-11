@@ -17,45 +17,57 @@ import entity.ProductionOrder;
 import entity.ProductionRecord;
 import entity.PurchasePlanningOrder;
 import entity.PurchasePlanningRecord;
+import entity.SuppliesIngrToFac;
 import entity.SuppliesMatToFac;
 import entity.SuppliesProdToFac;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.Remote;
 
 /**
  *
- * @author nataliegoh
+ * @author pern
  */
+@Remote
 public interface MrpBeanRemote {
 
     Map<Long, Integer> calcRawMats(Map<Long, Integer> rawmats);
 
     boolean checkMfDone(int year, int period, Facility mf);
 
+    boolean checkMfDoneKit(int year, int period, Facility fac);
+
     boolean checkMfDoneProd(int year, int period, Facility mf);
 
     List<DistributionMFtoStore> getDistribution(Facility mf);
+
+    List<Item> getDistributionKit(Facility fac);
 
     List<DistributionMFtoStoreProd> getDistributionProd(Facility mf);
 
     Facility getFacility(long fid);
 
-    Facility getFacility(String staff);
+    Facility getFacility(String user);
 
-    //1: holt
-    //2: winter
     List<Integer> getForecast(int type, Item item, Facility store);
-
 
     int getInventoryIndiv(Item mat, Facility fac);
 
+    Item getItem(long itemid);
+
     Item getItem(String name);
 
+    Item getItem(Long id);
+
     Item getMat(long itemid);
+
+    Integer getMatInventory(Facility fac, Material mat);
 
     List<MrpRecord> getMrpRecord(Facility mfg, Item mat);
 
     Item getProd(long itemid);
+
+    Integer getProdInventory(Facility fac, Product prod);
 
     ProductionOrder getProductionOrder(long id);
 
@@ -64,10 +76,6 @@ public interface MrpBeanRemote {
     List<ProductionRecord> getProductionRecords(Facility mf, Item mat, int year, int period);
 
     List<Integer> getProductionValues(Facility store, Item mat);
-    
-    Integer getMatInventory(Facility fac, Material mat);
-    
-    Integer getProdInventory(Facility fac, Product prod);
 
     PurchasePlanningOrder getPurchasePlanningOrder(long id);
 
@@ -77,11 +85,15 @@ public interface MrpBeanRemote {
 
     List<Integer> getPurchaseValues(Facility store, Item item);
 
+    SuppliesIngrToFac getSitf(Facility fac, Item ingredient);
+
     SuppliesMatToFac getSmtf(Facility mf, Item mat);
 
     SuppliesProdToFac getSptf(Facility mf, Product prod);
 
     List<Facility> getStores(Facility mfgid);
+    //1: holt
+    //2: winter
 
     boolean persistMrpRecords(List<MrpRecord> records);
 
@@ -97,5 +109,4 @@ public interface MrpBeanRemote {
 
     void updatePurchasePlanningOrder(PurchasePlanningOrder currOrder);
     
-    Item getItem(Long id);
 }

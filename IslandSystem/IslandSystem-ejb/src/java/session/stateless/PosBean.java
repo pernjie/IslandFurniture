@@ -19,6 +19,7 @@ import entity.Service;
 import entity.TransactionItem;
 import entity.TransactionRecord;
 import entity.TransactionService;
+import enumerator.BusinessArea;
 import enumerator.TenderType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -41,7 +42,8 @@ import javax.persistence.Query;
  */
 @Stateless
 @WebService
-public class PosBean {
+public class PosBean implements PosBeanRemote {
+    @Override
     public int login(String email, String password) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -89,6 +91,7 @@ public class PosBean {
         return encrypted;
     }
     
+    @Override
     public Facility getStore(String email) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -99,6 +102,7 @@ public class PosBean {
         return store;
     }
     
+    @Override
     public Item getItem(String id, String type) {
         System.out.println("ID IS " + id);
         try {
@@ -125,6 +129,7 @@ public class PosBean {
         return null;
     }
     
+    @Override
     public Service getService(String id) {
         System.out.println("ID IS " + id);
         try {
@@ -139,6 +144,7 @@ public class PosBean {
         }
     }
     
+    @Override
     public Customer getCustomer(String card) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -154,6 +160,7 @@ public class PosBean {
         }
     }
     
+    @Override
     public Region getRegion(Facility store) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -164,6 +171,7 @@ public class PosBean {
         return region;
     }
     
+    @Override
     public Double getItemPrice(Item item, Region region) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -175,6 +183,7 @@ public class PosBean {
         return price;
     }
     
+    @Override
     public Double getServicePrice(Service service, Region region) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -186,6 +195,7 @@ public class PosBean {
         return price;
     }
     
+    @Override
     public boolean redeemCake(Customer cust) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -203,17 +213,23 @@ public class PosBean {
         }
     }
     
+    @Override
     public boolean verifyPromo(String code, Region region, String type) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         Query q;
-        q = em.createQuery("SELECT 1 FROM " + Campaign.class.getName() + " c WHERE c.promocode = :code AND c.region = :region AND c.businessArea = :type");
+        q = em.createQuery("SELECT 1 FROM " + Campaign.class.getName() + " c WHERE c.promoCode = :code AND c.region = :region AND c.businessArea = :type");
         q.setParameter("code", code);
         q.setParameter("region", region);
-        q.setParameter("type", type);
+        switch (type) {
+            case "Furniture":q.setParameter("type", BusinessArea.FURNITURE);break;
+            case "Kitchen":q.setParameter("type", BusinessArea.KITCHEN);break;
+            default:q.setParameter("type", BusinessArea.FURNITURE);break;
+        }
         return (!q.getResultList().isEmpty());
     }
     
+    @Override
     public TransactionRecord addTransactionRecord(Facility store, List<TransactionItem> transitems, List<TransactionService> transservices, 
             List<Item> items, List<Service> services,
             Double amount, String promo, int tender, Customer cust, boolean redeemed) {

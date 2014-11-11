@@ -31,7 +31,7 @@ public class PurchaseOrderBean implements Serializable {
     @PostConstruct
     public void init() {
         //records = mb.getProductionRecords(1L, order, 2014, 10);
-        mf = mb.getFacility("Jurong MF");
+        mf = mb.getFacility((String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email"));
         orders = mb.getPurchasePlanningOrders();
     }
  

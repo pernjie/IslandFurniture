@@ -273,7 +273,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQty(Facility fac, Item mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -288,7 +288,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyMaterial(Facility fac, Material mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -299,7 +299,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
+        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -773,7 +773,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public List<MrpRecord> getMrpRecord(Facility fac, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT m FROM " + MrpRecord.class.getName() + " m WHERE m.week = :week AND m.yearId = :year AND m.fac = :fac");
+        Query query = em.createQuery("SELECT m FROM " + MrpRecord.class.getName() + " m WHERE m.week = :week AND m.year = :year AND m.fac = :fac");
         query.setParameter("fac", fac);
         query.setParameter("week", week);
         query.setParameter("year", year);

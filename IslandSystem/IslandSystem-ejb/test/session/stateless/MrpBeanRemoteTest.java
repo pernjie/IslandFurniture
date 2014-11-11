@@ -105,25 +105,25 @@ public class MrpBeanRemoteTest {
     @Test
     public void testGetDistribution() {
         System.out.println("getDistribution : normal case");
-        assertTrue(mrpBeanRemote.getDistribution(mrpBeanRemote.getFacility("Jurong MF")).size() > 0);
+        assertTrue(mrpBeanRemote.getDistribution(mrpBeanRemote.getFacility("pernjie@gmail.com")).size() > 0);
     }
     
     @Test
     public void testGetFacility() {
         System.out.println("getFacility : normal case");
-        assertEquals("Jurong MF", mrpBeanRemote.getFacility(mrpBeanRemote.getFacility("Jurong MF").getId()).getName());
+        assertEquals("Jurong MF", mrpBeanRemote.getFacility(mrpBeanRemote.getFacility("pernjie@gmail.com").getId()).getName());
     }
     
     @Test
     public void testGetForecast() {
         System.out.println("getForecast : normal case");
-        assertTrue(mrpBeanRemote.getForecast(1,mrpBeanRemote.getItem("Worktable Willy"),mrpBeanRemote.getFacility("Tampines Store")).size() > 0);
+        assertTrue(mrpBeanRemote.getForecast(1,mrpBeanRemote.getItem("Worktable Willy"),mrpBeanRemote.getFacility("tampines@if.com")).size() > 0);
     }
  
     @Test
     public void testGetInventoryIndiv() {
         System.out.println("getInventoryIndiv : normal case");
-        assertTrue(mrpBeanRemote.getInventoryIndiv(mrpBeanRemote.getItem("Worktable Willy"),mrpBeanRemote.getFacility("Tampines Store")) > 0);
+        assertTrue(mrpBeanRemote.getInventoryIndiv(mrpBeanRemote.getItem("Worktable Willy"),mrpBeanRemote.getFacility("tampines@if.com")) == 0);
     }
     
     @Test
@@ -141,19 +141,19 @@ public class MrpBeanRemoteTest {
     @Test
     public void testGetMrpRecord() {
         System.out.println("getMrpRecord : normal case");
-        assertTrue(mrpBeanRemote.getMrpRecord(mrpBeanRemote.getFacility("Tampines Store"),mrpBeanRemote.getItem("Worktable Willy")).size() > 0);
+        assertTrue(mrpBeanRemote.getMrpRecord(mrpBeanRemote.getFacility("tampines@if.com"),mrpBeanRemote.getItem("Wooden Plank")).size() > 0);
     }
     
     @Test
     public void testGetSmtf() {
         System.out.println("getSmtf : normal case");
-        assertTrue(mrpBeanRemote.getSmtf(mrpBeanRemote.getFacility("Jurong MF"),mrpBeanRemote.getItem("Worktable Willy")) != null);
+        assertTrue(mrpBeanRemote.getSmtf(mrpBeanRemote.getFacility("pernjie@gmail.com"),mrpBeanRemote.getItem("Rounded Screw")) != null);
     }
     
     @Test
     public void testGetSptf() {
-        System.out.println("getSmtf : normal case");
-        assertTrue(mrpBeanRemote.getSptf(mrpBeanRemote.getFacility("Jurong MF"), (Product) mrpBeanRemote.getItem("Lays Potato Chips")) != null);
+        System.out.println("getSptf : normal case");
+        assertTrue(mrpBeanRemote.getSptf(mrpBeanRemote.getFacility("pernjie@gmail.com"), (Product) mrpBeanRemote.getItem("Lays Potato Chips")) != null);
     }
     
     @Test
@@ -171,31 +171,31 @@ public class MrpBeanRemoteTest {
     @Test
     public void testGetStores() {
         System.out.println("getStores : normal case");
-        assertTrue(mrpBeanRemote.getStores(mrpBeanRemote.getFacility("Jurong MF")).size() > 0);
+        assertTrue(mrpBeanRemote.getStores(mrpBeanRemote.getFacility("pernjie@gmail.com")).size() > 0);
     }
     
     @Test
     public void testGetProductionValues() {
         System.out.println("getProductionValues : normal case");
-        assertTrue(mrpBeanRemote.getProductionValues(mrpBeanRemote.getFacility("Tampines Store"),mrpBeanRemote.getItem("Worktable Willy")).size() > 0);
+        assertTrue(mrpBeanRemote.getProductionValues(mrpBeanRemote.getFacility("tampines@if.com"),mrpBeanRemote.getItem("Worktable Willy")).size() > 0);
     }
     
     @Test
     public void testGetPurchaseValues() {
         System.out.println("getPurchaseValues : normal case");
-        assertTrue(mrpBeanRemote.getPurchaseValues(mrpBeanRemote.getFacility("Tampines Store"),mrpBeanRemote.getItem("Lays Potato Chips")).size() > 0);
+        assertTrue(mrpBeanRemote.getPurchaseValues(mrpBeanRemote.getFacility("tampines@if.com"),mrpBeanRemote.getItem("Lays Potato Chips")).size() > 0);
     }
     
     @Test
     public void testGetProductionRecords() {
         System.out.println("getProductionRecords : normal case");
-        assertTrue(mrpBeanRemote.getProductionRecords(mrpBeanRemote.getFacility("Tampines Store"),mrpBeanRemote.getItem("Worktable Willy"),2014,6).size() > 0);
+        assertTrue(mrpBeanRemote.getProductionRecords(mrpBeanRemote.getFacility("tampines@if.com"),mrpBeanRemote.getItem("Worktable Willy"),2014,6).size() > 0);
     }
     
     @Test
     public void testGetPurchasePlanningRecords() {
         System.out.println("getPurchasePlanning : normal case");
-        assertTrue(mrpBeanRemote.getPurchasePlanningRecords(mrpBeanRemote.getFacility("Tampines Store"), (Product) mrpBeanRemote.getItem("Lays Potato Chips"),2014,6).size() > 0);
+        assertTrue(mrpBeanRemote.getPurchasePlanningRecords(mrpBeanRemote.getFacility("tampines@if.com"), (Product) mrpBeanRemote.getItem("Lays Potato Chips"),2014,6).size() > 0);
     }
     
     @Test
@@ -250,9 +250,9 @@ public class MrpBeanRemoteTest {
     public void testPersistMrpRecords() {
         System.out.println("persistMrpRecords : normal case");
         MrpRecord mr = new MrpRecord();
-        mr.setYearid(2000);
+        mr.setYear(2000);
         MrpRecord mr2 = new MrpRecord();
-        mr2.setYearid(2000);
+        mr2.setYear(2000);
         assertTrue(mrpBeanRemote.persistMrpRecords(Arrays.asList(mr, mr2)));
     }
     
@@ -283,25 +283,25 @@ public class MrpBeanRemoteTest {
     @Test
     public void testCheckMfDone1() {
         System.out.println("checkMfDone : done");
-        assertTrue(mrpBeanRemote.checkMfDone(2014, 12, mrpBeanRemote.getFacility("Jurong MF")));
+        assertTrue(mrpBeanRemote.checkMfDone(2014, 12, mrpBeanRemote.getFacility("pernjie@gmail.com")));
     }
     
     @Test
     public void testCheckMfDone2() {
         System.out.println("checkMfDone : not done");
-        assertFalse(mrpBeanRemote.checkMfDone(2013, 12, mrpBeanRemote.getFacility("Jurong MF")));
+        assertFalse(mrpBeanRemote.checkMfDone(2013, 12, mrpBeanRemote.getFacility("pernjie@gmail.com")));
     }
     
     @Test
     public void testCheckMfDoneProd1() {
         System.out.println("checkMfDoneProd : done");
-        assertTrue(mrpBeanRemote.checkMfDoneProd(2014, 12, mrpBeanRemote.getFacility("Jurong MF")));
+        assertTrue(mrpBeanRemote.checkMfDoneProd(2014, 12, mrpBeanRemote.getFacility("pernjie@gmail.com")));
     }
     
     @Test
     public void testCheckMfDoneProd2() {
         System.out.println("checkMfDoneProd : not done");
-        assertFalse(mrpBeanRemote.checkMfDoneProd(2013, 12, mrpBeanRemote.getFacility("Jurong MF")));
+        assertFalse(mrpBeanRemote.checkMfDoneProd(2013, 12, mrpBeanRemote.getFacility("pernjie@gmail.com")));
     }
     
     private MrpBeanRemote lookupEventSessionRemote()
