@@ -1,30 +1,25 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/SCM_Template.xhtml"
+                template="./../template/Kitchen_Template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
                 xmlns="http://www.w3.org/1999/xhtml">
 
 	<ui:define name="content">
 		<h:form id="formMain">
             <p:growl id="msgs" showDetail="true"/>
-            <p:menubar>
-                <p:menuitem value="View All Shelf Type Records" url="viewShelfTypeRecords.xhtml"/>
-                <p:menuitem value="Add New Shelf Type Record" url="addShelfType.xhtml"/>
-            </p:menubar>
-
-            <br/>
-
-            <p:panel header="View All Shelf Type Records">
+            <b:panel>
+                <f:facet name="heading"><h3><b>View All Shelf Type Records</b></h3></f:facet>
                 <p:contextMenu for="shelfTypeTable">
-                    <p:menuitem value="Delete" update="shelfTypeTable, :formMain:msgs" icon="ui-icon-close" actionListener="#{shelfTypeManagerBean.deleteShelfType}"/>
+                    <p:menuitem value="Delete" update="shelfTypeTable, :formMain:msgs" icon="ui-icon-close" actionListener="#{kitchenShelfTypeManagerBean.deleteShelfType}"/>
                 </p:contextMenu>
 
-                <p:dataTable widgetVar = "shelfTypeTable" editable = "true" id = "shelfTypeTable" var="shelfType" value="#{shelfTypeManagerBean.shelfTypes}"
+                <p:dataTable widgetVar = "shelfTypeTable" editable = "true" id = "shelfTypeTable" var="shelfType" value="#{kitchenShelfTypeManagerBean.shelfTypes}"
                              paginator="true" rows="10" emptyMessage="No Shelf Type Record found with given criteria" rowKey="#{shelfType.id}"
-                             selection="#{shelfTypeManagerBean.selectedShelfType}" selectionMode="single" filteredValue="#{shelfTypeManagerBean.filteredShelfTypes}" >
+                             selection="#{kitchenShelfTypeManagerBean.selectedShelfType}" selectionMode="single" filteredValue="#{kitchenShelfTypeManagerBean.filteredShelfTypes}" >
 
 
                     <p:column headerText="Shelf Type ID" sortBy="#{shelfType.id}" filterBy="#{shelfType.id}" filterMatchMode="contains" >
@@ -70,7 +65,7 @@
                     </p:column>
 
                 </p:dataTable>
-            </p:panel>
+            </b:panel>
         </h:form>
 	</ui:define>
 

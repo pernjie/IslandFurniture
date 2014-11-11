@@ -26,6 +26,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import org.primefaces.event.RowEditEvent;
 import session.stateless.InventoryBean;
+import session.stateless.KitchenBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
 /**
@@ -37,6 +38,8 @@ import util.exception.ReferenceConstraintException;
 public class KitchenShelfManagerBean  implements Serializable{
     @EJB
    private InventoryBean inventoryBean;
+   @EJB
+   private KitchenBean kb;
     
     private String fac;
     private String zone;
@@ -66,7 +69,7 @@ public class KitchenShelfManagerBean  implements Serializable{
     public void init(){
          facilities = inventoryBean.getAllMFsStores();
          shelfTypes = inventoryBean.getAllShelfTypes();
-         allShelf = inventoryBean.getAllShelf();
+         allShelf = kb.getAllShelf();
          
          FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("facilities", facilities);
          FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shelfTypes",shelfTypes);
@@ -98,10 +101,15 @@ public class KitchenShelfManagerBean  implements Serializable{
         
 
         try {
+            setLocation(InvenLoc.KITCHEN);
             newShelfId = inventoryBean.addNewShelf(facLong, location, zone, shelfInt, shelfTypeLong);
             statusMessage = "New Shelf Type Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Status Result: "
                     + statusMessage + " (New Shelf Status ID is " + newShelfId + ")", ""));
+            setLocation(null);
+            setZone(null);
+            setShelfId(null);
+            setShelfTypeId(null);
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
             newShelfId  = -1L;
@@ -128,12 +136,12 @@ public class KitchenShelfManagerBean  implements Serializable{
 
      public void deleteShelf() {
         try {
-            inventoryBean.removeShelf(selectedShelf);
-            allShelf= inventoryBean.getAllShelf();
+            kb.removeShelf(selectedShelf);
+            allShelf= kb.getAllShelf();
             FacesMessage msg = new FacesMessage("Shelf  Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (ReferenceConstraintException ex) {
-            allShelf =inventoryBean.getAllShelf();
+            allShelf = kb.getAllShelf();
             statusMessage = ex.getMessage();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Changes not saved: "
                     + statusMessage, ""));
@@ -148,18 +156,7 @@ public class KitchenShelfManagerBean  implements Serializable{
         this.filteredShelf = filteredShelf;
     }
      
-       /**
-     * Creates a new instance of InvenotryManagerBean
-     * @return 
-     */
 
-    public InventoryBean getInventoryBean() {
-        return inventoryBean;
-    }
-
-    public void setInventoryBean(InventoryBean inventoryBean) {
-        this.inventoryBean = inventoryBean;
-    }
 
     public String getFac() {
         return fac;

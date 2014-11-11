@@ -797,4 +797,75 @@ public class KitchenBean { //implements ScmBeanRemote {
         List<SuppliesIngrToFac> dist = query.getResultList();
         return dist;
     }
+    
+    public List<Shelf> getAllShelf() {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Facility f = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
+        Query query = em.createQuery("SELECT s FROM " + Shelf.class.getName() + " s WHERE s.fac = :fac AND s.location = :location");
+        query.setParameter("fac", f);
+        query.setParameter("location", 5);
+        return query.getResultList();
+    }
+    
+    public void removeShelf(Shelf shelf) throws ReferenceConstraintException {
+          
+          System.out.println("REMOVE SHELF"+ shelf);
+         if(!ForeignKeyConstraintAlreadyExist(shelf)){
+         try{
+            EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+            EntityManager em = emf.createEntityManager();
+       
+                 Shelf removeShelf = em.merge(shelf);
+                 
+                 Query q = em.createNamedQuery("ShelfSlot.findByShelf");
+                 q.setParameter("shelf", removeShelf);
+                 
+                 List<ShelfSlot> resultSlots = q.getResultList();
+                 
+                 for(int i=0; i<resultSlots.size(); ++i){
+                     em.merge(resultSlots.get(i));
+                     em.remove(resultSlots.get(i));
+                 }
+                 
+                 em.remove(removeShelf);
+
+             } catch (Exception e) {
+                 throw new ReferenceConstraintException("Cannot delete Shelf Status ID " + shelf.getId() + " due to Foreign Key constraints");
+             }
+        }else{
+             throw new ReferenceConstraintException("Cannot delete Shelf Type ID " + shelf.getId() + " due to Foreign Key constraints");
+         }
+      }
+    
+    private Boolean ForeignKeyConstraintAlreadyExist(Shelf shelf) {
+       
+       System.out.println("IN HERE");
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+       
+        Query query = em.createNamedQuery("InventoryKit.findByShelf");
+        query.setParameter("shelf",shelf);
+        System.out.println(shelf);
+ 
+        
+        List<InventoryKit> ingrResultList = query.getResultList();
+        if (ingrResultList.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    //Shelf Slot Bean
+   public List<ShelfSlot> getAllShelfSlot(Shelf shelf) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createNamedQuery("ShelfSlot.getOccupied");
+        query.setParameter("shelf",shelf);
+        
+        System.out.println("LIST SIZE: "+ query.getResultList().size());
+        
+        return query.getResultList();
+    }
 }

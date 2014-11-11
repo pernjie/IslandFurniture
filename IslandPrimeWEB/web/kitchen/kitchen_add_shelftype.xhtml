@@ -1,18 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/SCM_Template.xhtml"
+                template="./../template/Kitchen_Template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-	 xmlns="http://www.w3.org/1999/xhtml">
+                xmlns:b="http://bootsfaces.net/ui"
+                xmlns="http://www.w3.org/1999/xhtml">
 
 	<ui:define name="content">
 		<h:form id="formMain">
-            <h1>Add New Shelf Type</h1>
-
-            <br/>
-            <p:panel id="panel" header="Add New Shelf Type">
+            <b:panel id="panel">
+                 <f:facet name="heading"><h3><b>Add New Shelf Type</b></h3></f:facet>
                 <p:ajaxStatus style="width:16px;height:16px;">
                     <f:facet name="start">
                         <h:graphicImage value="/images/spinner.gif" />
@@ -32,7 +31,7 @@
                         <p:column>
                             <p:inputText required="true" label="Shelf Type Name"
                                          requiredMessage="Shelf Type Name is required." id="name"
-                                         value="#{shelfTypeManagerBean.name}">
+                                         value="#{kitchenShelfTypeManagerBean.name}">
                             </p:inputText>
                         </p:column>
                         <p:column>
@@ -48,7 +47,7 @@
                         <p:column>
                             <p:inputText required="true" label="Num of Slots"
                                          requiredMessage="Number of Slots is required." id="numSlot"
-                                         value="#{shelfTypeManagerBean.numSlot}">
+                                         value="#{kitchenShelfTypeManagerBean.numSlot}">
                                 <f:validator validatorId ="posIntValueValidator" />
                             </p:inputText>
                         </p:column>
@@ -65,7 +64,7 @@
                         <p:column>
                             <p:inputText required="true" label="Weight Limit"
                                          requiredMessage="Weight Limit is required." id="weight"
-                                         value="#{shelfTypeManagerBean.weight}">
+                                         value="#{kitchenShelfTypeManagerBean.weight}">
                                 <f:validator validatorId ="posDbleValueValidator" />
                             </p:inputText>
                         </p:column>
@@ -82,7 +81,7 @@
                         <p:column>
                             <p:inputText required="true" label="Length"
                                          requiredMessage="Length is required." id="length"
-                                         value="#{shelfTypeManagerBean.length}">
+                                         value="#{kitchenShelfTypeManagerBean.length}">
                                 <f:validator validatorId ="posDbleValueValidator" />
                             </p:inputText>
                         </p:column>
@@ -98,7 +97,7 @@
                         <p:column>
                             <p:inputText required="true" label="Breadth (in m)"
                                          requiredMessage="Breadth is required." id="breadth"
-                                         value="#{shelfTypeManagerBean.breadth}">
+                                         value="#{kitchenShelfTypeManagerBean.breadth}">
                                 <f:validator validatorId ="posDbleValueValidator" />
                             </p:inputText>
                         </p:column>
@@ -114,7 +113,7 @@
                         <p:column>
                             <p:inputText required="true" label="Height (in m)"
                                          requiredMessage="Height is required." id="height"
-                                         value="#{shelfTypeManagerBean.height}">
+                                         value="#{kitchenShelfTypeManagerBean.height}">
                                 <f:validator validatorId ="posDbleValueValidator" />
                             </p:inputText>
                         </p:column>
@@ -124,8 +123,8 @@
                     </p:row>
 
                 </p:panelGrid>
-                <p:commandButton id="btn" value="Save New ShelfType" update="panel" actionListener="#{shelfTypeManagerBean.saveNewShelfType}" ajax="true"/>
-            </p:panel>
+                <p:commandButton id="btn" value="Save New ShelfType" update="panel" actionListener="#{kitchenShelfTypeManagerBean.saveNewShelfType}" ajax="true"/>
+            </b:panel>
         </h:form>
 	</ui:define>
 

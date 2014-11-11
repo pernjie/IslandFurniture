@@ -834,6 +834,7 @@ public class InventoryBean {
                         s.setShelfType(em.find(ShelfType.class, shelfTypeId));
                         System.err.println("shelf attributes set!");
                         em.persist(s);
+                        em.flush();
                         System.err.println("shelf entity persisted");
                        ShelfType shelfType =  em.find(ShelfType.class, shelfTypeId);
                        Shelf  createdShelf = em.find(Shelf.class, s.getId());
