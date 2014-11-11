@@ -269,22 +269,6 @@ public class ScmBean { //implements ScmBeanRemote {
         return ((Product) query.getSingleResult()).getName();
     }
 
-    //@Override
-    public Integer getMatQty(Facility fac, Item mat, Integer week, Integer year) {
-        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-        EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
-        query.setParameter("fac", fac);
-        query.setParameter("mat", mat);
-        query.setParameter("week", week);
-        query.setParameter("year", year);
-        if (query.getSingleResult() != null) {
-            return ((MrpRecord) query.getSingleResult()).getPlanned();
-        } else {
-            return 0;
-        }
-    }
-
     public Integer getMatQtyMaterial(Facility fac, Material mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -299,7 +283,7 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + MrpRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.yearId = :year");
+        Query query = em.createQuery("SELECT mr FROM " + PurchasePlanningRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
@@ -811,4 +795,14 @@ public class ScmBean { //implements ScmBeanRemote {
         Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + DistributionMFtoStore.class.getName() + " d WHERE i.mat = pr.mat AND d.mat = pr.mat AND d.store pr.store AND i.fac = d.mf");
         return (InventoryMaterial) query.getSingleResult();
     }
+    
+    public Supplier getSupplier(Facility fac, Item mat) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT DISTINCT s.sup FROM " + SuppliesMatToFac.class.getName() + " s WHERE s.fac = :fac AND s.mat = :mat");
+        query.setParameter("fac", fac);
+        query.setParameter("mat", mat);
+        return (Supplier) query.getSingleResult();
+    }
+
 }

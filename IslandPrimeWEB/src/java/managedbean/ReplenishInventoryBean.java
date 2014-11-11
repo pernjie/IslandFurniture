@@ -250,6 +250,7 @@ public class ReplenishInventoryBean implements Serializable {
     }
 
     public void updateInventory() throws IOException {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ilList", restockList);
         FacesContext.getCurrentInstance().getExternalContext().redirect("../inventory/inventory_view_restock_location.xhtml");
     }
     
