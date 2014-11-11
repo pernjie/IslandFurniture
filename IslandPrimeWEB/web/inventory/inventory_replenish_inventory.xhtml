@@ -17,10 +17,9 @@
                     <p:menuitem value="Delete" update="inventoryTable, :formMain:msgs" icon="ui-icon-close" actionListener="#{replenishInventoryBean.deleteInvenFurn}"/>
                 </p:contextMenu>
 
-                <p:cellEditor>  
                     <p:ajax process="@this" event="change" listener="#{replenishInventorydBean.updateTable}" update=":formMain:inventoryTable"/>
                     <f:facet name="output">  
-                        <h:outputText value="#{rb.status}" />  
+                        <h:outputText value="Select a Location" />  
                     </f:facet>  
                     <f:facet name="input">  
                         <h:selectOneMenu value="#{replenishInventoryBean.loc}" style="width:100%">  
@@ -30,7 +29,6 @@
                                            itemValue="#{loc}" />  
                         </h:selectOneMenu>  
                     </f:facet>  
-                </p:cellEditor>   
 
                 <p:dataTable widgetVar = "inventoryTable" editable = "true" id = "inventoryTable" var="invenFurn" value="#{replenishInventoryBean.invenFurns}"
                              paginator="true" rows="10" emptyMessage="No Furniture Inventory Record found with given criteria" rowKey="#{invenFurn.id}"
