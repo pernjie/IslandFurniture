@@ -11,15 +11,14 @@ import java.io.Serializable;
  *
  * @author dyihoon90
  */
-public enum Gender implements Serializable {
+public enum CustomerActivity implements Serializable{
 
-    MALE("Male"),
-    FEMALE("Female"),
-    ALL("All");
-
+    ALL("All customers"),
+    ACTIVE("Active customers only"),
+    INACTIVE("Inactive customers only");
     private final String label; //private variable
 
-    Gender(String label) {  //constructor
+    CustomerActivity(String label) {  //constructor
         this.label = label;
     }
 
@@ -27,7 +26,7 @@ public enum Gender implements Serializable {
         return label;
     }
 
-    public static Gender getIndex(int ord) {
-        return Gender.values()[ord]; // less safe
+    public static CustomerActivity getIndex(int ord) {
+        return CustomerActivity.values()[ord]; // less safe
     }
 }

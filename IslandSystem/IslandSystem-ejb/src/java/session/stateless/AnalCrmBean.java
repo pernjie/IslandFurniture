@@ -9,14 +9,21 @@ import classes.CustomerFreq;
 import classes.CustomerMonetary;
 import classes.CustomerRecency;
 import classes.CustomerRfm;
+import classes.NameQuantityExpenditure;
 import entity.Campaign;
 import entity.Customer;
 import entity.CustomerCampaignMetric;
 import entity.CustomerMetric;
+import entity.Material;
+import entity.MenuItem;
+import entity.Product;
 import entity.Region;
 import entity.TransactionItem;
 import entity.TransactionRecord;
+import enumerator.AnalAxis;
 import enumerator.BusinessArea;
+import enumerator.CustomerActivity;
+import enumerator.CustomerCampaignCat;
 import enumerator.Gender;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +76,333 @@ public class AnalCrmBean {
 //        q.setParameter("id", 5L);
 //        addTransactionToCampaignCustomerMetric((TransactionRecord) q.getSingleResult());
 //    }
+    public List<NameQuantityExpenditure> getBusinessAreaRegionCategoryQuantityExpenditure(BusinessArea ba, Region region, Integer numMonths) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        Calendar cal1 = Calendar.getInstance();
+        Date endDate = cal1.getTime();
+        Calendar cal2 = Calendar.getInstance();
+        // System.out.println("numMonths: " + numMonths);
+        numMonths = numMonths * -1;
+        cal2.add(Calendar.MONTH, numMonths);
+        Date startDate = cal2.getTime();
+       // System.out.println(numMonths);
+        //  System.out.println(startDate);
+        if (ba.equals(BusinessArea.FURNITURE)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND ti.item.ItemType = :Material AND NOT ti.item.id = 64 AND (ti.transact.transactTime BETWEEN :startDate AND :endDate)");
+            q.setParameter("region", region);
+            q.setParameter("Material", "Material");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else if (ba.equals(BusinessArea.PRODUCT)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND ti.item.ItemType = :Product AND (ti.transact.transactTime BETWEEN :startDate AND :endDate)");
+            q.setParameter("region", region);
+            q.setParameter("Product", "Product");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else if (ba.equals(BusinessArea.KITCHEN)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND (ti.item.ItemType = :MenuItem OR ti.item.ItemType = :SetItem) AND (ti.transact.transactTime BETWEEN :startDate AND :endDate)");
+            q.setParameter("region", region);
+            q.setParameter("MenuItem", "MenuItem");
+            q.setParameter("SetItem", "SetItem");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else {
+            q = null;
+        }
+        List<TransactionItem> transactionItems = q.getResultList();
+        List<NameQuantityExpenditure> nqeList = new ArrayList();
+        for (TransactionItem ti : transactionItems) {
+            String catName = null;
+            if (ba.equals(BusinessArea.FURNITURE)) {
+                Material mat = (Material) ti.getItem();
+                //  System.out.println("Material ID: " + mat.getId()+" NAME: "+mat.getName());
+                Integer catId = mat.getGenCategory();
+                catName = getMaterialGenCatName(catId);
+                // System.out.println("Furniture cat name: " + catName);
+            } else if (ba.equals(BusinessArea.PRODUCT)) {
+                Product prod = (Product) ti.getItem();
+                catName = prod.getCategory();
+                // System.out.println("Product cat name: " + catName);
+
+            } else if (ba.equals(BusinessArea.KITCHEN)) {
+                if (ti.getItem().getItemType().equals("SetItem")) {
+                    catName = "Set Item";
+                } else if (ti.getItem().getItemType().equals("MenuItem")) {
+                    MenuItem mi = (MenuItem) ti.getItem();
+                    catName = mi.getMealCourse().getLabel();
+                    //   System.out.println("Kitchen cat name: " + catName);
+                }
+            }
+            Integer quantity = ti.getQuantity();
+            Double expenditure = ti.getQuantity().doubleValue() * ti.getPrice();
+            Boolean foundName = false;
+            for (NameQuantityExpenditure nqe : nqeList) {
+                if (nqe.getName().equals(catName)) {
+                    nqe.setExpenditure(expenditure);
+                    nqe.setQuantity(quantity);
+                    foundName = true;
+                    break;
+                }
+            }
+            if (!foundName) {
+                nqeList.add(new NameQuantityExpenditure(catName, quantity, expenditure));
+            }
+
+        }
+        return nqeList;
+    }
+
+    public List<NameQuantityExpenditure> getBusinessAreaRegionItemQuantityExpenditure(BusinessArea ba, Region region, AnalAxis aa, Integer numMonths) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        Calendar cal1 = Calendar.getInstance();
+        Date endDate = cal1.getTime();
+        Calendar cal2 = Calendar.getInstance();
+        numMonths = numMonths * -1;
+        cal2.add(Calendar.MONTH, numMonths);
+        Date startDate = cal2.getTime();
+
+        if (ba.equals(BusinessArea.FURNITURE)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND ti.item.ItemType = :Material AND ti.transact.transactTime BETWEEN :startDate AND :endDate");
+            q.setParameter("region", region);
+            q.setParameter("Material", "Material");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else if (ba.equals(BusinessArea.PRODUCT)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND ti.item.ItemType = :Product AND ti.transact.transactTime BETWEEN :startDate AND :endDate");
+            q.setParameter("region", region);
+            q.setParameter("Product", "Product");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else if (ba.equals(BusinessArea.KITCHEN)) {
+            q = em.createQuery("SELECT ti FROM TransactionItem ti WHERE ti.transact.fac.region = :region AND ti.item.ItemType = :MenuItem OR ti.item.ItemType = :SetItem AND ti.transact.transactTime BETWEEN :startDate AND :endDate");
+            q.setParameter("region", region);
+            q.setParameter("MenuItem", "MenuItem");
+            q.setParameter("SetItem", "SetItem");
+            q.setParameter("startDate", startDate);
+            q.setParameter("endDate", endDate);
+        } else {
+            q = null;
+        }
+        List<TransactionItem> transactionItems = q.getResultList();
+        List<NameQuantityExpenditure> nqeList = new ArrayList();
+        for (TransactionItem ti : transactionItems) {
+
+            Long id = ti.getItem().getId();
+            String itemName = ti.getItem().getName();
+            Integer quantity = ti.getQuantity();
+            Double expenditure = ti.getQuantity().doubleValue() * ti.getPrice();
+            Boolean foundId = false;
+            for (NameQuantityExpenditure nqe : nqeList) {
+                if (nqe.getId().equals(id)) {
+                    nqe.setExpenditure(expenditure);
+                    nqe.setQuantity(quantity);
+                    foundId = true;
+                    break;
+                }
+            }
+            if (!foundId) {
+                nqeList.add(new NameQuantityExpenditure(itemName, quantity, expenditure));
+            }
+
+        }
+        return nqeList;
+    }
+
+    private String getMaterialGenCatName(Integer cat) {
+        switch (cat) {
+            case 1:
+                return "Living Room";
+            case 2:
+                return "Bathroom";
+            case 3:
+                return "Garden";
+            case 4:
+                return "Kitchen";
+            case 5:
+                return "Accessories";
+            case 6:
+                return "Bedroom";
+            case 7:
+                return "Children";
+            case 8:
+                return "Seasonal";
+            case 9:
+                return "Office";
+        }
+        return null;
+    }
+
+    public Integer getCampaignNumCust(Campaign camp, CustomerCampaignCat ccc) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        if (ccc.equals(CustomerCampaignCat.ALL)) {
+            q = em.createQuery("SELECT ccm FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp");
+            q.setParameter("camp", camp);
+        } else {
+            q = em.createQuery("SELECT ccm FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp AND ccm.customerCampaignCat = :ccc");
+            q.setParameter("camp", camp);
+            q.setParameter("ccc", ccc);
+        }
+        return q.getResultList().size();
+    }
+
+    public Integer getCampaignNumHit(Campaign camp, CustomerCampaignCat ccc) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        if (ccc.equals(CustomerCampaignCat.ALL)) {
+            q = em.createQuery("SELECT ccm.numHits FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp");
+            q.setParameter("camp", camp);
+        } else {
+            q = em.createQuery("SELECT ccm.numHits FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp AND ccm.customerCampaignCat = :ccc");
+            q.setParameter("camp", camp);
+            q.setParameter("ccc", ccc);
+        }
+        List<Integer> numPromoCodes = q.getResultList();
+        Integer totalNum = 0;
+        for (Integer i : numPromoCodes) {
+            totalNum += i;
+        }
+        return totalNum;
+    }
+
+    public Integer getCampaignNumPromoCode(Campaign camp, CustomerCampaignCat ccc) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        if (ccc.equals(CustomerCampaignCat.ALL)) {
+            q = em.createQuery("SELECT ccm.numPromoCodeUsed FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp");
+            q.setParameter("camp", camp);
+        } else {
+            q = em.createQuery("SELECT ccm.numPromoCodeUsed FROM CustomerCampaignMetric ccm WHERE ccm.campaign = :camp AND ccm.customerCampaignCat = :ccc");
+            q.setParameter("camp", camp);
+            q.setParameter("ccc", ccc);
+        }
+        List<Integer> numPromoCodes = q.getResultList();
+        Integer totalNum = 0;
+        for (Integer i : numPromoCodes) {
+            totalNum += i;
+        }
+        return totalNum;
+    }
+
+    public List<Double> getRegionBizAreaMetricScoresByAge(Region region, BusinessArea bizArea, AnalAxis aa, CustomerActivity ca) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        if (ca.equals(CustomerActivity.ALL)) {
+            q = em.createQuery("SELECT cm FROM CustomerMetric cm WHERE cm.businessArea = :bizArea AND cm.customer.region = :region");
+            q.setParameter("region", region);
+            q.setParameter("bizArea", bizArea);
+        } else {
+            q = em.createQuery("SELECT cm FROM CustomerMetric cm WHERE cm.businessArea = :bizArea AND cm.customer.region = :region AND cm.inactive = :boo");
+            q.setParameter("region", region);
+            q.setParameter("bizArea", bizArea);
+            if (ca.equals(CustomerActivity.INACTIVE)) {
+                q.setParameter("boo", false);
+            } else {
+                q.setParameter("boo", true);
+            }
+
+        }
+
+        List<CustomerMetric> custMetrics = q.getResultList();
+        List<Double> rfmForAges = new ArrayList(101);
+        List<Double> numCust = new ArrayList(101);
+        //list where age is the index and the average rfm is the Double for that index
+        Double newNum = 0.0;
+        Double newRfm = 0.0;
+        List<Double> result = new ArrayList(101);
+        for (int i = 0; i < 101; i++) {
+            rfmForAges.add(0.0);
+            numCust.add(0.0);
+            result.add(0.0);
+        }
+        for (CustomerMetric cm : custMetrics) {
+            Double rfm = cm.getCurrentRfm().doubleValue();
+            Integer age = translateDobToAge(cm.getCustomer().getDob());
+            if (rfmForAges.get(age).equals(0.0)) {
+                rfmForAges.set(age, rfm);
+                numCust.set(age, 1.0);
+            } else {
+                newNum = numCust.get(age) + 1;
+                numCust.set(age, newNum);
+                newRfm = (rfm + rfmForAges.get(age));
+                rfmForAges.set(age, newRfm);
+            }
+        }
+
+        for (int i = 0; i < 101; i++) {
+
+            result.set(i, (rfmForAges.get(i) / numCust.get(i)));
+            //System.out.println("For age: " + i + " average RFM is: " + result.get(i));
+        }
+        if (aa.equals(AnalAxis.RFM)) {
+            return result;
+        } else {
+            return numCust;
+        }
+    }
+
+    public List<Double> getRegionBizAreaMetricScoresByGender(Region region, BusinessArea bizArea, AnalAxis aa, CustomerActivity ca) {
+        System.out.println("Initialize getRegionBizAreaMetricScoresByGender");
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q;
+        if (ca.equals(CustomerActivity.ALL)) {
+            q = em.createQuery("SELECT cm FROM CustomerMetric cm WHERE cm.businessArea = :bizArea AND cm.customer.region = :region");
+            q.setParameter("region", region);
+            q.setParameter("bizArea", bizArea);
+        } else {
+            q = em.createQuery("SELECT cm FROM CustomerMetric cm WHERE cm.businessArea = :bizArea AND cm.customer.region = :region AND cm.inactive = :boo");
+            q.setParameter("region", region);
+            q.setParameter("bizArea", bizArea);
+            if (ca.equals(CustomerActivity.INACTIVE)) {
+                q.setParameter("boo", false);
+            } else {
+                q.setParameter("boo", true);
+            }
+        }
+        List<CustomerMetric> custMetrics = q.getResultList();
+        List<Double> rfmForGenders = new ArrayList(2);
+        List<Double> numCust = new ArrayList(2);
+        for (int i = 0; i < 2; i++) {
+            rfmForGenders.add(0.0);
+            numCust.add(0.0);
+        }
+        Double newNum;
+        for (CustomerMetric cm : custMetrics) {
+            Double rfm = cm.getCurrentRfm().doubleValue();
+            Boolean custIsMale = cm.getCustomer().getGender().equals(Gender.MALE);
+            if (custIsMale) {
+                newNum = numCust.get(0) + 1;
+                numCust.set(0, newNum);
+                rfmForGenders.set(0, rfmForGenders.get(0) + rfm);
+            } else {
+                newNum = numCust.get(1) + 1;
+                numCust.set(1, newNum);
+//                System.out.println("Customer's RFM is: " + rfm);
+//                System.out.println("Current Average RFM for female cust is: " + rfmForGenders.get(1));
+//                System.out.println("num female cust is: " + numCust.get(1));
+//                newFemaleRfm = (rfm + rfmForGenders.get(1));
+//                System.out.println("NEW RFM: " + newFemaleRfm);
+                rfmForGenders.set(1, rfmForGenders.get(1) + rfm);
+            }
+        }
+        rfmForGenders.set(0, rfmForGenders.get(0) / numCust.get(0));
+        rfmForGenders.set(1, rfmForGenders.get(1) / numCust.get(1));
+
+        if (aa.equals(AnalAxis.RFM)) {
+            return rfmForGenders;
+        } else {
+            return numCust;
+        }
+    }
 
     public void addCampaignNewCustomer(Region region, Customer customer) {
         System.out.println("Initialize checkCampaignNewCustomer");
@@ -102,7 +436,6 @@ public class AnalCrmBean {
         Integer bornYear = cal.get(Calendar.YEAR);
         return currYear - bornYear;
     }
-
 
     public void calculateInactivity() {
         System.out.println("Initialize calculateInactivity");
@@ -166,7 +499,7 @@ public class AnalCrmBean {
         }
     }
 
-    public void calculateCustomerRfmScoreByRegion() {
+    public Boolean calculateCustomerRfmScoreByRegion() {
         System.out.println("Initialize calculateCustomerRfmScoreByRegion");
         List<Region> regions = getAllRegions();
         Calendar cal = Calendar.getInstance();
@@ -181,45 +514,50 @@ public class AnalCrmBean {
         itemTypes.add("Kitchen");
 
 //        List<BusinessArea> bizAreas = new ArrayList<BusinessArea>(BusinessArea.FURNITURE,BusinessArea.KITCHEN,BusinessArea.PRODUCT);
-        for (String itemType : itemTypes) {
-            for (Region r : regions) {
-                EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-                EntityManager em = emf.createEntityManager();
-                //get all transaction records in the region between 
-                System.out.println("getting transaction records for region: " + r.getName() + " item type: " + itemType);
-                Query q;
-                if (!itemType.equals("Kitchen")) {
-                    q = em.createQuery("SELECT DISTINCT ti.transact FROM TransactionItem ti WHERE ti.item.ItemType = :itemType "
-                            + "AND ti.transact.fac.region = :region AND ti.transact.transactTime BETWEEN :lastYear AND :currDate");
-                    q.setParameter("itemType", itemType);
-                    q.setParameter("region", r);
-                    q.setParameter("lastYear", lastYear, TemporalType.TIMESTAMP);
-                    q.setParameter("currDate", currDate, TemporalType.TIMESTAMP);
-                } else {
-                    q = em.createQuery("SELECT DISTINCT ti.transact FROM TransactionItem ti WHERE ti.item.ItemType = :itemType1 OR ti.item.ItemType = :itemType2 "
-                            + "AND ti.transact.fac.region = :region AND ti.transact.transactTime BETWEEN :lastYear AND :currDate");
-                    q.setParameter("itemType1", "MenuItem");
-                    q.setParameter("itemType2", "SetItem");
-                    q.setParameter("region", r);
-                    q.setParameter("lastYear", lastYear, TemporalType.TIMESTAMP);
-                    q.setParameter("currDate", currDate, TemporalType.TIMESTAMP);
-                }
+        try {
+            for (String itemType : itemTypes) {
+                for (Region r : regions) {
+                    EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+                    EntityManager em = emf.createEntityManager();
+                    //get all transaction records in the region between 
+                    System.out.println("getting transaction records for region: " + r.getName() + " item type: " + itemType);
+                    Query q;
+                    if (!itemType.equals("Kitchen")) {
+                        q = em.createQuery("SELECT DISTINCT ti.transact FROM TransactionItem ti WHERE ti.item.ItemType = :itemType "
+                                + "AND ti.transact.fac.region = :region AND ti.transact.transactTime BETWEEN :lastYear AND :currDate");
+                        q.setParameter("itemType", itemType);
+                        q.setParameter("region", r);
+                        q.setParameter("lastYear", lastYear, TemporalType.TIMESTAMP);
+                        q.setParameter("currDate", currDate, TemporalType.TIMESTAMP);
+                    } else {
+                        q = em.createQuery("SELECT DISTINCT ti.transact FROM TransactionItem ti WHERE ti.item.ItemType = :itemType1 OR ti.item.ItemType = :itemType2 "
+                                + "AND ti.transact.fac.region = :region AND ti.transact.transactTime BETWEEN :lastYear AND :currDate");
+                        q.setParameter("itemType1", "MenuItem");
+                        q.setParameter("itemType2", "SetItem");
+                        q.setParameter("region", r);
+                        q.setParameter("lastYear", lastYear, TemporalType.TIMESTAMP);
+                        q.setParameter("currDate", currDate, TemporalType.TIMESTAMP);
+                    }
 
-                System.out.println("finished getting transaction records");
-                if (!q.getResultList().isEmpty()) {
-                    System.out.println("success in getting records, moving on to calculate RFM");
-                    List<TransactionRecord> transactionRecords = q.getResultList();
-                    calculateFrequency(transactionRecords);
-                    calculateRecency(transactionRecords);
-                    calculateMonetary(transactionRecords);
-                    persistRfmScores(r, itemType);
+                    System.out.println("finished getting transaction records");
+                    if (!q.getResultList().isEmpty()) {
+                        System.out.println("success in getting records, moving on to calculate RFM");
+                        List<TransactionRecord> transactionRecords = q.getResultList();
+                        calculateFrequency(transactionRecords);
+                        calculateRecency(transactionRecords);
+                        calculateMonetary(transactionRecords);
+                        persistRfmScores(r, itemType);
+                    }
+                    custRfmScores = new ArrayList<>();
                 }
-                custRfmScores = new ArrayList<>();
             }
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 
-    public void persistRfmScores(Region r, String itemType) {
+    private void persistRfmScores(Region r, String itemType) {
 
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -257,8 +595,10 @@ public class AnalCrmBean {
         Query query = em.createNamedQuery("Region.findAll");
         return query.getResultList();
     }
+//from a list of transaction records, using transaction id, determine their latest purchase.
+    //sort them according in ascending order. split into 5 groups and add to the rfm score of the customer.
 
-    public void calculateRecency(List<TransactionRecord> transactionRecords) {
+    private void calculateRecency(List<TransactionRecord> transactionRecords) {
         Collections.sort(transactionRecords, new Comparator<TransactionRecord>() {
             @Override
             public int compare(TransactionRecord o1, TransactionRecord o2) {
@@ -316,7 +656,7 @@ public class AnalCrmBean {
 
     }
 
-    public void calculateFrequency(List<TransactionRecord> transactionRecords) {
+    private void calculateFrequency(List<TransactionRecord> transactionRecords) {
         List<CustomerFreq> custFreqScores = new ArrayList<>();
         Boolean foundCustFreqRecord = false;
 
@@ -368,7 +708,7 @@ public class AnalCrmBean {
 
     }
 
-    public void calculateMonetary(List<TransactionRecord> transactionRecords) {
+    private void calculateMonetary(List<TransactionRecord> transactionRecords) {
         Collections.sort(transactionRecords, new Comparator<TransactionRecord>() {
             @Override
             public int compare(TransactionRecord o1, TransactionRecord o2) {
@@ -435,7 +775,7 @@ public class AnalCrmBean {
         return true;
     }
 
-    public void addToCustRfmScores(Customer customer, Integer addToScore) {
+    private void addToCustRfmScores(Customer customer, Integer addToScore) {
 
         for (CustomerRfm custRfm : custRfmScores) {
             if (custRfm.getCust().equals(customer)) {
@@ -445,16 +785,16 @@ public class AnalCrmBean {
 
     }
 
-    public void generateCustomerMetrics() {
-        int custId = 1;
-        int i = 1;
-        for (int b = 0; b < 3; b++) {
-
-            for (custId = 1; custId < 201; custId++) {
-                System.out.println("INSERT INTO CUSTOMERMETRIC (ID,INACTIVE,CURRENT_RFM,HIGHEST_RFM,BUSINESS_AREA,CUSTOMER)"
-                        + "VALUES (" + i + "," + 0 + "," + 0 + "," + 0 + "," + b + "," + custId + ");");
-                i++;
-            }
-        }
-    }
+//    public void generateCustomerMetrics() {
+//        int custId = 1;
+//        int i = 1;
+//        for (int b = 0; b < 3; b++) {
+//
+//            for (custId = 1; custId < 201; custId++) {
+//                System.out.println("INSERT INTO CUSTOMERMETRIC (ID,INACTIVE,CURRENT_RFM,HIGHEST_RFM,BUSINESS_AREA,CUSTOMER)"
+//                        + "VALUES (" + i + "," + 0 + "," + 0 + "," + 0 + "," + b + "," + custId + ");");
+//                i++;
+//            }
+//        }
+//    }
 }
