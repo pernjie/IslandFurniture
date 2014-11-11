@@ -55,6 +55,7 @@ public class RoleFunctionsBean implements Serializable {
     private boolean checkViewDistributnP;
     private boolean checkViewUnpaidBills;
     private boolean checkAddBill;
+    private boolean checkProductionOperation;
     
     private boolean checkSCMInvenRestock;
     private boolean checkSCMReceiveSInven;
@@ -282,6 +283,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -317,6 +319,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -352,6 +355,7 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("ViewDistributnP");
             rolesSet.add("SCMViewUnpaidBills");
             rolesSet.add("AddBill");
+            rolesSet.add("ProductionOperation");
             
             rolesSet.add("SCMInvenRestock");
             rolesSet.add("SCMReceiveSInven");
@@ -808,13 +812,13 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("SendMktEmail");
         }
         
-        if (getRole1().equals("Kitchen")) {
+        if (getRole1().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
-        if (getRole2() != null && getRole2().equals("Kitchen")) {
+        if (getRole2() != null && getRole2().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
-        if (getRole3() != null && getRole3().equals("Kitchen")) {
+        if (getRole3() != null && getRole3().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
         
@@ -1158,6 +1162,10 @@ public class RoleFunctionsBean implements Serializable {
 
     public boolean isCheckSCMAdHocPdtnPlan() {
         return getRolesSet().contains("SCMAdHocPdtnPlan");
+    }
+
+    public boolean isCheckProductionOperation() {
+        return getRolesSet().contains("ProductionOperation");
     }
 
     

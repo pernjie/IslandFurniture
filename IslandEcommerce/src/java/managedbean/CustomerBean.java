@@ -29,7 +29,7 @@ import util.exception.DetailsConflictException;
 public class CustomerBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal ocb;
+    private EComBeanLocal ocb;
     private String unsubscribeEmail;
     private Customer customer;
     private Long custId;

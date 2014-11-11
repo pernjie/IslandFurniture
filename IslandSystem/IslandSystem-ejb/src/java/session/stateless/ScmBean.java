@@ -811,5 +811,4 @@ public class ScmBean { //implements ScmBeanRemote {
         Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + DistributionMFtoStore.class.getName() + " d WHERE i.mat = pr.mat AND d.mat = pr.mat AND d.store pr.store AND i.fac = d.mf");
         return (InventoryMaterial) query.getSingleResult();
     }
-
 }

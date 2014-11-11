@@ -6,6 +6,7 @@
 package managedbean;
 
 import static com.sun.faces.facelets.util.Path.context;
+import entity.Facility;
 import entity.InventoryMaterial;
 import entity.Item;
 import entity.Material;
@@ -193,13 +194,22 @@ public class FurnInventoryMB implements Serializable{
    
    
     public SelectItem[] getFurnLocValues() {
-    SelectItem[] items = new SelectItem[3];
-    int j=0;
-    int i;
-    for(i=0; i< (InvenLoc.values().length-1); ++i) {
-        InvenLoc il= InvenLoc.getIndex(i);
-       items[j++] = new SelectItem(il, il.getLabel());
-    }
+        Facility fac = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
+         SelectItem[] items=null;
+        if (fac.getType().equals("Manufacturing")) {
+            items = new SelectItem[1];
+            items[0] = new SelectItem(InvenLoc.getIndex(0), InvenLoc.getIndex(0).getLabel());
+        }
+        else if (fac.getType().equals("Store")) 
+            
+            items = new SelectItem[4];
+            int j=0;
+            int i;
+            for(i=1; i<5; i++) {
+                System.out.println("arr =" + i);
+                InvenLoc il= InvenLoc.getIndex(i);
+               items[j++] = new SelectItem(il, il.getLabel());
+            }
     return items;
   }
     

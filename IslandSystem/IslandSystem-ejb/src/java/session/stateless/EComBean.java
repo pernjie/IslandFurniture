@@ -5,10 +5,15 @@
  */
 package session.stateless;
 
+import entity.Country;
+import entity.Customer;
 import entity.Item;
 import entity.Material;
 import entity.Region;
 import entity.RegionItemPrice;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.LocalBean;
@@ -16,6 +21,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
+import util.exception.DetailsConflictException;
 
 /**
  *
@@ -36,17 +42,11 @@ public class EComBean {//implements EComBeanLocal{
         Region region = (Region) q.getSingleResult();
 
         System.out.println("IN GET FURNITURE!");
-        Integer genCategory = 1;
         System.out.print("REGION " + region);
-        Query query = em.createQuery("SELECT r FROM " + RegionItemPrice.class.getName() + " r WHERE r.region =:region AND r.item IN (SELECT m FROM " + Material.class.getName() + " m WHERE m.genCategory = :genCategory)");
-        query.setParameter("genCategory", genCategory);
+        Query query = em.createQuery("SELECT r FROM " + RegionItemPrice.class.getName() + " r WHERE r.region =:region AND r.item IN (SELECT m FROM " + Material.class.getName() + " m WHERE NOT m.id = 64)");
         query.setParameter("region", region);
 
-       //Query q = em.createNamedQuery("Material.findAllFurn");
-      // List<Item> mats= q.getResultList();
         System.out.println("IN GET FURNITURE 2!");
-      // for(Item m: mats)
-        //     System.out.println(m.getId());
 
         return query.getResultList();
     }
@@ -65,15 +65,15 @@ public class EComBean {//implements EComBeanLocal{
     }
 
     //@Override
-    public Item getItembyString(String itemName) {
+    public Material getItembyString(String itemName) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
 
-        Query q = em.createNamedQuery("Item.findByName");
+        Query q = em.createNamedQuery("Material.findByName");
         q.setParameter("name", itemName);
 
         try {
-            Item result = (Item) q.getSingleResult();
+            Material result = (Material) q.getSingleResult();
             System.out.println("IN GET ITEM!");
             System.out.println(result);
             return result;
@@ -145,5 +145,91 @@ public class EComBean {//implements EComBeanLocal{
         }
 
         return resItems;
+    }
+    
+    //@Override
+    public void unsubscribe(long custId) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery("SELECT c FROM Customer c where c.id= :param");
+        q.setParameter("param", custId);
+        Customer customer = (Customer) q.getSingleResult();
+        customer.setUnsubscribed(true);
+        em.persist(customer);
+    }
+
+    //@Override
+    public Long addNewCustomer(Customer customer) throws DetailsConflictException {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        String email = customer.getEmail();
+        if (!emailAlreadyExist(email)) {
+            try {
+                customer.setPassword(encryptPassword(customer.getEmail(), customer.getPassword()));
+                em.persist(customer);
+
+                return customer.getId();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                return null;
+
+            } finally {
+                em.close();
+
+            }
+        } else {
+            throw new DetailsConflictException("Email exists: " + customer.getEmail());
+        }
+    }
+
+    private Boolean emailAlreadyExist(String email) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+
+        Query query = em.createQuery("SELECT c FROM Customer c WHERE c.email = :email");
+        query.setParameter("email", email);
+        List resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public String encryptPassword(String email, String password) {
+        String encrypted = null;
+        if (password == null) {
+            return null;
+        } else {
+            try {
+                password = password.concat(email);
+                System.err.println("encrypt Password: password = " + password);
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.update(password.getBytes(), 0, password.length());
+                encrypted = new BigInteger(1, md.digest()).toString(16);
+                System.err.println("encrypt Password: encrypted = " + encrypted);
+            } catch (NoSuchAlgorithmException ex) {
+            }
+        }
+        return encrypted;
+
+    }
+    
+    //@Override
+    public List<Customer> getAllCustomers() {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createNamedQuery("Customer.findAll");
+        return query.getResultList();
+    }
+    
+    //@Override
+    public List<Country> getAllCountries() {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createNamedQuery("Country.findAll");
+        return query.getResultList();
     }
 }

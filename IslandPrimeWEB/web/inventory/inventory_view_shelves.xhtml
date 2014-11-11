@@ -19,7 +19,7 @@
                     
                 <p:dataTable widgetVar = "shelfTable" editable = "true" id = "shelfTable" var="shelf" value="#{shelfManagerBean.allShelf}"
                              paginator="true" rows="10" emptyMessage="No Shelf Type Record found with given criteria" rowKey="#{shelf.id}"
-                             selection="#{shelfMa0nagerBean.selectedShelf}" selectionMode="single" filteredValue="#{shelfManagerBean.filteredShelf}" >
+                             selection="#{shelfManagerBean.selectedShelf}" selectionMode="single" filteredValue="#{shelfManagerBean.filteredShelf}" >
 
 
                     <p:column headerText="Shelf ID" sortBy="#{shelf.id}" filterBy="#{shelf.id}" filterMatchMode="contains" >
@@ -41,7 +41,7 @@
                     
                     <p:column headerText="Location"
                               sortBy="#{shelf.location}" filterBy="#{shelf.location}" filterMatchMode="startsWith" > 
-                                <h:outputText value="#{shelf.location}" />    
+                        <h:outputText value="#{shelf.location.label}" />    
                     </p:column>
                     
                     <p:column headerText="Zone"

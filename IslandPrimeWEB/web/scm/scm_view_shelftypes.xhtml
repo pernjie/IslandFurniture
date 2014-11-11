@@ -1,23 +1,18 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/Inventory_Template.xhtml"
+                template="./../template/Kitchen_Template.xhtml"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:b="http://bootsfaces.net/ui"
                 xmlns="http://www.w3.org/1999/xhtml">
 
 	<ui:define name="content">
 		<h:form id="formMain">
             <p:growl id="msgs" showDetail="true"/>
-            <p:menubar>
-                <p:menuitem value="View All Shelf Type Records" url="viewShelfTypeRecords.xhtml"/>
-                <p:menuitem value="Add New Shelf Type Record" url="addShelfType.xhtml"/>
-            </p:menubar>
-
-            <br/>
-
-            <p:panel header="View All Shelf Type Records">
+            <b:panel>
+                <f:facet name="heading"><h1>View All Shelf Type Records</h1></f:facet>
                 <p:contextMenu for="shelfTypeTable">
                     <p:menuitem value="Delete" update="shelfTypeTable, :formMain:msgs" icon="ui-icon-close" actionListener="#{shelfTypeManagerBean.deleteShelfType}"/>
                 </p:contextMenu>
@@ -70,7 +65,7 @@
                     </p:column>
 
                 </p:dataTable>
-            </p:panel>
+            </b:panel>
         </h:form>
 	</ui:define>
 

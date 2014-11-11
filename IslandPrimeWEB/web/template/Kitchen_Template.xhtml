@@ -12,7 +12,7 @@
         <meta name="author" content="The Author"></meta>
     </h:head>
     
-    <h:body style="padding: 0px 25px;">
+<h:body style="padding: 0px 25px;">
         <b:navBar brand="Island FMS" brandHref="../common/CI_Index_Page.xhtml" inverse="true">
             <b:navbarLinks>
                  <b:navLink href="../mrp/mrp_home.xhtml" value="MRP" rendered="#{roleFunctionsBean.checkMRP}"></b:navLink>
@@ -47,13 +47,28 @@
         
         <b:column span="2">
             <b:panel look="primary">
-                <f:facet name="heading">#{indexManagedBean.loggedInName}, You are currently at <b>System Admin Home</b>. </f:facet>
+                <f:facet name="heading">#{indexManagedBean.loggedInName}, You are currently at <b>Kitchen Home</b>. </f:facet>
                 <!-- how to display links according to roles? -->
                 <b:listLinks>
-                    <b:navLink header="User Accounts"/>
-                    <b:navLink href="../common/CI_Create_New_User.xhtml" value="Create New Account"></b:navLink>
-                    <b:navLink href="../common/CI_View_All_Staff.xhtml" value="View All Users"></b:navLink>
-                    <b:navLink href="../common/CI_View_All_Log.xhtml" value="View System Log"></b:navLink>
+                    <b:navLink header="Kitchen"/>
+                    <b:navLink href="../kitchen/kitchen_forecasting.xhtml" value="Forecast Ingredients"></b:navLink>
+                    <b:navLink></b:navLink>
+                    <b:navLink header="Purchase Orders"/>
+                    <b:navLink href="../kitchen/kitchen_generate_ingr_po.xhtml" value="Generate Ingredients Purchase Order"></b:navLink>
+                    <b:navLink href="../kitchen/viewAllPurchasePlanningRecord.xhtml" value="View Purchasing Records"></b:navLink>
+                    <b:navLink></b:navLink>
+                    <b:navLink header="Shelf"/>
+                    <b:navLink href="../kitchen/kitchen_view_shelves.xhtml" value="View All Shelf Records"></b:navLink>
+                    <b:navLink href="../kitchen/kitchen_add_shelf.xhtml" value="Add New Shelf"></b:navLink>
+                    <b:navLink></b:navLink>
+                    <b:navLink header="Shelf Type"/>
+                    <b:navLink href="../kitchen/kitchen_view_shelftypes.xhtml" value="View All Shelf Type"></b:navLink>
+                    <b:navLink href="../kitchen/kitchen_add_shelftype.xhtml" value="Add New Shelf Type"></b:navLink>
+                    <b:navLink></b:navLink>
+                    <b:navLink header="Inventory Restock"/>
+                    <b:navLink href="../kitchen/kitchen_receive_supplier_inventory.xhtml" value="Receive Supplier Inventory"></b:navLink>
+                    <b:navLink href="../kitchen/kitchen_view_ingr_inventory.xhtml" value="View Ingredient Inventory"></b:navLink>
+                    <b:navLink href="../kitchen/kitchen_view_restock_location.xhtml" value="View Restock Location"></b:navLink>
                 </b:listLinks>
             </b:panel>
         </b:column> 

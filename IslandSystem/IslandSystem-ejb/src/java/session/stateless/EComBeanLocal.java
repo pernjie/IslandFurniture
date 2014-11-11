@@ -6,6 +6,8 @@
 
 package session.stateless;
 
+import entity.Country;
+import entity.Customer;
 import entity.Item;
 import entity.Region;
 import entity.RegionItemPrice;
@@ -26,6 +28,10 @@ public interface EComBeanLocal {
    public List<RegionItemPrice> getFurnitureDisplays(String regionId);
    public Region getRegion(String regionId);
    public RegionItemPrice getRegionPriceRecord(Item item, Region region);
-
+    public Long addNewCustomer(Customer customer) throws DetailsConflictException;
     public List<Region> getAllRegions();
+    public List<Country> getAllCountries();
+    public List<Customer> getAllCustomers();
+    public void unsubscribe(long custId);
+    public Customer getCustomerDetails(String email);
 }

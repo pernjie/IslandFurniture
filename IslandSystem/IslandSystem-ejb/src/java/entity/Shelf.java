@@ -50,7 +50,6 @@ public class Shelf implements Serializable {
     @JoinColumn(name = "FAC", referencedColumnName = "ID")
     @ManyToOne
     private Facility fac;
-    @Size(max = 2)
     @Column(name = "location")
     private InvenLoc location;
     @Column(name = "zone")
