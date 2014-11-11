@@ -808,13 +808,13 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("SendMktEmail");
         }
         
-        if (getRole1().equals("Kitchen")) {
+        if (getRole1().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
-        if (getRole2() != null && getRole2().equals("Kitchen")) {
+        if (getRole2() != null && getRole2().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
-        if (getRole3() != null && getRole3().equals("Kitchen")) {
+        if (getRole3() != null && getRole3().equals("Kitchen Staff")) {
             rolesSet.add("Kitchen");
         }
         

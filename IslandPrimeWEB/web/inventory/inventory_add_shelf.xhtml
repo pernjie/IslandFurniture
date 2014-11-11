@@ -29,10 +29,11 @@
                             <p:outputLabel for="location" style="font-weight: bold" value="Location: " />
                         </p:column>
                         <p:column>
-                            <p:inputText required="true" label="location"
-                                         requiredMessage="Location is required." id="location"
-                                         value="#{shelfManagerBean.location}">
-                            </p:inputText>
+                            <p:selectOneMenu label="location" requiredMessage="Location is required." required="true" id="location" 
+                                             value="#{shelfManagerBean.location}" style="width:100%" >
+                                <f:selectItem itemLabel="Select Location" itemValue="" noSelectionOption="true" />   
+                                <f:selectItems value="#{shelfManagerBean.locValues}" var="location" itemLabel="#{shelfManagerBean.locValues}" itemValue="#{shelfManagerBean.locValues}"/>
+                            </p:selectOneMenu>
                         </p:column>
                         <p:column>
                             <p:message for="location" />
@@ -44,7 +45,7 @@
                             <p:outputLabel for="zone" style="font-weight: bold" value="Zone: " />
                         </p:column>
                         <p:column>
-                            <p:selectOneMenu id="zone" value="#{createManagedBean.zone}" label="zone">
+                            <p:selectOneMenu id="zone" value="#{shelfManagerBean.zone}" label="zone">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="A" itemValue="A" />
 				<f:selectItem itemLabel="B" itemValue="B" />

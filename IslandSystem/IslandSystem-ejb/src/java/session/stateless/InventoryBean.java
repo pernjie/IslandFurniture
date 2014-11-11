@@ -831,7 +831,6 @@ public class InventoryBean {
                         s.setShelfType(em.find(ShelfType.class, shelfTypeId));
 
                         em.persist(s);
-                        em.flush();
 
                        ShelfType shelfType =  em.find(ShelfType.class, shelfTypeId);
                        Shelf  createdShelf = em.find(Shelf.class, s.getId());
@@ -844,7 +843,8 @@ public class InventoryBean {
                            shelfSlot.setOccupied(false);
                            em.persist(shelfSlot);
                        }
-
+                        em.flush();
+                        System.err.println("ID = " + s.getId());
                         return s.getId();
 
                     } catch (Exception e) {
@@ -928,7 +928,9 @@ public class InventoryBean {
      public List<Shelf> getAllShelf() {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createNamedQuery("Shelf.findAll");
+        Facility f = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
+        Query query = em.createNamedQuery("Shelf.findByFac");
+        query.setParameter("fac", f);
         return query.getResultList();
     }
 

@@ -12,7 +12,7 @@
         <meta name="author" content="The Author"></meta>
     </h:head>
     
-    <h:body style="padding: 0px 25px;">
+<h:body style="padding: 0px 25px;">
         <b:navBar brand="Island FMS" brandHref="../common/CI_Index_Page.xhtml" inverse="true">
             <b:navbarLinks>
                  <b:navLink href="../mrp/mrp_home.xhtml" value="MRP" rendered="#{roleFunctionsBean.checkMRP}"></b:navLink>
@@ -47,13 +47,16 @@
         
         <b:column span="2">
             <b:panel look="primary">
-                <f:facet name="heading">#{indexManagedBean.loggedInName}, You are currently at <b>System Admin Home</b>. </f:facet>
+                <f:facet name="heading">#{indexManagedBean.loggedInName}, You are currently at <b>MRP Home</b>. </f:facet>
                 <!-- how to display links according to roles? -->
                 <b:listLinks>
-                    <b:navLink header="User Accounts"/>
-                    <b:navLink href="../common/CI_Create_New_User.xhtml" value="Create New Account"></b:navLink>
-                    <b:navLink href="../common/CI_View_All_Staff.xhtml" value="View All Users"></b:navLink>
-                    <b:navLink href="../common/CI_View_All_Log.xhtml" value="View System Log"></b:navLink>
+                    <b:navLink header="Kitchen"/>
+                    <b:navLink href="../kitchen/kitchen_forecasting.xhtml" value="Forecast Ingredients"></b:navLink>
+                    <b:navLink href="../kitchen/mrp_production_record.xhtml" value="Production Order Processing"></b:navLink>
+                    <b:navLink href="../kitchen/mrp_forecast_product.xhtml" value="Forecast Retail Products"></b:navLink>
+                    <b:navLink href="../kitchen/kitchen_generate_ingr_po.xhtml" value="Purchasing Order Processing"></b:navLink>
+                    <b:navLink href="../kitchen/viewProductionRecords.xhtml" value="View Production Records"></b:navLink>
+                    <b:navLink href="../kitchen/viewAllPurchasePlanningRecord.xhtml" value="View Purchasing Records"></b:navLink>
                 </b:listLinks>
             </b:panel>
         </b:column> 
