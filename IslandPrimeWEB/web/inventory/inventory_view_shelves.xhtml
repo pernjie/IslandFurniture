@@ -41,7 +41,7 @@
                     
                     <p:column headerText="Location"
                               sortBy="#{shelf.location}" filterBy="#{shelf.location}" filterMatchMode="startsWith" > 
-                                <h:outputText value="#{shelf.location}" />    
+                        <h:outputText value="#{shelf.location.label}" />    
                     </p:column>
                     
                     <p:column headerText="Zone"

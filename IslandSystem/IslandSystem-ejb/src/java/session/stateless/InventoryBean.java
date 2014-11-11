@@ -630,6 +630,7 @@ public class InventoryBean {
                         p.setPdtBreadth(pdtBreadth);
                         p.setPdtHeight(pdtHeight);
                         em.persist(p);
+                        em.flush();
 
                         return p.getId();
 
@@ -682,6 +683,7 @@ public class InventoryBean {
                         System.out.println("LOC IN SAVE: "+loc);
                         im.setLocation(loc);
                         em.persist(im);
+                        em.flush();
 
                         return im.getId();
 
@@ -816,12 +818,13 @@ public class InventoryBean {
     //Shelf Bean Methods
      public Long addNewShelf(Long facId, InvenLoc location, String zone, Integer shelf, Long shelfTypeId)
             throws EntityDneException, DetailsConflictException {
+         System.err.println("addNewShelf()");
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
 
         if (!EntityIdDNE("Facility", facId)) {
             if (!EntityIdDNE("ShelfType", shelfTypeId)) {
-                if (!ShelfNumberAlreadyExist(shelf)) {
+                if (!ShelfNumberAlreadyExist(location, zone, shelf)) {
                     try {
                         Shelf s = new Shelf();     
                         s.setFac(em.find(Facility.class, facId));
@@ -829,9 +832,9 @@ public class InventoryBean {
                         s.setZone(zone);
                         s.setShelf(shelf);
                         s.setShelfType(em.find(ShelfType.class, shelfTypeId));
-
+                        System.err.println("shelf attributes set!");
                         em.persist(s);
-
+                        System.err.println("shelf entity persisted");
                        ShelfType shelfType =  em.find(ShelfType.class, shelfTypeId);
                        Shelf  createdShelf = em.find(Shelf.class, s.getId());
                       
@@ -866,11 +869,15 @@ public class InventoryBean {
         }
     } 
     
-     private Boolean ShelfNumberAlreadyExist(Integer shelfNum) {
+     private Boolean ShelfNumberAlreadyExist(InvenLoc location, String zone, Integer shelfNum) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         
-        Query query = em.createNamedQuery("Shelf.findByShelf");
+        Facility f = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
+        Query query = em.createQuery("SELECT s FROM " + Shelf.class.getName() + " s where s.fac = :fac AND s.location = :location AND s.zone = :zone AND s.shelf = :shelf");
+        query.setParameter("fac", f);
+        query.setParameter("location", location);
+        query.setParameter("zone", zone);
         query.setParameter("shelf", shelfNum);
       
         List resultList = query.getResultList();

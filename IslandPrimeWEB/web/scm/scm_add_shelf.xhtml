@@ -24,21 +24,21 @@
 
                 <p:panelGrid>
                     
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="location" style="font-weight: bold" value="Location: " />
-                        </p:column>
-                        <p:column>
-                            <p:selectOneMenu label="location" requiredMessage="Location is required." required="true" id="location" 
-                                             value="#{shelfManagerBean.location}" style="width:100%" >
-                                <f:selectItem itemLabel="Select Location" itemValue="" noSelectionOption="true" />   
-                                <f:selectItems value="#{shelfManagerBean.locValues}" var="location" itemLabel="#{shelfManagerBean.locValues}" itemValue="#{shelfManagerBean.locValues}"/>
-                            </p:selectOneMenu>
-                        </p:column>
-                        <p:column>
-                            <p:message for="location" />
-                        </p:column>
-                    </p:row>
+                    <<p:row>
+                       <p:column>
+                           <p:outputLabel for="invenLoc" style="font-weight: bold" value="Location: " />
+                       </p:column>
+                       <p:column>
+                           <p:selectOneMenu label="invenLoc" requiredMessage="Location is required." required="true" id="invenLoc" 
+                                            value="#{shelfManagerBean.location}" style="width:100%" >  
+                               <f:selectItem itemLabel="Select Location" itemValue="" noSelectionOption="true" />             
+                               <f:selectItems value="#{shelfManagerBean.locValues}" />
+                           </p:selectOneMenu>     
+                       </p:column>
+                       <p:column>
+                           <p:message for="invenLoc" />
+                       </p:column>
+                   </p:row>
                     
                          <p:row>
                         <p:column>

@@ -36,17 +36,11 @@ public class EComBean {//implements EComBeanLocal{
         Region region = (Region) q.getSingleResult();
 
         System.out.println("IN GET FURNITURE!");
-        Integer genCategory = 1;
         System.out.print("REGION " + region);
-        Query query = em.createQuery("SELECT r FROM " + RegionItemPrice.class.getName() + " r WHERE r.region =:region AND r.item IN (SELECT m FROM " + Material.class.getName() + " m WHERE m.genCategory = :genCategory)");
-        query.setParameter("genCategory", genCategory);
+        Query query = em.createQuery("SELECT r FROM " + RegionItemPrice.class.getName() + " r WHERE r.region =:region AND r.item IN (SELECT m FROM " + Material.class.getName() + " m WHERE NOT m.id = 64)");
         query.setParameter("region", region);
 
-       //Query q = em.createNamedQuery("Material.findAllFurn");
-      // List<Item> mats= q.getResultList();
         System.out.println("IN GET FURNITURE 2!");
-      // for(Item m: mats)
-        //     System.out.println(m.getId());
 
         return query.getResultList();
     }
@@ -65,15 +59,15 @@ public class EComBean {//implements EComBeanLocal{
     }
 
     //@Override
-    public Item getItembyString(String itemName) {
+    public Material getItembyString(String itemName) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
 
-        Query q = em.createNamedQuery("Item.findByName");
+        Query q = em.createNamedQuery("Material.findByName");
         q.setParameter("name", itemName);
 
         try {
-            Item result = (Item) q.getSingleResult();
+            Material result = (Material) q.getSingleResult();
             System.out.println("IN GET ITEM!");
             System.out.println(result);
             return result;
