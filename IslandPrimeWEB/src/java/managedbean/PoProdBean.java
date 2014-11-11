@@ -111,7 +111,7 @@ public class PoProdBean implements Serializable {
                 poDetail.setItem(spf.getProd());
                 Integer qty = 0;
                 try {
-                    qty = sb.getMatQtyProduct(fac, spf.getProd(), delivery_week, delivery_year);
+                    qty = sb.getMatQtyProduct(fac, spf.getProd(), wh.getWeekOfPeriod(delivery_week), wh.getPeriod(delivery_week), delivery_year);
                 } catch (Exception ex) {
                     String statusMessage = "There is no Purchase Order to generate for this supplier this week.";
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Generate Purchase Order Result: "

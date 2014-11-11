@@ -66,6 +66,14 @@ public class WeekHelper {
         }
     }
 
+    public int getWeekOfPeriod(int offset) {
+        if (offset == 53) {
+            return 5;
+        } else {
+            return offset% 4;
+        }
+    }
+        
     public int getWeeklyDemand(int amt, int week) {
         int demand = amt / 4;
         int remainder = amt % 4;
@@ -107,62 +115,6 @@ public class WeekHelper {
         return mCalendar.getTime();
     }
 
-    public String getDate1() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 1);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate2() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 2);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate3() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 3);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate4() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 4);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate5() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 5);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate6() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 6);
-        return getDateString(mCalendar.getTime());
-    }
-    
-    public String getDate7() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.set(Calendar.YEAR, getYear());
-        mCalendar.set(Calendar.WEEK_OF_YEAR, getWeek());
-        mCalendar.set(Calendar.DAY_OF_WEEK, 7);
-        return getDateString(mCalendar.getTime());
-    }
-    
     public String getDateString(Date date) {
         //SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
