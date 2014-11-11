@@ -9,6 +9,7 @@
             <name>IslandSystem-ejb</name>
             <minimum-ant-version>1.6.5</minimum-ant-version>
             <included-library dirs="200">file.reference.commons-math3-3.3.jar</included-library>
+            <included-library dirs="200">file.reference.commons-math3-3.3.jar-1</included-library>
             <included-library dirs="200">file.reference.all-themes-1.0.10.jar</included-library>
             <source-roots>
                 <root id="src.dir"/>

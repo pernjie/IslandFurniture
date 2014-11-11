@@ -9,14 +9,17 @@ package managedbean;
 import classes.DeliveryScheduleClass;
 import classes.WeekHelper;
 import entity.Facility;
+import entity.Item;
 import entity.ProductionRecord;
 import entity.PurchasePlanningRecord;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import session.stateless.ScmBean;
 
@@ -26,6 +29,10 @@ public class DeliveryScheduleBean implements Serializable{
     
     @EJB
     private ScmBean sb;
+    private String loggedInEmail;
+    private Date currDate;
+    private Integer week;
+    private Integer year;
     private Facility mf;
     private int type;
     private List<ProductionRecord> records;
@@ -39,8 +46,14 @@ public class DeliveryScheduleBean implements Serializable{
     
     @PostConstruct
     public void init() {
-        wh = new WeekHelper();
-        mf = sb.getFacility("Jurong MF");
+        System.err.println("function: init()");
+        loggedInEmail = new String();
+        loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
+        mf = sb.getFac(loggedInEmail);
+        System.err.println("fac: " + mf);
+        currDate = wh.getCurrDate();
+        week = wh.getWeek();
+        year = wh.getYear();
         records = sb.getProductionRecords(mf, wh.getYear(0), wh.getPeriod(0));
         delivs = new ArrayList<>();
         for (ProductionRecord pr : records) {

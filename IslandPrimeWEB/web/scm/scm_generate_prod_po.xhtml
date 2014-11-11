@@ -41,14 +41,16 @@
                                 <h:outputText value="#{po.matQty}" />  
                             </f:facet>  
                             <f:facet name="input">  
-                                <h:inputText id="qty" value="#{po.matQty}" style="width:100%" required="true" />
-                            </f:facet>  
+                                <p:inputText id="qty" value="#{po.matQty}" style="width:100%" required="true" >
+                                             <f:validator validatorId ="posIntValueValidator" />
+                                </p:inputText>
                         </p:cellEditor>  
                     </p:column>
 
                     <p:column headerText="Unit Price">
-                        <h:outputText value="#{po.unitPrice}" />
-                    </p:column>
+                        <h:outputText value="#{po.unitPrice}" >
+                            <f:convertNumber currencySymbol="$" type="currency" />
+                        </h:outputText>
 
                     <p:column headerText="Delivery Date">
                         <h:outputText value="#{poProdBean.dateString(po.deliveryDate)}" />

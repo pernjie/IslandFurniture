@@ -1256,4 +1256,12 @@ private Boolean ShelfAlreadyExist(String entity, Integer shelfNum, Long id) {
         }
     }
 
+    public Facility getMatMf(Facility fac, Item mat) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query query = em.createQuery("SELECT DISTINCT f FROM " + Facility.class.getName() + " f, " + DistributionMFtoStore.class.getName() + " d WHERE d.store = :fac AND d.mat = :mat AND f = d.mf");
+        query.setParameter("fac", fac);
+        query.setParameter("mat", mat);
+        return (Facility) query.getSingleResult();
+    }
 }

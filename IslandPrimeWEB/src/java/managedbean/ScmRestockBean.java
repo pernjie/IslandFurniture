@@ -59,8 +59,6 @@ public class ScmRestockBean {
     private Double furnHeightRes;
     private Integer resUpperThres;
     private Integer resLowerThres;
-    private Integer upperThresValue;
-    private Integer upperLowerThresValue;
 
     static {
         statuses = new String[4];
@@ -495,6 +493,9 @@ public class ScmRestockBean {
             } else if (pi.getStatus().equals("Cancelled")) {
 
             }
+        }
+        if(ilList.isEmpty()) {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../scm/scm_receive_supplier_inventory.xhtml");
         }
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ilList", ilList);
         FacesContext.getCurrentInstance().getExternalContext().redirect("../scm/scm_view_restock_location.xhtml");
