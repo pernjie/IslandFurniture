@@ -15,7 +15,7 @@
 
                 <p:commandButton value="Start Production" actionListener="#{productionOperationBean.startProduction()}" 
                                  disabled="#{productionOperationBean.disable}"> 
-                    <f:setPropertyActionListener value="#{false}" target="#{bean.disable}"/>   
+                    <f:setPropertyActionListener value="#{false}" target="#{productionOperationBean.disable}"/>   
                 </p:commandButton> 
                 <br></br>
                 <p:commandButton value="End Production" actionListener="#{productionOperationBean.endProduction()}" disabled="#{!(productionOperationBean.disable)}"> 

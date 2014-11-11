@@ -62,27 +62,6 @@ public class ViewScmRestockLocationBean implements Serializable {
         
         System.err.println("restock items: " + restockList.size());
     }
-
-    public Long getItemId(InventoryLocation il) {
-        System.err.println("getInvItem of id: " + il.getInvItem() + " and type: " + il.getItemType());
-        return sb.getInvItemId(il.getInvItem(), il.getItemType());
-    }
-    
-    public String getItemName(InventoryLocation il) { 
-        return sb.getInvItemName(il.getInvItem(), il.getItemType());
-    }
-    
-    public String getZone(InventoryLocation il) {
-        return sb.getZone(il.getInvItem(), il.getItemType());
-    }
-    
-    public String getShelf(InventoryLocation il) {
-        return sb.getShelf(il.getInvItem(), il.getItemType());
-    }
-    
-    public Integer getPosition(InventoryLocation il) {
-        return sb.getPosition(il.getInvItem(), il.getItemType());
-    }
     
     public void quit() throws IOException {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ilList", ilList);
