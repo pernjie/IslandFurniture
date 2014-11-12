@@ -284,7 +284,7 @@ public class MrpialBean implements Serializable {
         if (persisted) {
             try {
                 Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
-                cib.addLog(staff, "Done Material Planning (Furniture) for period " + wh.getPeriod(6));
+                cib.addLog(staff, "Done Material Planning (Furniture) for period " + wh.getPeriod(5));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("../mrp/mrp_home.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();

@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import org.primefaces.event.RowEditEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import session.stateless.KitchenBean;
 import util.exception.DetailsConflictException;
@@ -40,7 +41,8 @@ public class KitchenShelfManagerBean  implements Serializable{
    private InventoryBean inventoryBean;
    @EJB
    private KitchenBean kb;
-    
+    @EJB 
+    private CIBeanLocal cib;
     private String fac;
     private String zone;
     private InvenLoc location;
@@ -106,6 +108,8 @@ public class KitchenShelfManagerBean  implements Serializable{
             statusMessage = "New Shelf Type Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Status Result: "
                     + statusMessage + " (New Shelf Status ID is " + newShelfId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added new Shelf: " + newShelfId);
             setLocation(null);
             setZone(null);
             setShelfId(null);
@@ -136,10 +140,13 @@ public class KitchenShelfManagerBean  implements Serializable{
 
      public void deleteShelf() {
         try {
+            Long sId = selectedShelf.getId();
             kb.removeShelf(selectedShelf);
             allShelf= kb.getAllShelf();
             FacesMessage msg = new FacesMessage("Shelf  Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Shelf: " + sId);
         } catch (ReferenceConstraintException ex) {
             allShelf = kb.getAllShelf();
             statusMessage = ex.getMessage();

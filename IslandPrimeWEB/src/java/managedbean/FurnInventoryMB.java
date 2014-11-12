@@ -10,8 +10,6 @@ import entity.Facility;
 import entity.InventoryMaterial;
 import entity.Item;
 import entity.Material;
-import java.util.ArrayList;
-import java.util.List;
 import entity.Product;
 import entity.Shelf;
 import entity.ShelfSlot;
@@ -23,7 +21,9 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,19 +32,19 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
- 
 import org.primefaces.event.SelectEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
@@ -89,6 +89,8 @@ public class FurnInventoryMB implements Serializable{
     
     @EJB
     private InventoryBean inventoryBean;
+    @EJB
+    private CIBeanLocal cib;
     
     @PostConstruct
     public void init() {
@@ -229,7 +231,8 @@ public class FurnInventoryMB implements Serializable{
             statusMessage = "New Inventory Furniture Record Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Furniture Record Result: "
                     + statusMessage + " (New Inventory Furniture Record ID is " + newInvenFurnId  + ")", ""));
-            
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added New Inventory Record (Furniture): " + newInvenFurnId);
             setFurn(null);
             setZon(null);
             setShelfValue(null);
@@ -248,10 +251,13 @@ public class FurnInventoryMB implements Serializable{
     
      public void deleteInvenFurn() {
         try {
+            Long furnId = selectedInvenFurn.getId();
             inventoryBean.removeFurn(selectedInvenFurn);
             invenFurns = inventoryBean.getAllInvenFurns();
             FacesMessage msg = new FacesMessage("Retail Inventory Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Inventory Record (Furniture): " + furnId);
         } catch (ReferenceConstraintException ex) {
             invenFurns = inventoryBean.getAllInvenFurns();
             statusMessage = ex.getMessage();
