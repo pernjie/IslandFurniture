@@ -7,16 +7,12 @@ package managedbean;
 
 import entity.Customer;
 import entity.Facility;
-import entity.Material;
-import entity.Service;
 import entity.ServiceRecord;
-import entity.ServiceRecordItem;
 import entity.TransactionRecord;
 import enumerator.SvcCat;
 import enumerator.SvcRecStatus;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -29,7 +25,6 @@ import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
 import services.SvcRecService;
 import session.stateless.OpCrmBean;
-import session.stateless.OpCrmBeanLocal;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
 
@@ -42,7 +37,7 @@ import util.exception.ReferenceConstraintException;
 public class ServiceRecordBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal ocb;
+    private OpCrmBean ocb;
     private Long id;
     private String custName;
     private String address;
@@ -64,15 +59,6 @@ public class ServiceRecordBean implements Serializable {
     private List<ServiceRecord> filteredServiceRecords;
     private List<ServiceRecord> serviceRecords;
     private ServiceRecord newServiceRecord = new ServiceRecord();
-//    private ServiceRecordItem svcRecItem;
-//    private SvcCat svcCat;
-//    private Material material;
-//    private Service service;
-//    private Long svcId;
-//    private Long matId;
-//    private Integer svcRecItemQty;
-//    private List<Material> storeMaterials;
-//    private List<Service> storeServices;
     private SvcRecService svcRecService;
 
     @PostConstruct
@@ -178,11 +164,11 @@ public class ServiceRecordBean implements Serializable {
         return svcRecService.getCategories();
     }
 
-    public OpCrmBeanLocal getOcb() {
+    public OpCrmBean getOcb() {
         return ocb;
     }
 
-    public void setOcb(OpCrmBeanLocal ocb) {
+    public void setOcb(OpCrmBean ocb) {
         this.ocb = ocb;
     }
 
@@ -347,62 +333,6 @@ public class ServiceRecordBean implements Serializable {
         this.newServiceRecord = newServiceRecord;
     }
 
-//    public ServiceRecordItem getSvcRecItem() {
-//        return svcRecItem;
-//    }
-//
-//    public void setSvcRecItem(ServiceRecordItem svcRecItem) {
-//        this.svcRecItem = svcRecItem;
-//    }
-//
-//    public SvcCat getSvcCat() {
-//        return svcCat;
-//    }
-//
-//    public void setSvcCat(SvcCat svcCat) {
-//        this.svcCat = svcCat;
-//    }
-//
-//    public Long getSvcId() {
-//        return svcId;
-//    }
-//
-//    public void setSvcId(Long svcId) {
-//        this.svcId = svcId;
-//    }
-//
-//    public Long getMatId() {
-//        return matId;
-//    }
-//
-//    public void setMatId(Long matId) {
-//        this.matId = matId;
-//    }
-//
-//    public Integer getSvcRecItemQty() {
-//        return svcRecItemQty;
-//    }
-//
-//    public void setSvcRecItemQty(Integer svcRecItemQty) {
-//        this.svcRecItemQty = svcRecItemQty;
-//    }
-//
-//    public List<Material> getStoreMaterials() {
-//        return storeMaterials;
-//    }
-//
-//    public void setStoreMaterials(List<Material> storeMaterials) {
-//        this.storeMaterials = storeMaterials;
-//    }
-//
-//    public List<Service> getStoreServices() {
-//        return storeServices;
-//    }
-//
-//    public void setStoreServices(List<Service> storeServices) {
-//        this.storeServices = storeServices;
-//    }
-
     public SvcRecService getSvcRecService() {
         return svcRecService;
     }
@@ -410,21 +340,5 @@ public class ServiceRecordBean implements Serializable {
     public void setSvcRecService(SvcRecService svcRecService) {
         this.svcRecService = svcRecService;
     }
-
-//    public Material getMaterial() {
-//        return material;
-//    }
-//
-//    public void setMaterial(Material material) {
-//        this.material = material;
-//    }
-//
-//    public Service getService() {
-//        return service;
-//    }
-//
-//    public void setService(Service service) {
-//        this.service = service;
-//    }
 
 }

@@ -6,27 +6,20 @@
 package managedbean;
 
 //import static entity.Component_.matId;
-import entity.Customer;
 import entity.Facility;
 import entity.Region;
 import entity.TransactionRecord;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
-import services.SvcRecService;
 import session.stateless.OpCrmBean;
-import session.stateless.OpCrmBeanLocal;
-import util.exception.DetailsConflictException;
-import util.exception.ReferenceConstraintException;
 
 /**
  *
@@ -37,7 +30,7 @@ import util.exception.ReferenceConstraintException;
 public class TransactionRecordBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal ocb;
+    private OpCrmBean ocb;
     private Long id;
     private String userEmail;
     private Facility userFacility;
@@ -84,13 +77,23 @@ public void onRowEdit(RowEditEvent event) {
         }
     }
 
-    public OpCrmBeanLocal getOcb() {
+    public OpCrmBean getOcb() {
         return ocb;
     }
 
-    public void setOcb(OpCrmBeanLocal ocb) {
+    public void setOcb(OpCrmBean ocb) {
         this.ocb = ocb;
     }
+
+    public Region getUserRegion() {
+        return userRegion;
+    }
+
+    public void setUserRegion(Region userRegion) {
+        this.userRegion = userRegion;
+    }
+
+
 
     public Long getId() {
         return id;
