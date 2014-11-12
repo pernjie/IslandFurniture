@@ -48,6 +48,7 @@ import org.primefaces.event.SelectEvent;
 import session.stateless.InventoryBean;
 import util.SMTPAuthenticator;
 import util.exception.DetailsConflictException;
+import util.exception.EntityDneException;
 import util.exception.ReferenceConstraintException;
 
 /**
@@ -138,27 +139,38 @@ public class ReplenishInventoryBean implements Serializable {
 
     }
 
-    public void updateTable() {
+    public void updateTable() throws EntityDneException, DetailsConflictException {
         Integer qty = 0;
         ilList = new ArrayList<InventoryLocation>();
         restockList = new ArrayList<InventoryLocation>();
         System.err.println("location selected: " + loc);
         if (loc.equals("MarketPlace") || loc.equals("Self Service Warehouse")) {
-            invenLoc = InvenLoc.FRONTEND_STORE;
+            if(loc.equals("MarketPlace")) {
+                invenLoc = InvenLoc.FRONTEND_STORE;
+            }
+            else {
+                invenLoc = InvenLoc.FRONTEND_WAREHOUSE;
+            }
             invenFurns = ib.getFurns(fac, invenLoc);
+            System.err.println(invenFurns.size() + " items found");
             for (InventoryMaterial mat : invenFurns) {
                 il = new InventoryLocation();
                 rl = new InventoryLocation();
+                furn = new Item() {};
                 furn = mat.getMat();
+                System.err.println("for item: " + furn.getId() + " " + furn.getName());
                 if (mat.getQuantity() < mat.getUppThreshold()) {
+                    System.err.println("inventory level below upper threshold");
                     il.setInvItem(furn.getId());
                     rl.setInvItem(furn.getId());
                     il.setItemType(1);
                     rl.setItemType(1);
                     qty = mat.getUppThreshold() - mat.getQuantity();
+                    System.err.println("shortfall of: " + qty);
                     restockMat = new InventoryMaterial();
                     restockMat = ib.getInventoryMat(furn, fac, InvenLoc.BACKEND_WAREHOUSE);
                     if (restockMat.getQuantity() > qty) {
+                        System.err.println("sufficient inventory to restock");
                         mat.setQuantity(mat.getUppThreshold());
                         restockMat.setQuantity(restockMat.getQuantity() - qty);
                         il.setItem(furn);
@@ -174,6 +186,7 @@ public class ReplenishInventoryBean implements Serializable {
                         rl.setQty(qty);
                         rl.setMove(true);
                     } else if (restockMat.getQuantity() > 0) {
+                        System.err.println("insufficient inventory to restock");
                         mat.setQuantity(mat.getQuantity() + restockMat.getQuantity());
                         restockMat.setQuantity(0);
                         il.setItem(furn);
@@ -192,15 +205,17 @@ public class ReplenishInventoryBean implements Serializable {
                     // ad hoc production planning
                         sendAdHocProdOrder(fac,mat.getMat());
                     }
-                    ib.persistInventoryMaterial(mat);
-                    ib.persistInventoryMaterial(restockMat);
+                    ib.updateInventory(mat);
+                    ib.updateInventory(restockMat);
                     ilList.add(il);
+                    restockList.add(rl);
                 }
             }
         } else {
             invenProds = ib.getProds(fac, invenLoc);
             for (InventoryProduct prod : invenProds) {
                 il = new InventoryLocation();
+                furn = new Item() {};
                 furn = prod.getProd();
                 if (prod.getQuantity() < prod.getUppThreshold()) {
                     il.setInvItem(furn.getId());
@@ -242,9 +257,10 @@ public class ReplenishInventoryBean implements Serializable {
                     // ad hoc production planning
                         sendAdHocProdOrder(fac,prod.getProd());
                     }
-                    ib.persistInventoryProduct(prod);
-                    ib.persistInventoryProduct(restockProd);
+                    ib.updateInventoryProduct(prod);
+                    ib.updateInventoryProduct(restockProd);
                     ilList.add(il);
+                    restockList.add(il);
                 }
             }
         }

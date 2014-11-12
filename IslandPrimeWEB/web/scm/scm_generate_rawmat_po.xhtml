@@ -24,7 +24,7 @@
                     <p:ajax event="cellEdit" listener="#{poMatBean.onCellEdit}" update=":form:msgs"/>
 
                     <f:facet name="header">
-                        Confirm Purchase Order for Supplier: #{poMatBean.supplier}
+                        Confirm Purchase Order for Supplier: #{poMatBean.sup.name}
                     </f:facet>
 
                     <p:column headerText="Item ID">
@@ -44,6 +44,7 @@
                                 <p:inputText id="qty" value="#{po.matQty}" style="width:100%" required="true" >
                                              <f:validator validatorId ="posIntValueValidator" />
                                 </p:inputText>
+                            </f:facet>
                         </p:cellEditor>  
                     </p:column>
 
@@ -51,7 +52,8 @@
                         <h:outputText value="#{po.unitPrice}" >
                             <f:convertNumber currencySymbol="$" type="currency" />
                         </h:outputText>
-
+                    </p:column>
+                    
                     <p:column headerText="Delivery Date">
                         <h:outputText value="#{poMatBean.dateString(po.deliveryDate)}" />
                     </p:column>
