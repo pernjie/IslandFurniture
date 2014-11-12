@@ -127,7 +127,7 @@
            <p:dialog widgetVar="pAnnounce" header="Announcement" modal="true" showEffect="fade" hideEffect="fade">
                 <h:panelGrid id="announceChatContainer" columns="2" columnClasses="vtop,vtop">
                     <p:outputLabel for="pAnnounceInput" value="Message: " />
-                    <p:inputTextarea id="pAnnounceInput" value="#{chatView.globalMessage}" rows="5" cols="30" />
+                    <p:inputTextarea id="pAnnounceInput" value="#{chatView.announceMessage}" rows="5" cols="30" />
 
                     <p:spacer />
                     <p:commandButton value="Send" actionListener="#{chatView.sendAnnounce}" oncomplete="PF('pAnnounce').hide()" />

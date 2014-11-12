@@ -781,17 +781,19 @@ public class MrpBean implements MrpBeanRemote {
     public boolean checkMfDone(int year, int period, Facility mf) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT f FROM " + Facility.class.getName() +
+        Query query = em.createQuery("SELECT d FROM " + Facility.class.getName() +
                 " f, " + DistributionMFtoStore.class.getName() + " d WHERE "
                 + "f = d.store AND d.mf = :mf");
         query.setParameter("mf", mf);
-        Facility s = (Facility) query.getResultList().get(0);
+        DistributionMFtoStore d = (DistributionMFtoStore) query.getResultList().get(0);
         
         query = em.createQuery("SELECT 1 FROM " + ProductionRecord.class.getName() + 
                 " p WHERE p.year = " + year +
                         " AND p.period = " + period +
-                                " AND p.store = :store");
-        query.setParameter("store", s);
+                                " AND p.store = :store "
+                + "AND p.mat = :mat");
+        query.setParameter("store", d.getStore());
+        query.setParameter("mat", d.getMat());
         return (!query.getResultList().isEmpty());
     }
     
@@ -859,14 +861,17 @@ public class MrpBean implements MrpBeanRemote {
 
     @Override
     public boolean checkMfDoneKit(int year, int period, Facility fac) {
+        Item item = getDistributionKit(fac).get(0);
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         
         Query query = em.createQuery("SELECT 1 FROM " + ProductionRecord.class.getName() + 
                 " p WHERE p.year = " + year +
                         " AND p.period = " + period +
-                                " AND p.store = :store");
+                                " AND p.store = :store "
+                + "AND p.mat = :mat");
         query.setParameter("store", fac);
+        query.setParameter("mat", item);
         return (!query.getResultList().isEmpty());
     }
 }

@@ -36,6 +36,7 @@ public class ChatView implements Serializable {
 
     @ManagedProperty("#{chatUsers}")
     private ChatUsers users;
+    private String announceMessage;
     private String privateMessage;
     private String globalMessage;
     private String email;
@@ -103,6 +104,14 @@ public class ChatView implements Serializable {
         this.globalMessage = globalMessage;
     }
 
+    public String getAnnounceMessage() {
+        return announceMessage;
+    }
+
+    public void setAnnounceMessage(String announceMessage) {
+        this.announceMessage = announceMessage;
+    }
+
     public String getPrivateMessage() {
         return privateMessage;
     }
@@ -136,6 +145,7 @@ public class ChatView implements Serializable {
     }
 
     public void sendGlobal() {
+        System.out.println("sdkfjlmsg: " + globalMessage);
         date = new java.util.Date();
         eventBus.publish(CHANNEL + "*", new Message(ft.format(date) + " " + email + ": " + globalMessage, true));
         ChatRecord cr = new ChatRecord();
@@ -150,14 +160,14 @@ public class ChatView implements Serializable {
     public void sendAnnounce() {
         date = new java.util.Date();
 
-        eventBus.publish(CHANNEL + "*", new Message("ANNOUNCEMENT: " + ft.format(date) + " " + email + ": " + globalMessage, true));
+        eventBus.publish(CHANNEL + "*", new Message("ANNOUNCEMENT: " + ft.format(date) + " " + email + ": " + announceMessage, true));
         ChatRecord cr = new ChatRecord();
         cr.setChannel("announcement");
-        cr.setMessage(globalMessage);
+        cr.setMessage(announceMessage);
         cr.setMsgTime(date_to_string + "  " + ft.format(date));
         cr.setSender(staffuser);
         chatbean.persistChatlog(cr);
-        globalMessage = null;
+        announceMessage = null;
     }
 
     public void sendPrivate() {
@@ -207,7 +217,7 @@ public class ChatView implements Serializable {
         }
 
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../common/CI_Index_Page.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../common/index.xhtml");
         } catch (IOException e) {
             e.printStackTrace();
         }
