@@ -129,10 +129,10 @@ public class PoMatBean implements Serializable {
         Integer qty = Integer.valueOf(newValue.toString());
 
         if (qty <= 0) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Edited Value", "Old: " + oldValue + ", New:" + newValue);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } else if (newValue != null && !newValue.equals(oldValue)) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Edited Value", "Old: " + oldValue + ", New:" + newValue);
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
     }
