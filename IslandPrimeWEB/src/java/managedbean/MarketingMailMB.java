@@ -11,34 +11,14 @@ import entity.Staff;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Properties;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.mail.Message;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
-import util.SMTPAuthenticator;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +28,15 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
  
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
@@ -65,9 +51,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import session.stateless.OpCrmBeanLocal;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+import session.stateless.OpCrmBean;
+import util.SMTPAuthenticator;
 /**
  *
  * @author Anna
@@ -88,7 +80,7 @@ public class MarketingMailMB implements Serializable {
     //private static final File LOCATION = new File("../resources/images/");
     
     @EJB
-    OpCrmBeanLocal opcrmBean;
+    OpCrmBean opcrmBean;
 
     @PostConstruct
     public void init() {

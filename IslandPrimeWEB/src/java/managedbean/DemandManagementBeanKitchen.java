@@ -95,7 +95,7 @@ public class DemandManagementBeanKitchen implements Serializable {
         if (valid == true) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("weeklyDemand", weeklyDemand);
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.redirect("kit_mrp.xhtml");
+            context.redirect("kitchen_mrp.xhtml");
         }
     }
 }
