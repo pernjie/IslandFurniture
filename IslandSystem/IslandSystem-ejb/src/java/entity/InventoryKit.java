@@ -62,7 +62,6 @@ public class InventoryKit implements Serializable {
     @JoinColumn(name = "INGR", referencedColumnName = "ID")
     @ManyToOne
     private Item ingr;
-    @Size(max = 2)
     @Column(name = "zone")
     private String zone;
     @JoinColumn(name = "SHELF", referencedColumnName = "ID")

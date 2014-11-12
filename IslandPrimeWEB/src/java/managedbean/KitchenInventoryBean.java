@@ -79,7 +79,6 @@ public class KitchenInventoryBean implements Serializable {
     private List<InventoryKit> inventoryProds;
     private InvenLoc loc;
     private Facility fac;
-    private Integer qty;
 
     @EJB
     private KitchenBean kb;
@@ -232,18 +231,25 @@ public class KitchenInventoryBean implements Serializable {
         InventoryKit ik = new InventoryKit();
         try {
             ik = kb.getInventoryKit(pdt, fac);
+            System.out.println("ik: " + ik.getId());
         } catch (Exception e) {
-            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update Inventory Quantity: "
+                    + "Item not found", ""));
+//            e.printStackTrace();
         }
-        Integer value = ik.getQuantity() - qty;
-        if (value > 0) {
-            ik.setQuantity(qty);
+        System.out.println("qty: " + ik.getQuantity());
+        int value = ik.getQuantity() - quantity;
+        System.out.println("value: " + value);
+        if (value >= 0) {
+            ik.setQuantity(value);
             try {
                 kb.updateInventoryKit(ik);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("error updating inventorykit");
             }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Inventory Quantity: "
+                    + "Successful", ""));
         }
         else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update Inventory Quantity: "

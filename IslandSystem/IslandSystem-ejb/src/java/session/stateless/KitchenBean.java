@@ -260,12 +260,13 @@ public class KitchenBean { //implements ScmBeanRemote {
         return 0;
     }
 
-    public InventoryKit getInventoryKit(Item mat, Facility fac) {
+    public InventoryKit getInventoryKit(Item ingr, Facility fac) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT im FROM " + InventoryKit.class.getName() + " im WHERE im.mat = :mat AND im.fac = :fac AND im.location = '5'");
+        Query query = em.createQuery("SELECT im FROM " + InventoryKit.class.getName() + " im WHERE im.ingr = :ingr AND im.fac = :fac AND im.location = :loc");
         query.setParameter("fac", fac);
-        query.setParameter("mat", mat);
+        query.setParameter("ingr", ingr);
+        query.setParameter("loc", InvenLoc.KITCHEN);
         List<InventoryKit> imList = query.getResultList();
         if (imList.isEmpty()) {
             System.err.println("no invmat found");
@@ -615,7 +616,7 @@ public class KitchenBean { //implements ScmBeanRemote {
         
         //Integer genCategory = 0; 
          
-        Query query = em.createQuery("SELECT im FROM " + InventoryKit.class.getName() + " im WHERE im.fac = :fac AND im.mat IN (SELECT m FROM " + Ingredient.class.getName() + " m)");
+        Query query = em.createQuery("SELECT im FROM " + InventoryKit.class.getName() + " im WHERE im.fac = :fac AND im.ingr IN (SELECT m FROM " + Ingredient.class.getName() + " m)");
         //query.setParameter("genCategory", genCategory);
         query.setParameter("fac", fac);
         
@@ -727,38 +728,39 @@ public class KitchenBean { //implements ScmBeanRemote {
 
         ShelfSlot tempSlot = (ShelfSlot) q2.getSingleResult();
 
-       try {
-                        tempSlot.setOccupied(true);
-                        em.persist(tempSlot);
-                        System.out.println("VALUE: "+tempSlot.getOccupied());
-                        InventoryKit p = new InventoryKit();     
-                        p.setFac(em.find(Facility.class, fac.getId()));
-                        p.setIngr(pdt);
-                        p.setZone(zon);
-                        p.setShelf(em.find(Shelf.class, shelfValueLong));
-                        p.setShelfSlot(tempSlot);
-                        p.setQuantity(0);
-                        p.setUppThreshold(upperThres);
-                        p.setLowThreshold(lowerThres);
-                        p.setLocation(loc);
-                        p.setIngLength(pdtLength);
-                        p.setIngBreadth(pdtBreadth);
-                        p.setIngHeight(pdtHeight);
-                        em.persist(p);
+        try {
+            tempSlot.setOccupied(true);
+            em.persist(tempSlot);
+            System.out.println("VALUE: " + tempSlot.getOccupied());
+            InventoryKit p = new InventoryKit();
+            p.setFac(em.find(Facility.class, fac.getId()));
+            p.setIngr(pdt);
+            p.setZone(zon);
+            p.setShelf(em.find(Shelf.class, shelfValueLong));
+            p.setShelfSlot(tempSlot);
+            p.setQuantity(0);
+            p.setUppThreshold(upperThres);
+            p.setLowThreshold(lowerThres);
+            p.setLocation(loc);
+            p.setIngLength(pdtLength);
+            p.setIngBreadth(pdtBreadth);
+            p.setIngHeight(pdtHeight);
+            em.persist(p);
+            em.flush();
 
-                        return p.getId();
+            return p.getId();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                        return null;
+            return null;
 
-                    } finally {
-                        em.close();
-                    }
+        } finally {
+            em.close();
+        }
     }
-      
-      
+
+
     public void removeRetail(InventoryKit pdt) throws ReferenceConstraintException {
         try {
             EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
