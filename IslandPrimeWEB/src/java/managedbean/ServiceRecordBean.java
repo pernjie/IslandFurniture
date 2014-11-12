@@ -8,6 +8,7 @@ package managedbean;
 import entity.Customer;
 import entity.Facility;
 import entity.ServiceRecord;
+import entity.Staff;
 import entity.TransactionRecord;
 import enumerator.SvcCat;
 import enumerator.SvcRecStatus;
@@ -24,6 +25,7 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
 import services.SvcRecService;
+import session.stateless.CIBeanLocal;
 import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
@@ -38,6 +40,8 @@ public class ServiceRecordBean implements Serializable {
 
     @EJB
     private OpCrmBean ocb;
+    @EJB
+    private CIBeanLocal cib;
     private Long id;
     private String custName;
     private String address;
@@ -87,8 +91,11 @@ public class ServiceRecordBean implements Serializable {
 
             if (persisted) {
                 try {
+                    Long servId = selectedServiceRecord.getId();
                     FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("selectedServiceRecord", selectedServiceRecord);
                     FacesContext.getCurrentInstance().getExternalContext().redirect("op_add_item_to_selected_service_record.xhtml");
+                    Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+                    cib.addLog(staff, "Added New Service Record: " + servId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -107,10 +114,14 @@ public class ServiceRecordBean implements Serializable {
 
     public void deleteServiceRecord() {
         try {
+            Long servId = selectedServiceRecord.getId();
             ocb.removeServiceRecord(selectedServiceRecord);
             serviceRecords = ocb.getServiceRecords(userFacility);
             FacesMessage msg = new FacesMessage("Service Price Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Service Record: " + servId);
+            
         } catch (ReferenceConstraintException ex) {
             serviceRecords = ocb.getServiceRecords(userFacility);
             statusMessage = ex.getMessage();

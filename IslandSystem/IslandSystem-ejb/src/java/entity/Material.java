@@ -27,7 +27,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Material.findByGenCategory", query = "SELECT m FROM Material m WHERE m.genCategory = :genCategory"),
     @NamedQuery(name = "Material.findAllMaterial", query = "SELECT m FROM Material m WHERE NOT m.genCategory = 0"),
     @NamedQuery(name = "Material.findAllRawMat", query = "SELECT m FROM Material m WHERE m.genCategory = 0"),
-    @NamedQuery(name = "Material.findByMatCategory", query = "SELECT m FROM Material m WHERE m.matCategory = :matCategory")})
+    @NamedQuery(name = "Material.findByMatCategory", query = "SELECT m FROM Material m WHERE m.matCategory = :matCategory"),
+    @NamedQuery(name = "Material.findAllFurniture", query = "SELECT m FROM Material m WHERE NOT m.genCategory = 0")})
 public class Material extends Item implements Serializable {
 
     @Column(name = "GEN_CATEGORY")

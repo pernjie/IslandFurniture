@@ -8,6 +8,7 @@ package managedbean;
 import entity.Campaign;
 import entity.Facility;
 import entity.Region;
+import entity.Staff;
 import enumerator.BusinessArea;
 import enumerator.Gender;
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
@@ -52,6 +54,8 @@ public class CampaignBean implements Serializable {
     private String statusMessage;
     @EJB
     private OpCrmBean ocb;
+    @EJB
+    private CIBeanLocal cib;
     private Gender targetGender;
     private BusinessArea businessArea;
     private Campaign selectedCampaign;
@@ -139,6 +143,8 @@ public class CampaignBean implements Serializable {
                 statusMessage = "New Campaign Created Successfully.";
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Campaign Result: "
                         + statusMessage + " (New Campaign ID is " + newCampaignId + ")", ""));
+                Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+                cib.addLog(staff, "Added New Campaign: " + newCampaignId);
             }
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
@@ -156,10 +162,13 @@ public class CampaignBean implements Serializable {
 
     public void deleteCampaign() {
         try {
+            Long CamId = selectedCampaign.getId();
             ocb.removeCampaign(selectedCampaign);
             campaigns = ocb.getAllCampaigns();
             FacesMessage msg = new FacesMessage("Campaign Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Campaign: " + CamId);
         } catch (ReferenceConstraintException ex) {
             campaigns = ocb.getAllCampaigns();
             statusMessage = ex.getMessage();
