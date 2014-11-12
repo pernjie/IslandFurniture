@@ -24,7 +24,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -39,7 +39,7 @@ import session.stateless.ScmBean;
 import util.SMTPAuthenticator;
 
 @ManagedBean(name = "poMatBean")
-@SessionScoped
+@ViewScoped
 public class PoMatBean implements Serializable {
 
     @EJB
@@ -98,25 +98,26 @@ public class PoMatBean implements Serializable {
 
         for (SuppliesMatToFac smf : suppliesMatToFac) {
             //System.err.println("function: iterate supplies");
-            MaterialPoDetailsClass poDetail = new MaterialPoDetailsClass();
-                //item = smf.getMat();
-            //System.err.println("function: product " + product.getName());
-            poDetail.setItem(smf.getMat());
-                //to do: check if roll over to next year
             //System.err.println("function: current date is " + week);
-            delivery_week = week + smf.getLeadTime();
+            delivery_week = week + smf.getLeadTime() + 1;
             delivery_year = year;
             //System.err.println("function: generate delivery date " + delivery_week);
             delivery_date = (Date) wh.getDate(delivery_year, delivery_week);
-            //System.err.println("function: delivery date generated " + delivery_date);
-            poDetail.setMatQty(sb.getMatQtyMaterial(fac, smf.getMat(), delivery_week, delivery_year));
-            poDetail.setUnitPrice(smf.getUnitPrice());
-            //System.err.println("function: mat qty " + sb.getMatQty(fac, product, delivery_week, delivery_year));
-            poDetail.setDeliveryDate(delivery_date);
-            materialPoDetailsClass.add(poDetail);
+            //System.err.println("function: delivery date generated " + delivery_date)
+            if (!sb.checkPoMatExist(fac, sup, smf.getMat(), delivery_date)) {
+                MaterialPoDetailsClass poDetail = new MaterialPoDetailsClass();
+                //item = smf.getMat();
+                //System.err.println("function: product " + product.getName());
+                poDetail.setItem(smf.getMat());
+                //to do: check if roll over to next year    
+                poDetail.setMatQty(sb.getMatQtyMaterial(fac, smf.getMat(), delivery_week, delivery_year));
+                poDetail.setUnitPrice(smf.getUnitPrice());
+                //System.err.println("function: mat qty " + sb.getMatQty(fac, product, delivery_week, delivery_year));
+                poDetail.setDeliveryDate(delivery_date);
+                materialPoDetailsClass.add(poDetail);
+            }
         }
-        
-        if(materialPoDetailsClass.isEmpty()) {
+        if (materialPoDetailsClass.isEmpty()) {
             statusMessage = "There is no pending purchase order to generate for the supplier this week.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Generate Purchase Order Result: "
                     + statusMessage, ""));
@@ -183,6 +184,7 @@ public class PoMatBean implements Serializable {
         poRecord.setStatus("Sent");
         sb.persistPo(poRecord);
         sb.persistPoDetails(piList, poRecord);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("poRecord", poRecord);
         FacesContext.getCurrentInstance().getExternalContext().redirect("../scm/scm_view_rawmat_po.xhtml");
         //sendPo();
         //}

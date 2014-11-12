@@ -24,7 +24,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Message;
 import javax.mail.Multipart;
@@ -39,38 +39,39 @@ import session.stateless.ScmBean;
 import util.SMTPAuthenticator;
 
 @ManagedBean(name = "productionOperationBean")
-@ViewScoped
+@ApplicationScoped
 public class ProductionOperationBean implements Serializable {
 
     private String loggedInEmail;
     private Date currDate;
+    private Date productionDate;
     private Facility fac;
     private Item item;
     private Integer week;
     private Integer year;
     private WeekHelper wh = new WeekHelper();
-    
+
     private Double furnLengthRes;
     private Double furnBreadthRes;
     private Double furnHeightRes;
     private Integer resUpperThres;
     private Integer resLowerThres;
     private boolean disable;
-    
+
     String emailServerName = "mailauth.comp.nus.edu.sg";
 // Replace with your real name and unix email address
     String emailFromAddress = "Island Furniture System Administrator <a0101309@u.nus.edu>";
 // Replace with your real name and NUSNET email address
     String mailer = "JavaMailer";
 
-
-    
     @EJB
     private ScmBean sb;
 
     @PostConstruct
     public void init() {
         System.err.println("function: init()");
+        productionDate = new Date(2014,11,11);
+        System.err.println("last production date: " + productionDate);
         loggedInEmail = new String();
         loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
         fac = sb.getFac(loggedInEmail);
@@ -78,39 +79,55 @@ public class ProductionOperationBean implements Serializable {
         currDate = wh.getCurrDate();
         week = wh.getWeek();
         year = wh.getYear();
-        this.disable= false;
+        this.disable = false;
+        System.err.println("disable: " + disable);
     }
 
     public void startProduction() {
-        System.out.println("Inventory Update for raw materials on: " + new Date());
-        currDate = wh.getCurrDate();
-        List<MrpRecord> mrprec = new ArrayList<MrpRecord>();
-        mrprec = sb.getMrpRecord(fac, week, year);
-
-        if (!mrprec.isEmpty()) {
-            for (MrpRecord mr : mrprec) {
-                System.err.println("function: iterate production record: " + mr.getMat());
-                InventoryMaterial im = new InventoryMaterial();
-                im = sb.getInventoryMat(mr);
-                System.err.println("function: inventorymaterial " + im.getMat() + " at fac " + im.getFac() + " with qty " + im.getQuantity());
-
-                Integer qty = im.getQuantity() + wh.getDailyDemand(mr.getRequirement(), wh.getDay());
-                System.err.println("qty: " + qty);
-                if (qty > 0) {
-                    im.setQuantity(qty);
-                    sb.persistInventoryMaterial(im);
-                }
-                if (qty < im.getLowThreshold()) {
-                    System.err.println("Qty below lower threshold");
-                    this.disable = true;
-                } else {
-                    System.err.println("Insufficient Inventory");
-                    sendAdHocPurchaseOrder(fac,im.getMat());
-                }
+        if (wh.getDateString(currDate) != wh.getDateString(productionDate)) {
+            productionDate = currDate;
+            System.out.println("Production operation for: " + new Date());
+            currDate = wh.getCurrDate();
+            List<MrpRecord> mrprec = new ArrayList<MrpRecord>();
+            try {
+                mrprec = sb.getMrpRecord(fac, week, year);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } else {
-            System.out.println("No mrp record found");
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Production Available", ""));
+
+            if (!mrprec.isEmpty()) {
+                for (MrpRecord mr : mrprec) {
+                    System.err.println("function: iterate production record: " + mr.getMat());
+                    InventoryMaterial im = new InventoryMaterial();
+                    try {
+                        im = sb.getInventoryMat(mr);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.err.println("function: inventorymaterial " + im.getMat() + " at fac " + im.getFac() + " with qty " + im.getQuantity());
+
+                    Integer qty = im.getQuantity() - wh.getDailyDemand(mr.getRequirement(), wh.getDay());
+                    System.err.println("qty: " + qty);
+                    if (qty > 0) {
+                        im.setQuantity(qty);
+                        sb.updateInventoryMat(im);
+                        this.disable = true;
+                        System.err.println("disable: " + disable);
+                        if (qty < im.getLowThreshold()) {
+                            System.err.println("Qty below lower threshold");
+                        }
+                    } else {
+                        System.err.println("Insufficient Inventory");
+                        sendAdHocPurchaseOrder(fac, im.getMat());
+                    }
+                }
+            } else {
+                System.out.println("No mrp record found");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No Production Available", ""));
+            }
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is no more production for today", ""));
         }
     }
 
@@ -214,14 +231,14 @@ public class ProductionOperationBean implements Serializable {
             System.out.println("No production record");
         }
     }
-    
-        public void sendAdHocPurchaseOrder(Facility fac, Item mat) {
+
+    public void sendAdHocPurchaseOrder(Facility fac, Item mat) {
         System.err.println("send ad hoc prod order");
         Supplier sup = new Supplier();
         sup = sb.getSupplier(fac, mat);
         String toEmailAddress = "islandFurnituremf@gmail.com";
         System.out.println("send to: " + toEmailAddress);
-        
+
         try {
             Properties props = new Properties();
             props.put("mail.transport.protocol", "smtp");
@@ -231,39 +248,38 @@ public class ProductionOperationBean implements Serializable {
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.debug", "true");
             javax.mail.Authenticator auth = new SMTPAuthenticator();
-            Session session = Session.getInstance(props, auth); 
+            Session session = Session.getInstance(props, auth);
             session.setDebug(true);
             Message msg = new MimeMessage(session);
             if (msg != null) {
                 msg.setFrom(InternetAddress.parse(emailFromAddress, false)[0]);
                 msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmailAddress, false));
                 msg.setSubject("Ad Hoc Purchase Request for " + mat.getName() + " from " + fac.getName() + "\n\n");
-                
+
                 //Create and fill first part
                 MimeBodyPart header = new MimeBodyPart();
                 header.setText("Hi " + fac.getName() + ".\n\n");
-                
+
                 //Create and fill second part
                 MimeBodyPart body = new MimeBodyPart();
                 body.setText("This is a Ad Hoc Production request from " + fac.getName() + ".\n\n");
-                
+
                 //Create and fill third part
                 MimeBodyPart linkText = new MimeBodyPart();
                 linkText.setText("The inventory level for " + mat.getName() + " is currently running low.");
-                
+
                 //Create the Multipart
                 Multipart mp = new MimeMultipart();
                 mp.addBodyPart(header);
                 mp.addBodyPart(body);
                 mp.addBodyPart(linkText);
-                
+
                 //Set Message Content
                 msg.setContent(mp);
-                
+
                 //String messageText = "Welcome to Island Furniture Family, " +name+ ".\n\n Here's the autogenerated password: " + password +"\n\n";
                 //msg.setText(messageText);
                 //msg.setDisposition(Part.INLINE);
-                
                 msg.setHeader("X-Mailer", mailer);
                 Date timeStamp = new Date();
                 msg.setSentDate(timeStamp);
@@ -274,10 +290,12 @@ public class ProductionOperationBean implements Serializable {
             throw new EJBException(e.getMessage());
         }
     }
+
     public boolean isDisable() {
-       return disable;
+        return disable;
     }
+
     public void setDisable(boolean disable) {
-       this.disable = disable;
+        this.disable = disable;
     }
 }
