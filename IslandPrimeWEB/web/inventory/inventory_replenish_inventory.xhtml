@@ -33,7 +33,7 @@
                     <p:ajax event="rowEdit" listener="#{replenishInventoryBean.onRowEdit}" update=":formMain:msgs" />
                     <p:ajax event="rowEditCancel" listener="#{replenishInventoryBean.onRowCancel}" update=":formMain:msgs" />
 
-                    <p:column  headerText="Furniture Inventory ID" sortBy="#{invenFurn.item.id}" filterBy="#{invenFurn.item.id}" filterMatchMode="contains" >
+                    <p:column  headerText="Item ID" sortBy="#{invenFurn.item.id}" filterBy="#{invenFurn.item.id}" filterMatchMode="contains" >
                         <h:outputText value="#{invenFurn.item.id}" /> 
                     </p:column>
 

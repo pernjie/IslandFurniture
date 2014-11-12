@@ -265,13 +265,14 @@ public class ScmBean { //implements ScmBeanRemote {
     public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer period, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + PurchasePlanningRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.period = :period AND mr.year = :year");
+        Query query = em.createQuery("SELECT p FROM " + PurchasePlanningRecord.class.getName() + " p WHERE p.store = :fac AND p.prod = :mat AND p.period = :period AND p.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
-        query.setParameter("week", week);
         query.setParameter("period", period);
         query.setParameter("year", year);
         if (query.getSingleResult() != null) {
+            System.err.println("purchase planning record found for period: " + period + " and week: " + week);
+            week += 1;
             if (week == 1) {
                 return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW1();
             }
@@ -288,6 +289,7 @@ public class ScmBean { //implements ScmBeanRemote {
                 return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW5();
             }
         } else {
+            System.err.println("no purchase planning records found");
             return 0;
         }
     }
