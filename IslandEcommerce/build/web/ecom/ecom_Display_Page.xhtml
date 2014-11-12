@@ -37,15 +37,12 @@
 
             <p:dataGrid var="furn" value="#{displayPageBean.furns}" columns="3" id="furns">
                 <p:panel style="text-align:center">
-                    <h:panelGrid columns="1" style="width:100%">
                         <h:commandLink action="#{displayPageBean.itemDetails}">
                             <f:setPropertyActionListener target="#{displayPageBean.itemId}" value="#{furn.item.id}"/>
                             <h:outputText value="#{furn.item.name}" />
                         </h:commandLink>
                         <br/>
                         <h:outputText value="#{displayPageBean.calcItemPrice(furn.price, furn.region)}" />
-
-                    </h:panelGrid>
                 </p:panel>
 
             </p:dataGrid>

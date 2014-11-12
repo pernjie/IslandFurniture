@@ -10,11 +10,8 @@
     <ui:define name="content">
        <h:form id="formMain">
             <p:growl id="msgs" showDetail="true"/>
-            <h1>View Purchase Planning Records</h1>
-            <p:panel header="View Purchase Planning Records">
-
-
-
+            <b:panel>
+                <f:facet name="heading"><h3><b>View Purchase Planning Records</b></h3></f:facet>
                 <p:dataTable widgetVar = "purchasePlanningRecordTable" id = "purchasePlanningRecordTable" var="purchasePlanningRecord" value="#{purchasePlanningRecordManagerBean.purchasePlanningRecords}"
                              paginator="true" rows="10" emptyMessage="No Purchase Planning Record found with given criteria" rowKey="#{purchasePlanningRecord.id}"
                              selection="#{purchasePlanningRecordManagerBean.selectedPurchasePlanningRecord}" selectionMode="single" filteredValue="#{purchasePlanningRecordManagerBean.filteredPurchasePlanningRecords}" >
@@ -60,7 +57,7 @@
                     </p:column>
 
                 </p:dataTable>
-            </p:panel>
+            </b:panel>
         </h:form>
     </ui:define>
 
