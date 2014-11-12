@@ -14,7 +14,7 @@
                 <f:facet name="heading"><h1>Production Operation</h1></f:facet>
 
                 <p:commandButton value="Start Production" actionListener="#{productionOperationBean.startProduction()}" 
-                                 disabled="#{productionOperationBean.disable}"> 
+                                 disabled="#{productionOperationBean.disable}" update="@form"> 
                     <f:setPropertyActionListener value="#{false}" target="#{productionOperationBean.disable}"/>   
                 </p:commandButton> 
                 <br></br>
