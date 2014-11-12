@@ -23,6 +23,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Local;
+import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -39,7 +40,7 @@ import util.exception.ReferenceConstraintException;
  * @author nataliegoh
  */
 @Stateful
-@Local
+@LocalBean
 public class CIBean implements CIBeanLocal {
 
     // Add business logic below. (Right-click in editor and choose
@@ -208,10 +209,12 @@ public class CIBean implements CIBeanLocal {
     }
 
     @Override
-    public List<Log> getAllLog() {
+    public List<Log> getAllLog(Facility fac, Staff staff) {
         System.out.println("FMSBean: Entered getAllLog method");
         Query q;
-        q = em.createQuery("SELECT d FROM Log d");
+        q = em.createQuery("SELECT l FROM " + Log.class.getName() + " l, " + Staff.class.getName() + " s WHERE l.email = :email AND l.email = s.email AND s.fac = :fac");
+        q.setParameter("email", staff.getEmail());
+        q.setParameter("fac", fac);
         List<Log> logList = new ArrayList();
         for (Object o : q.getResultList()) {
             Log d = (Log) o;
@@ -289,6 +292,10 @@ public class CIBean implements CIBeanLocal {
     @Override
     public void remove(Staff staff) {
         Query q = em.createQuery("DELETE FROM Staff s where s.email= :param");
+        q.setParameter("param", staff.getEmail());
+        q.executeUpdate();
+        em.flush();
+        q = em.createQuery("DELETE FROM Log s where s.email= :param");
         q.setParameter("param", staff.getEmail());
         q.executeUpdate();
         em.flush();

@@ -6,12 +6,15 @@ package managedbean;
  * and open the template in the editor.
  */
 
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-import session.stateless.CIBeanLocal;
+import entity.Facility;
 import entity.Log;
+import entity.Staff;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.Dependent;
+import javax.faces.context.FacesContext;
+import javax.inject.Named;
+import session.stateless.CIBeanLocal;
 
 /**
  *
@@ -25,6 +28,8 @@ public class ViewAllLogBean {
     private CIBeanLocal fmsbean;
     private List<Log> allLog;
     private String loggedInEmail;
+    private Staff staff;
+    private Facility fac;
 
     /**
      * Creates a new instance of viewLogManagedBean
@@ -33,11 +38,20 @@ public class ViewAllLogBean {
     }
     
     public List<Log> getAllLog() {
-        allLog = fmsbean.getAllLog();
+        allLog = fmsbean.getAllLog(getFac(), getStaff());
         return allLog;
     }
 
     public void setAllLog(List<Log> allLog) {
         this.allLog = allLog;
     }
+
+    public Staff getStaff() {
+        return (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+    }
+
+    public Facility getFac() {
+        return (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
+    }
+    
 }

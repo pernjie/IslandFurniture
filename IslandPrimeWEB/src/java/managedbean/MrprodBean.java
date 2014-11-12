@@ -1,7 +1,7 @@
 package managedbean;
 
-import classes.ItemWeek;
 import classes.ItemClass;
+import classes.ItemWeek;
 import classes.MrpItemClass;
 import classes.StoreClass;
 import classes.StoreClassWeekly;
@@ -12,6 +12,7 @@ import entity.Item;
 import entity.MrpRecord;
 import entity.Product;
 import entity.PurchasePlanningRecord;
+import entity.Staff;
 import entity.SuppliesProdToFac;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import session.stateless.CIBeanLocal;
 import session.stateless.MrpBean;
 
 @ManagedBean(name = "mrprodBean")
@@ -32,6 +34,8 @@ public class MrprodBean {
 
     @EJB
     private MrpBean mb;
+    @EJB
+    private CIBeanLocal cib;
     private List<ItemClass> prods;
     private List<MrpItemClass> mrprods;
     private boolean persisted;
@@ -253,6 +257,8 @@ public class MrprodBean {
 
         if (persisted) {
             try {
+                Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+                cib.addLog(staff, "Done Material Planning (Retail) for period " + wh.getPeriod(6));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("../mrp/mrp_home.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();

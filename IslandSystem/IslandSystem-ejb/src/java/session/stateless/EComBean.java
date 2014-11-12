@@ -55,7 +55,7 @@ public class EComBean {//implements EComBeanLocal{
     public Material getItem(Long itemId) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        
+
         System.out.println("itemid: !" + itemId);
         Query q = em.createNamedQuery("Material.findById");
         q.setParameter("id", itemId);
@@ -146,7 +146,7 @@ public class EComBean {//implements EComBeanLocal{
 
         return resItems;
     }
-    
+
     //@Override
     public void unsubscribe(long custId) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
@@ -159,7 +159,7 @@ public class EComBean {//implements EComBeanLocal{
     }
 
     //@Override
-    public Long addNewCustomer(Customer customer) throws DetailsConflictException {
+     public Long addNewCustomer(Customer customer) throws DetailsConflictException {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         String email = customer.getEmail();
@@ -182,6 +182,15 @@ public class EComBean {//implements EComBeanLocal{
         } else {
             throw new DetailsConflictException("Email exists: " + customer.getEmail());
         }
+    }
+
+    public Customer getCustomerDetails(String email) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createQuery("SELECT c FROM Customer c where c.email= :param");
+        q.setParameter("param", email);
+        Customer customer = (Customer) q.getSingleResult();
+        return customer;
     }
 
     private Boolean emailAlreadyExist(String email) {
@@ -216,7 +225,7 @@ public class EComBean {//implements EComBeanLocal{
         return encrypted;
 
     }
-    
+
     //@Override
     public List<Customer> getAllCustomers() {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
@@ -224,7 +233,7 @@ public class EComBean {//implements EComBeanLocal{
         Query query = em.createNamedQuery("Customer.findAll");
         return query.getResultList();
     }
-    
+
     //@Override
     public List<Country> getAllCountries() {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");

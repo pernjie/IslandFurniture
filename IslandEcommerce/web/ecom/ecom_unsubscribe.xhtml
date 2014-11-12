@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:b="http://bootsfaces.net/ui">
+    
+    <h:head>
+        <title>Island Furniture Management System</title>
+        <meta name="author" content="The Author"></meta>
+    </h:head>
+    
+    <h:body class="background.css" style="padding: 60px;">
+        <b:navBar brand="Island Furniture Management System" brandHref="login.xhtml" inverse="true" fixed="true">
+            <b:navbarLinks>
+            </b:navbarLinks>
+        </b:navBar>
+    
+    <b:column span="8" offset="2">
+		<h:form> 
+			<p:growl id="growl" />
+ 
+				<p:panel id="pnl" header="Unsubscribe to Island Furniture's Mailing List" style="margin-top:10px">
+				<p:messages id="messages" />
+				<h:panelGrid columns="3" id="grid" cellpadding="5">
+					<p:outputLabel for="unsubscribeEmail" value="Email:" />
+					<p:inputText id="unsubscribeEmail" value="#{customerBean.unsubscribeEmail}" required="true"/>
+					<p:message for="unsubscribeEmail" />
+				</h:panelGrid>
+ 
+				<p:commandButton value="Confirm" actionListener="#{customerBean.save}" update="growl grid" oncomplete="handleForm(xhr, status, args)"/>
+			</p:panel>
+ 
+			<p:spotlight target="pnl" widgetVar="spot"/>
+		</h:form>
+    </b:column>
+    </h:body>
+</ui:composition>

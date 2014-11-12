@@ -68,6 +68,7 @@ import javax.mail.internet.MimeMultipart;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import session.stateless.OpCrmBean;
+import org.primefaces.model.UploadedFile;
 /**
  *
  * @author Anna

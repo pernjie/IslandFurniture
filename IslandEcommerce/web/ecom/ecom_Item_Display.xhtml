@@ -16,19 +16,41 @@
                                             style="width:100%"> 
                                 <p:ajax event="itemSelect" process="@this"  listener="#{displayPageBean.handleSelect}" />
                             </p:autoComplete>
-                            <p:commandButton value="Search" actionListener="#{displayPageBean.search}" ajax="false" />
+                            <style>
+                            .blueButton .ui-button-text {
+                               font-size:15px;
+                               color: #043852;
+                               background-color: #9DD7F5;
+                            }    
+                            </style>
+                            <p:commandButton value="Search" actionListener="#{displayPageBean.search}" ajax="false" styleClass="blueButton"/>
                         </p:row>
                     </h:form>
+                    <br/>
                     
                     <img src="../resources/images/furn/#{itemDetailsBean.selectedItemId}.gif" height="171" width="200" />
                     <br/>
                     <h:outputText value="#{itemDetailsBean.selectedItemRes.name}" />
                     <br/>
                     <h:outputText value="#{itemDetailsBean.calcItemPrice()}" />
-                       <br/>
+                    <br/>
                     <h:outputText value="#{itemDetailsBean.selectedItemRes.longDesc}" />
                     <br/>
                     <h:outputText value="#{itemDetailsBean.selectedItemRes.shortDesc}" />
+                    <br/>
+
+                    <p:panel id="buttonpanel">
+                        <style>
+                        .blueButton .ui-button-text {
+                           font-size:15px;
+                           color: #043852;
+                           background-color: #9DD7F5;
+                        }    
+                        </style>
+                    <p:commandButton immediate="true" process="@this" value="Add" actionListener="#{itemDetailsBean.addCart}" ajax="true" rendered="#{!itemDetailsBean.added}" update=":form:buttonpanel" styleClass="blueButton"/>
+                    <p:commandButton immediate="true" process="@this" value="View List" action="ecom_view_cart.xhtml" ajax="true" rendered="#{itemDetailsBean.added}" styleClass="blueButton"/>
+                    <p:commandButton immediate="true" process="@this" value="Back" action="ecom_Display_Page.xhtml" ajax="true" rendered="#{itemDetailsBean.added}" styleClass="blueButton"/>
+                    </p:panel>
                 </h:form>
             </ui:define>
 

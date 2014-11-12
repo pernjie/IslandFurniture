@@ -145,11 +145,12 @@ public class CIBeanLocalTest {
             staff.setEmail("test@if.com");
             staff.setPassword("ilikecakes");
             staff.setContact("995");
+            staff.setFac(ciBeanRemote.getAllFacilities().get(0));
             ciBeanRemote.createStaff(staff);
         } catch (DetailsConflictException e) {
             System.out.println("create error");
         }
-        assertTrue(ciBeanRemote.getAllLog().size()>0);
+        assertTrue(ciBeanRemote.getAllLog(staff.getFac(), staff).size()>0);
         ciBeanRemote.remove(staff);
     }
     
