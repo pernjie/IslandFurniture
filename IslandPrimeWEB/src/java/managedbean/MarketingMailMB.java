@@ -83,7 +83,7 @@ public class MarketingMailMB implements Serializable {
     
     String emailServerName = "mailauth.comp.nus.edu.sg";
 // Replace with your real name and unix email address
-    String emailFromAddress = "Island Furniture <a0101309@u.nus.edu>";
+    String emailFromAddress = "Island Furniture <natalie.goh93@gmail.com>";
 // Replace with your real name and NUSNET email address
     String mailer = "JavaMailer";
     //private static final File LOCATION = new File("../resources/images/");

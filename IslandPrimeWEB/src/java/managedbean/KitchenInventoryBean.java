@@ -8,19 +8,20 @@ package managedbean;
 import entity.InventoryKit;
 import entity.InventoryProduct;
 import entity.Item;
-import java.util.ArrayList;
-import java.util.List;
 import entity.Product;
 import entity.Shelf;
 import entity.ShelfSlot;
 import entity.ShelfType;
+import entity.Staff;
 import enumerator.InvenLoc;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -32,8 +33,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import org.primefaces.event.RowEditEvent;
-
 import org.primefaces.event.SelectEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import session.stateless.KitchenBean;
 import util.exception.DetailsConflictException;
@@ -87,6 +88,8 @@ public class KitchenInventoryBean implements Serializable {
 
     @EJB
     private KitchenBean kb;
+    @EJB
+    private CIBeanLocal cib;
 
     public KitchenInventoryBean() {
         pdt = null;
@@ -220,6 +223,8 @@ public class KitchenInventoryBean implements Serializable {
             statusMessage = "New Inventory Ingredient Record Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Ingredient Record Result: "
                     + statusMessage + " (New Inventory Ingredient Record ID is " + newInventoryPdtId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added New Inventory Record (Kitchen): " + newInventoryPdtId);
         } catch (Exception ex) {
             newInventoryPdtId = -1L;
             statusMessage = "New Inventory Ingredient Failed.";
@@ -231,10 +236,13 @@ public class KitchenInventoryBean implements Serializable {
 
     public void deleteRetail() {
         try {
+            Long retailId = selectedRetail.getId();
             kb.removeRetail(selectedRetail);
             retails = kb.getAllInvenIngr();
             FacesMessage msg = new FacesMessage("Kitchen Inventory Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Inventory Record (Kitchen): " + retailId);
         } catch (ReferenceConstraintException ex) {
             retails = kb.getAllInvenIngr();
             statusMessage = ex.getMessage();
@@ -250,6 +258,8 @@ public class KitchenInventoryBean implements Serializable {
             inventoryProds = kb.getAllInvenIngr();
             FacesMessage msg = new FacesMessage("Retail Inventory Record Edited", ((InventoryProduct) event.getObject()).getId().toString());
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Edited Inventory Record (Kitchen): " + ((InventoryProduct) event.getObject()).getId().toString());
     /*    } catch (DetailsConflictException dcx) {
             inventoryProds = kb.getAllInvenIngr();
             statusMessage = dcx.getMessage();

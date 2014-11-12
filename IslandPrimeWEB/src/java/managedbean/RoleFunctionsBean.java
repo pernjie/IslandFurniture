@@ -822,6 +822,68 @@ public class RoleFunctionsBean implements Serializable {
             rolesSet.add("Kitchen");
         }
         
+        if (getRole1().equals("Marketing Staff")) {
+            rolesSet.add("OpCRM");
+            rolesSet.add("ServiceRec");
+            rolesSet.add("ViewServiceRec");
+            rolesSet.add("AddServiceRec");
+            
+            rolesSet.add("PdtnOrders");
+            rolesSet.add("ViewPdtnOrders");
+            rolesSet.add("AddPdtnOrders");
+            
+            rolesSet.add("Campaigns");
+            rolesSet.add("ViewCampaigns");
+            rolesSet.add("AddCampaigns");
+            
+            rolesSet.add("Customers");
+            rolesSet.add("ViewCustomers");
+            rolesSet.add("SendMktEmail");
+            
+            rolesSet.add("Anal");
+        }
+        if (getRole2() != null && getRole2().equals("Marketing Staff")) {
+            rolesSet.add("OpCRM");
+            rolesSet.add("ServiceRec");
+            rolesSet.add("ViewServiceRec");
+            rolesSet.add("AddServiceRec");
+            
+            rolesSet.add("PdtnOrders");
+            rolesSet.add("ViewPdtnOrders");
+            rolesSet.add("AddPdtnOrders");
+            
+            rolesSet.add("Campaigns");
+            rolesSet.add("ViewCampaigns");
+            rolesSet.add("AddCampaigns");
+            
+            rolesSet.add("Customers");
+            rolesSet.add("ViewCustomers");
+            rolesSet.add("SendMktEmail");
+            
+            rolesSet.add("Anal");
+            
+        }
+        if (getRole3() != null && getRole3().equals("Marketing Staff")) {
+            rolesSet.add("OpCRM");
+            rolesSet.add("ServiceRec");
+            rolesSet.add("ViewServiceRec");
+            rolesSet.add("AddServiceRec");
+            
+            rolesSet.add("PdtnOrders");
+            rolesSet.add("ViewPdtnOrders");
+            rolesSet.add("AddPdtnOrders");
+            
+            rolesSet.add("Campaigns");
+            rolesSet.add("ViewCampaigns");
+            rolesSet.add("AddCampaigns");
+            
+            rolesSet.add("Customers");
+            rolesSet.add("ViewCustomers");
+            rolesSet.add("SendMktEmail");
+            
+            rolesSet.add("Anal");
+        }
+        
         return rolesSet;
     }
 
