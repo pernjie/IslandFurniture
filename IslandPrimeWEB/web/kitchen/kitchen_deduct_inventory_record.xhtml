@@ -29,10 +29,10 @@
                         <p:outputLabel for="Ingredient" style="font-weight: bold" value="Ingredient: " />
                     </p:column>
                     <p:column>
-                        <p:autoComplete id="ingr" forceSelection="true" value="#{rawMatInventoryMB.rawMat}" 
-                                        completeMethod="#{KitchenInventoryMB.completeText}" var="ingr" itemLabel="#{ingr.name}" itemValue="#{ingr}"
-                                        converter="ingrAutoConverter" requiredMessage="Raw Material is required." required="true"  style="width:100%"> 
-                            <p:ajax event="itemSelect" process="@this"  listener="#{rawMatInventoryMB.handleSelect}" /> 
+                        <p:autoComplete id="ingr" forceSelection="true" value="#{kitchenInventoryMB.pdt}" 
+                                        completeMethod="#{kitchenInventoryMB.completeText}" var="ingr" itemLabel="#{ingr.name}" itemValue="#{ingr}"
+                                        converter="ingrAutoConverter" requiredMessage="Ingredient is required." required="true"  style="width:100%"> 
+                            <p:ajax event="itemSelect" process="@this"  listener="#{kitchenInventoryMB.handleSelect}" /> 
                         </p:autoComplete>
                     </p:column>
                     <p:column>
@@ -40,119 +40,6 @@
                     </p:column>
                 </p:row>
 
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="zoneShelfEntity" style="font-weight: bold" value="Zone: " />
-                        </p:column>
-                        <p:column>
-                               <p:selectOneMenu label="zoneShelfEntity" requiredMessage="Zone is required." required="true" id="zoneShelfEntity" 
-                                             value="#{rawMatInventoryMB.zon}" style="width:100%" >
-
-                                <f:selectItem itemLabel="Select Zone" itemValue="" noSelectionOption="true" />             
-                                <f:selectItems value="#{rawMatInventoryMB.zoneShelfEntities}" var="zoneShelfEntity" itemLabel="#{zoneShelfEntity.zone}" itemValue="#{zoneShelfEntity.zone}" />
-                                 <p:ajax listener="#{rawMatInventoryMB.onZoneChange}" update="shelfEntity" process="zoneShelfEntity" event="change"/> 
-                            </p:selectOneMenu>     
-                        </p:column>
-                        <p:column>
-                            <p:message for="zoneShelfEntity" />
-                        </p:column>
-                    </p:row>
-                    
-                    <p:row>
-                        <p:column>
-                            <p:outputLabel for="shelfEntity" style="font-weight: bold" value="Shelf: " />
-                        </p:column>
-                        <p:column>
-                                <p:selectOneMenu label="shelfEntity" requiredMessage="Shelf is required." required="true" id="shelfEntity" 
-                                             value="#{rawMatInventoryMB.shelfValue}"  style="width:100%" >  
-                                    
-                                <f:selectItem itemLabel="Select Shelf" itemValue="" noSelectionOption="true" />             
-                                <f:selectItems value="#{rawMatInventoryMB.shelfEntities}" var="shelfEntity" itemLabel="#{shelfEntity.shelf}" itemValue="#{shelfEntity.id}" /> 
-                                 <p:ajax listener="#{rawMatInventoryMB.onShelfChange}" update="shelfSlot upperThresValue lowerThresValue matLengthRes matBreadthRes matHeightRes" process="shelfEntity" event="change"/>
-                            </p:selectOneMenu>     
-                        </p:column>
-                        <p:column>
-                            <p:message for="shelfEntity" />
-                        </p:column>
-                    </p:row>
-
-                                  <p:row>
-                                      <p:column>
-                                          <p:outputLabel for="shelfSlot" style="font-weight: bold" value="Slot in Shelf: " />
-                                      </p:column>
-                                      <p:column>
-                                          <p:selectOneMenu label="shelfSlot" requiredMessage="Shelf Slot is required." required="true" id="shelfSlot" 
-                                                           value="#{rawMatInventoryMB.shelfSlotPos}" style="width:100%" >  
-                                              <f:selectItem itemLabel="Select Shelf Slot" itemValue="" noSelectionOption="true" />             
-                                              <f:selectItems value="#{rawMatInventoryMB.shelfSlots}" var="shelfSlot" itemLabel="#{shelfSlot.position}" itemValue="#{shelfSlot.position}" />
-                                          </p:selectOneMenu>     
-                                      </p:column>
-                                      <p:column>
-                                          <p:message for="shelfSlot" />
-                                      </p:column>
-                                  </p:row>                  
-                                  
-                                  <p:row>
-                                       <p:column>
-                                          <p:outputLabel for="upperThresValue" style="font-weight: bold" value="Upper Threshold:  " />
-                                      </p:column>
-                                      <p:column>
-                                          <h:outputText id="upperThresValue" value="#{rawMatInventoryMB.resUpperThres}" />               
-                                      </p:column>
-                                      <p:column>
-                                          <p:message for="upperThresValue" />
-                                      </p:column>
-                                  </p:row>     
-                  
-                   
-                      <p:row>
-                       <p:column>
-                           <p:outputLabel for="lowerThresValue" style="font-weight: bold" value="Lower Threshold:  " />
-                       </p:column>
-                       <p:column>
-                           <h:outputText id="lowerThresValue" value="#{rawMatInventoryMB.resLowerThres}" />               
-                       </p:column>
-                       <p:column>
-                           <p:message for="lowerThresValue" />
-                       </p:column>
-                   </p:row>     
-                   
-                     <p:row>
-                       <p:column>
-                           <p:outputLabel for="matLengthRes" style="font-weight: bold" value="Material Box Length:  " />
-                       </p:column>
-                       <p:column>
-                           <h:outputText id="matLengthRes" value="#{rawMatInventoryMB.matLengthRes}" />               
-                       </p:column>
-                       <p:column>
-                           <p:message for="matLengthRes" />
-                       </p:column>
-                   </p:row>     
-                   
-                      <p:row>
-                       <p:column>
-                           <p:outputLabel for="matBreadthRes" style="font-weight: bold" value="Material Box Breadth:  " />
-                       </p:column>
-                       <p:column>
-                           <h:outputText id="matBreadthRes" value="#{rawMatInventoryMB.matBreadthRes}" />               
-                       </p:column>
-                       <p:column>
-                           <p:message for="matBreadthRes" />
-                       </p:column>
-                   </p:row>    
-        
-                      <p:row>
-                       <p:column>
-                           <p:outputLabel for="matHeightRes" style="font-weight: bold" value="Material Box Height:  " />
-                       </p:column>
-                       <p:column>
-                           <h:outputText id="matHeightRes" value="#{rawMatInventoryMB.matHeightRes}" />               
-                       </p:column>
-                       <p:column>
-                           <p:message for="matHeightRes" />
-                       </p:column>
-                   </p:row>    
-                   
                    <p:row>
                        <p:column>
                            <p:outputLabel for="invenLoc" style="font-weight: bold" value="Location: " />

@@ -198,15 +198,12 @@ public class KitchenInventoryBean implements Serializable {
     }
 
     public SelectItem[] getPdtLocValues() {
-        SelectItem[] items = new SelectItem[2];
-        int j = 0;
-        int i = 2;
-        for (i = 2; i < InvenLoc.values().length; ++i) {
-            InvenLoc il = InvenLoc.getIndex(i);
-            items[j++] = new SelectItem(il, il.getLabel());
-        }
-        return items;
-    }
+    SelectItem[] items = new SelectItem[1];
+
+       InvenLoc il= InvenLoc.getIndex(5);
+       items[0] = new SelectItem(il, il.getLabel());
+    return items;
+  }
 
     public void saveNewInventory(ActionEvent event) {
         System.out.println(pdt);
@@ -220,13 +217,13 @@ public class KitchenInventoryBean implements Serializable {
 
         try {
             newInventoryPdtId = kb.addNewInventoryIngr(pdt, shelfValueLong, shelfSlotInt, loc, zon, resUpperThres, resLowerThres, pdtLengthRes, pdtBreadthRes, pdtHeightRes);
-            statusMessage = "New Inventory Product Record Saved Successfully.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Product Record Result: "
-                    + statusMessage + " (New Inventory Product Record ID is " + newInventoryPdtId + ")", ""));
+            statusMessage = "New Inventory Ingredient Record Saved Successfully.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Ingredient Record Result: "
+                    + statusMessage + " (New Inventory Ingredient Record ID is " + newInventoryPdtId + ")", ""));
         } catch (Exception ex) {
             newInventoryPdtId = -1L;
-            statusMessage = "New Inventory Product Failed.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Product Record Result: "
+            statusMessage = "New Inventory Ingredient Failed.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Ingredient Record Result: "
                     + statusMessage, ""));
             ex.printStackTrace();
         }
@@ -236,7 +233,7 @@ public class KitchenInventoryBean implements Serializable {
         try {
             kb.removeRetail(selectedRetail);
             retails = kb.getAllInvenIngr();
-            FacesMessage msg = new FacesMessage("Retail Inventory Record Deleted");
+            FacesMessage msg = new FacesMessage("Kitchen Inventory Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (ReferenceConstraintException ex) {
             retails = kb.getAllInvenIngr();
