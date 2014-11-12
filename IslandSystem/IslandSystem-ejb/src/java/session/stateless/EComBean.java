@@ -159,7 +159,7 @@ public class EComBean {//implements EComBeanLocal{
     }
 
     //@Override
-    public Long addNewCustomer(Customer customer) throws DetailsConflictException {
+     public Long addNewCustomer(Customer customer) throws DetailsConflictException {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         String email = customer.getEmail();

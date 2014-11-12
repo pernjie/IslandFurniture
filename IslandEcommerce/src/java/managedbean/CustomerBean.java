@@ -20,7 +20,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
-import session.stateless.OpCrmBean;
+import session.stateless.EComBean;
 import util.exception.DetailsConflictException;
 
 /**
@@ -32,7 +32,7 @@ import util.exception.DetailsConflictException;
 public class CustomerBean implements Serializable {
 
     @EJB
-    private OpCrmBean ocb;
+    private EComBean ocb;
     private String unsubscribeEmail;
     private Customer customer;
     private Long custId;
@@ -99,11 +99,11 @@ public class CustomerBean implements Serializable {
         }
     }
 
-    public OpCrmBean getOcb() {
+    public EComBean getOcb() {
         return ocb;
     }
 
-    public void setOcb(OpCrmBean ocb) {
+    public void setOcb(EComBean ocb) {
         this.ocb = ocb;
     }
 

@@ -59,40 +59,40 @@ public class CustomerBean implements Serializable {
        return password.equals(confirmPassword);
     }
 
-    public void saveNewCustomer(ActionEvent event) {
-        try {
-            if (!password.equals(confirmPassword)) {
-                statusMessage = "Passwords do not match";
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
-                        + statusMessage, ""));
-            }
-            newCustomer = new Customer();
-            newCustomer.setName(name);
-            newCustomer.setEmail(email);
-            newCustomer.setAddress(address);
-            newCustomer.setGender(gender);
-            newCustomer.setPassword(password);
-            newCustomer.setMobile(mobile);
-            newCustomer.setDob(DOB);
-            newCustomer.setCity(city);
-            newCustomer.setCountry(country);
-            newCustomer.setUnsubscribed(false);
-            
-            newCustomerId = ocb.addNewCustomer(newCustomer);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Account created successfully", ""));
-        } catch (DetailsConflictException dcx) {
-            statusMessage = dcx.getMessage();
-            newCustomerId = -1L;
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
-                    + statusMessage, ""));
-        } catch (Exception ex) {
-            newCustomerId = -1L;
-            statusMessage = "New Customer Failed.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
-                    + statusMessage, ""));
-            ex.printStackTrace();
-        }
-    }
+//    public void saveNewCustomer(ActionEvent event) {
+//        try {
+//            if (!password.equals(confirmPassword)) {
+//                statusMessage = "Passwords do not match";
+//                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
+//                        + statusMessage, ""));
+//            }
+//            newCustomer = new Customer();
+//            newCustomer.setName(name);
+//            newCustomer.setEmail(email);
+//            newCustomer.setAddress(address);
+//            newCustomer.setGender(gender);
+//            newCustomer.setPassword(password);
+//            newCustomer.setMobile(mobile);
+//            newCustomer.setDob(DOB);
+//            newCustomer.setCity(city);
+//            newCustomer.setCountry(country);
+//            newCustomer.setUnsubscribed(false);
+//            
+//            newCustomerId = ocb.addNewCustomer(newCustomer);
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Account created successfully", ""));
+//        } catch (DetailsConflictException dcx) {
+//            statusMessage = dcx.getMessage();
+//            newCustomerId = -1L;
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
+//                    + statusMessage, ""));
+//        } catch (Exception ex) {
+//            newCustomerId = -1L;
+//            statusMessage = "New Customer Failed.";
+//            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
+//                    + statusMessage, ""));
+//            ex.printStackTrace();
+//        }
+//    }
 
     public void save(ActionEvent event) throws IOException {
         unsubscribeEmail = getUnsubscribeEmail();
