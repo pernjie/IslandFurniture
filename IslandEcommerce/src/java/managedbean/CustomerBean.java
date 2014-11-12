@@ -1,34 +1,38 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package managedbean;
-//COUNTRY INPUT IS NOT WORKING
+
 import entity.Country;
 import entity.Customer;
 import enumerator.Gender;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import org.primefaces.event.RowEditEvent;
-import session.stateless.EComBeanLocal;
+import javax.faces.view.ViewScoped;
+import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 
 /**
  *
- * @author jiameiii
+ * @author dyihoon90
  */
-@ManagedBean(name = "CustomerBean")
+@ManagedBean(name = "customerBean")
 @ViewScoped
 public class CustomerBean implements Serializable {
 
     @EJB
-    private EComBeanLocal ocb;
+    private OpCrmBean ocb;
     private String unsubscribeEmail;
     private Customer customer;
     private Long custId;
@@ -46,26 +50,26 @@ public class CustomerBean implements Serializable {
     private String statusMessage;
     private Country country;
     private String city;
-    private List<Country> countrys;
+    private List<Country> countries;
 
     @PostConstruct
+
     public void init() {
-        customers = ocb.getAllCustomers();
-        countrys = ocb.getAllCountries();
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("countrys", countrys);
+        System.out.println("Initialized customerBean");
+        countries = ocb.getAllCountries();
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("countries", countries);
     }
-    
-    public Boolean matchPasswords(){
-       return password.equals(confirmPassword);
+
+    public List<Gender> getGenders() {
+        List<Gender> genders = new ArrayList<>();
+        genders.add(Gender.MALE);
+        genders.add(Gender.FEMALE);
+        return genders;
     }
 
     public void saveNewCustomer(ActionEvent event) {
         try {
-            if (!password.equals(confirmPassword)) {
-                statusMessage = "Passwords do not match";
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
-                        + statusMessage, ""));
-            }
+            System.out.println("saveNewCustomer");
             newCustomer = new Customer();
             newCustomer.setName(name);
             newCustomer.setEmail(email);
@@ -77,9 +81,10 @@ public class CustomerBean implements Serializable {
             newCustomer.setCity(city);
             newCustomer.setCountry(country);
             newCustomer.setUnsubscribed(false);
-            
+
             newCustomerId = ocb.addNewCustomer(newCustomer);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Account created successfully", ""));
+
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
             newCustomerId = -1L;
@@ -87,43 +92,19 @@ public class CustomerBean implements Serializable {
                     + statusMessage, ""));
         } catch (Exception ex) {
             newCustomerId = -1L;
-            statusMessage = "New Customer Failed.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please try again: "
+            statusMessage = "Account creation failed.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please try again: "
                     + statusMessage, ""));
             ex.printStackTrace();
         }
     }
 
-    public void save(ActionEvent event) throws IOException {
-        unsubscribeEmail = getUnsubscribeEmail();
-        custId = getCustId();
-        ocb.unsubscribe(custId);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("You've successfully unregistered!"));
+    public OpCrmBean getOcb() {
+        return ocb;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void onRowEdit(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Customer Edited", ((Customer) event.getObject()).getName());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void onRowCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", ((Customer) event.getObject()).getName());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public List<Gender> getGenders() {
-        Gender[] genders = new Gender[2];
-        genders[0] = Gender.MALE;
-        genders[1] = Gender.FEMALE;
-        return Arrays.asList(genders);
-
-    }
-
-    public CustomerBean() {
+    public void setOcb(OpCrmBean ocb) {
+        this.ocb = ocb;
     }
 
     public String getUnsubscribeEmail() {
@@ -134,23 +115,28 @@ public class CustomerBean implements Serializable {
         this.unsubscribeEmail = unsubscribeEmail;
     }
 
-    public Long getCustId() {
-        unsubscribeEmail = getUnsubscribeEmail();
-        customer = ocb.getCustomerDetails(unsubscribeEmail);
-        custId = customer.getId();
-        return custId;
-    }
-
-    public void setCustId(long custId) {
-        this.custId = custId;
-    }
-
     public Customer getCustomer() {
         return customer;
     }
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Long getCustId() {
+        return custId;
+    }
+
+    public void setCustId(Long custId) {
+        this.custId = custId;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 
     public String getAddress() {
@@ -185,6 +171,14 @@ public class CustomerBean implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getMobile() {
         return mobile;
     }
@@ -199,14 +193,6 @@ public class CustomerBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public Gender getGender() {
@@ -257,14 +243,19 @@ public class CustomerBean implements Serializable {
         this.city = city;
     }
 
-    public List<Country> getCountrys() {
-        return countrys;
+    public List<Country> getCountries() {
+        return countries;
     }
 
-    public void setCountrys(List<Country> countrys) {
-        this.countrys = countrys;
+    public void setCountries(List<Country> countries) {
+        this.countries = countries;
     }
-    
-    
+
+    public void save(ActionEvent event) throws IOException {
+        unsubscribeEmail = getUnsubscribeEmail();
+        custId = getCustId();
+        ocb.unsubscribe(custId);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("You've successfully unregistered!"));
+    }
 
 }

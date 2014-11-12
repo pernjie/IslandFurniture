@@ -1,25 +1,34 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-                template="./../template/Default_Template.xhtml"
-                xmlns:b="http://bootsfaces.net/ui"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:p="http://primefaces.org/ui"
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Island E-Commerce</title>
+        <meta name="author" content="Island"></meta>
+    </h:head>
 
-    <ui:define name="content">
-        <h:form id="form">
-            
-            <ui:repeat var="region" value="#{selectRegionBean.regions}" >
-                <h:commandLink action="#{selectRegionBean.regionDirect}">
-                    <f:setPropertyActionListener target="#{selectRegionBean.regionId}" value="#{region.id}"/>
-                    <h:outputText value="#{region.name}" />
-                </h:commandLink>
-                    <br />
-                </ui:repeat>
+    <h:body style="padding: 0px 25px;">   
+        <div>
+            <a href="index.xhtml"><img src="../images/islandfurniturelogo.gif"  width="224" height="110" alt="Welcome to Island Furniture Singapore" title="Welcome to Island Furniture Singapore"/></a>
+        </div>
+        <h1 style="font-family:Helvetica;">Welcome to Island Furniture!</h1>
+        <h3 style="font-family:Helvetica;">Please select your region to proceed</h3>
+                <h:form id="form">
 
-        </h:form>
-    </ui:define>
+                    <ui:repeat var="region" value="#{selectRegionBean.regions}" >
+                        <h:commandLink action="#{selectRegionBean.regionDirect}">
+                            <f:setPropertyActionListener target="#{selectRegionBean.regionId}" value="#{region.id}"/>
+                            <h:outputText value="#{region.name}" style="font-size:larger;font-family:Helvetica;"/>
+                        </h:commandLink>
+                        <br />
+                    </ui:repeat>
 
-</ui:composition>
+                </h:form>
+
+    </h:body>
+</html>
