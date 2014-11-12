@@ -259,7 +259,18 @@ public class ScmBean { //implements ScmBeanRemote {
         query.setParameter("mat", mat);
         query.setParameter("week", week);
         query.setParameter("year", year);
-        return ((MrpRecord) query.getSingleResult()).getPlanned();
+        System.err.println("week: " + week);
+        System.err.println("year: " + year);
+        System.err.println("mat: " + mat.getName());
+        MrpRecord mr = new MrpRecord();
+        try {
+            mr = ((MrpRecord) query.getSingleResult());
+            System.err.println("mrp record found");
+        } catch(Exception e) {
+            System.err.println("no mrp record found");
+            e.printStackTrace();
+        }
+        return mr.getPlanned();
     }
 
     public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer period, Integer year) {
@@ -270,7 +281,7 @@ public class ScmBean { //implements ScmBeanRemote {
         query.setParameter("mat", mat);
         query.setParameter("period", period);
         query.setParameter("year", year);
-        if (query.getSingleResult() != null) {
+        try {
             System.err.println("purchase planning record found for period: " + period + " and week: " + week);
             week += 1;
             if (week == 1) {
@@ -288,7 +299,8 @@ public class ScmBean { //implements ScmBeanRemote {
             else {
                 return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW5();
             }
-        } else {
+        } catch(Exception e) {
+            e.printStackTrace();
             System.err.println("no purchase planning records found");
             return 0;
         }
@@ -691,13 +703,34 @@ public class ScmBean { //implements ScmBeanRemote {
         query.setParameter("year", year);
         return query.getResultList();
     }
-        
+    
     public InventoryMaterial getInventoryMat(MrpRecord mr) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         Query query = em.createQuery("SELECT i FROM " + InventoryMaterial.class.getName() + " i, " + MrpRecord.class.getName() + " m WHERE i.mat = m.mat AND i.fac = m.fac");
-        return (InventoryMaterial) query.getSingleResult();
+       
+        List<InventoryMaterial> imList = new ArrayList<InventoryMaterial>();
+        try {
+            imList = query.getResultList();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        if (imList.isEmpty()) {
+            System.err.println("no invmat found");
+            return null;
+        }
+        InventoryMaterial invMat = imList.get(0);
+        if (imList.size() > 1) {
+            System.err.println("multiple invmat found");
+            for (InventoryMaterial im : imList) {
+                if (invMat.getQuantity() < im.getQuantity()) {
+                    invMat = im;
+                }
+            }
+        }
+        return invMat;
     }
+
 
     public List<ProductionRecord> getProductionRecord(Facility fac, Integer period, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
