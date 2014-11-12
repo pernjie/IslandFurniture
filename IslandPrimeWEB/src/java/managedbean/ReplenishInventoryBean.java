@@ -142,6 +142,7 @@ public class ReplenishInventoryBean implements Serializable {
         Integer qty = 0;
         ilList = new ArrayList<InventoryLocation>();
         restockList = new ArrayList<InventoryLocation>();
+        System.err.println("location selected: " + loc);
         if (loc.equals("MarketPlace") || loc.equals("Self Service Warehouse")) {
             invenLoc = InvenLoc.FRONTEND_STORE;
             invenFurns = ib.getFurns(fac, invenLoc);
@@ -325,71 +326,6 @@ public class ReplenishInventoryBean implements Serializable {
         }
 
         return filteredResults;
-    }
-
-    public void onZoneChange() {
-        System.out.println("ZONE: " + zon);
-        if (zon != null && !zon.equals("")) {
-            shelfEntities = ib.getShelfEntities(zon);
-            System.out.println("SUCCESS");
-        } else {
-            shelfEntities = new ArrayList<Shelf>();
-        }
-    }
-
-    public void onShelfChange() throws Exception {
-        furn = (Item) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("furn");
-      //furn.getClass().getSimpleName();
-        //furn instanceof Material;
-
-        //if(furn instanceof Material) {
-        System.out.println("In FUNCTION");
-        System.out.println("SHELF: " + shelfValue);
-        if (shelfValue != null && !shelfValue.equals("")) {
-            Long shelfNum = Long.valueOf(shelfValue);
-            System.out.println(shelfNum);
-            shelfSlots = ib.getShelfSlots(shelfNum);
-            shelfTypeSelected = ib.getShelfType(shelfNum);
-            Double slotLength = shelfTypeSelected.getLength();
-            Double slotBreadth = shelfTypeSelected.getBreadth();
-            Double slotHeight = shelfTypeSelected.getHeight();
-            System.out.println("SUCCESS 2");
-            System.out.println("SlotLength " + slotLength);
-            System.out.println("SlotHeight " + slotHeight);
-            System.out.println("SlotBreadth " + slotBreadth);
-
-            System.out.println("FURN" + furn);
-            try {
-                Double furnLength = furn.getLength();
-                Double furnBreadth = furn.getBreadth();
-                Double furnHeight = furn.getHeight();
-                Map<String, Double> finalvalues = new HashMap<String, Double>();
-
-                finalvalues = ib.calcThresValues(slotLength, slotBreadth, slotHeight, furnLength, furnBreadth, furnHeight);
-                furnLengthRes = finalvalues.get("lengthUsed");
-                furnBreadthRes = finalvalues.get("breadthUsed");
-                furnHeightRes = finalvalues.get("heightUsed");
-                Double upperThreshold = finalvalues.get("upperThreshold");
-                Double lowerThreshold = finalvalues.get("lowerThreshold");
-
-                resUpperThres = upperThreshold.intValue();
-                System.out.println("resUpperThreshold 2: " + resUpperThres);
-
-                resLowerThres = lowerThreshold.intValue();
-                System.out.println("resUpperThreshold 2: " + resLowerThres);
-
-                System.out.println("Length to use 2: " + furnLengthRes);
-                System.out.println("Breadth to use 2: " + furnBreadthRes);
-                System.out.println("Height to use 2: " + furnHeightRes);
-                System.out.println("Upper Threshold 2: " + resUpperThres);
-                System.out.println("Lower Threshold 2: " + resLowerThres);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-        } else {
-            shelfSlots = new ArrayList<ShelfSlot>();
-        }
     }
 
     public void handleSelect(SelectEvent event) {
@@ -677,9 +613,29 @@ public class ReplenishInventoryBean implements Serializable {
     public void setFilteredInvenFurn(InventoryMaterial filteredInvenFurn) {
         this.filteredInvenFurn = filteredInvenFurn;
     }
+
+    public InvenLoc getInvenLoc() {
+        return invenLoc;
+    }
     
     public String[] getLocation() {
         return location;
+    }
+
+    public List<InventoryLocation> getIlList() {
+        return ilList;
+    }
+
+    public void setIlList(List<InventoryLocation> ilList) {
+        this.ilList = ilList;
+    }
+
+    public List<InventoryLocation> getRestockList() {
+        return restockList;
+    }
+
+    public void setRestockList(List<InventoryLocation> restockList) {
+        this.restockList = restockList;
     }
 
 }

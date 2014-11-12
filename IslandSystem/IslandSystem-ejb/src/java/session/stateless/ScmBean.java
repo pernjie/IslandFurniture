@@ -153,24 +153,6 @@ public class ScmBean { //implements ScmBeanRemote {
     }
 
     //@Override
-    public Facility getFacility(long fid) {
-        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-        EntityManager em = emf.createEntityManager();
-        Query query = em.createNamedQuery("Facility.findById");
-        query.setParameter("facilityId", fid);
-        return (Facility) query.getSingleResult();
-    }
-
-    //@Override
-    public Facility getFacility(String fname) {
-        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-        EntityManager em = emf.createEntityManager();
-        Query query = em.createNamedQuery("Facility.findByName");
-        query.setParameter("name", fname);
-        return (Facility) query.getSingleResult();
-    }
-
-    //@Override
     public Supplier getSupplier(long sid) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
@@ -280,16 +262,31 @@ public class ScmBean { //implements ScmBeanRemote {
         return ((MrpRecord) query.getSingleResult()).getPlanned();
     }
 
-    public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer year) {
+    public Integer getMatQtyProduct(Facility fac, Product mat, Integer week, Integer period, Integer year) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT mr FROM " + PurchasePlanningRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.week = :week AND mr.year = :year");
+        Query query = em.createQuery("SELECT mr FROM " + PurchasePlanningRecord.class.getName() + " mr WHERE mr.fac = :fac AND mr.mat = :mat AND mr.period = :period AND mr.year = :year");
         query.setParameter("fac", fac);
         query.setParameter("mat", mat);
         query.setParameter("week", week);
+        query.setParameter("period", period);
         query.setParameter("year", year);
         if (query.getSingleResult() != null) {
-            return ((MrpRecord) query.getSingleResult()).getPlanned();
+            if (week == 1) {
+                return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW1();
+            }
+            else if (week == 2) {
+                return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW2();
+            }
+            else if (week == 3) {
+                return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW3();
+            }
+            else if (week == 4) {
+                return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW4();
+            }
+            else {
+                return ((PurchasePlanningRecord) query.getSingleResult()).getQuantityW5();
+            }
         } else {
             return 0;
         }
@@ -591,7 +588,7 @@ public class ScmBean { //implements ScmBeanRemote {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         Query query = em.createQuery("SELECT s FROM " + ShelfSlot.class.getName() + " s WHERE "
-                + "im.mat = :mat AND s.shelf.fac = :fac AND s.occupied = '0' AND s.shelf.location = '0'");
+                + "s.shelf.fac = :fac AND s.occupied = '0' AND s.shelf.location = '0'");
         query.setParameter("fac", fac);
         if (query.getResultList().isEmpty()) {
             return null;

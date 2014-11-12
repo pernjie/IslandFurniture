@@ -194,6 +194,7 @@ public class FurnInventoryMB implements Serializable{
    
    
     public SelectItem[] getFurnLocValues() {
+  
         Facility fac = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
          SelectItem[] items=null;
         if (fac.getType().equals("Manufacturing")) {

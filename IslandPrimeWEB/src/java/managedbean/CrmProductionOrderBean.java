@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
-import session.stateless.OpCrmBeanLocal;
+import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 import util.exception.EntityDneException;
 import util.exception.ReferenceConstraintException;
@@ -34,7 +34,7 @@ import util.exception.ReferenceConstraintException;
 public class CrmProductionOrderBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal opCrmBean;
+    private OpCrmBean opCrmBean;
     private Long id;
     private String matIdS;
     private String storeIdS;
@@ -174,11 +174,11 @@ public class CrmProductionOrderBean implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public OpCrmBeanLocal getOpCrmBean() {
+    public OpCrmBean getOpCrmBean() {
         return opCrmBean;
     }
 
-    public void setOpCrmBean(OpCrmBeanLocal opCrmBean) {
+    public void setOpCrmBean(OpCrmBean opCrmBean) {
         this.opCrmBean = opCrmBean;
     }
 

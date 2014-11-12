@@ -161,13 +161,14 @@ public class InventoryBean {
         }
         InventoryMaterial invMat = imList.get(0);
         if(imList.size() > 1) {
-            System.err.println("multiple invmat found");
+            System.err.println("multiple invmat found for " + mat.getName());
             for(InventoryMaterial im : imList) {
                 if(invMat.getQuantity()<im.getQuantity() && im.getQuantity()!=0) {
                     invMat = im;
                 }
             }
         }
+        System.err.println("invmat: " + invMat.getId());
         return invMat;
     }
 
@@ -1235,9 +1236,11 @@ private Boolean ShelfAlreadyExist(String entity, Integer shelfNum, Long id) {
     public List<InventoryMaterial> getFurns(Facility fac, InvenLoc location) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
-        Query query = em.createQuery("SELECT DISTINCT im FROM " + InventoryMaterial.class.getName() + " im WHERE im.fac = :fac AND im.location = :location");
+        Query query = em.createQuery("SELECT DISTINCT im FROM " + InventoryMaterial.class.getName() + " im WHERE im.fac = :fac AND im.location = :location AND "
+                + "im.mat NOT IN (SELECT DISTINCT im2.mat FROM " + InventoryMaterial.class.getName() + " im2 WHERE im2.fac = :fac AND im2.location = :location)");
         query.setParameter("fac", fac);
         query.setParameter("location", location);
+        System.err.println("getFurns from: " + location);
         return query.getResultList();
     }
     

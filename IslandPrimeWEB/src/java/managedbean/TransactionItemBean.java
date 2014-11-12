@@ -5,40 +5,21 @@
  */
 package managedbean;
 
-import entity.Customer;
 import entity.Facility;
-import entity.Material;
 import entity.Region;
-import entity.Service;
-import entity.TransactionRecord;
 import entity.TransactionItem;
 import entity.TransactionRecord;
-import enumerator.SvcCat;
-import enumerator.SvcRecStatus;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.sql.DataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperRunManager;
 import org.primefaces.event.RowEditEvent;
-import services.SvcRecService;
 import session.stateless.OpCrmBean;
-import session.stateless.OpCrmBeanLocal;
 import util.exception.DetailsConflictException;
-import util.exception.ReferenceConstraintException;
 
 /**
  *
@@ -49,7 +30,7 @@ import util.exception.ReferenceConstraintException;
 public class TransactionItemBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal ocb;
+    private OpCrmBean ocb;
     private Long id;
     private String userEmail;
     private Facility userFacility;
@@ -122,13 +103,15 @@ public class TransactionItemBean implements Serializable {
         this.newTransactionItemId = newTransactionItemId;
     }
 
-    public OpCrmBeanLocal getOcb() {
+    public OpCrmBean getOcb() {
         return ocb;
     }
 
-    public void setOcb(OpCrmBeanLocal ocb) {
+    public void setOcb(OpCrmBean ocb) {
         this.ocb = ocb;
     }
+
+
 
     public Long getId() {
         return id;

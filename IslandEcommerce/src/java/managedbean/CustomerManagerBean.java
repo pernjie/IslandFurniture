@@ -15,14 +15,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RowEditEvent;
-import session.stateless.OpCrmBeanLocal;
+import session.stateless.OpCrmBean;
 
 
 @ManagedBean(name = "customerManagerBean")
 @ViewScoped
 public class CustomerManagerBean {
     @EJB
-    OpCrmBeanLocal cb;
+    OpCrmBean cb;
     List<Customer> customers;
     
     public CustomerManagerBean() {

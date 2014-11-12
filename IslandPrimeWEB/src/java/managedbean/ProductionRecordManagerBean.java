@@ -31,6 +31,7 @@ public class ProductionRecordManagerBean implements Serializable {
 
     @EJB
     private ScmBean sb;
+    private String loggedInEmail;
     private List<Facility> mfs;
     private List<Facility> stores;
     private List<Facility> facilities;
@@ -43,7 +44,9 @@ public class ProductionRecordManagerBean implements Serializable {
     @PostConstruct
     public void init() {
         WeekHelper wh = new WeekHelper();
-        Facility mf = sb.getFacility("Jurong MF");
+        loggedInEmail = new String();
+        loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
+        Facility mf = sb.getFac(loggedInEmail);
         productionRecords = sb.getProductionRecords(mf, wh.getYear(0), wh.getPeriod(0));
         materials = sb.getAllFurniture();
         stores = sb.getAllStores();

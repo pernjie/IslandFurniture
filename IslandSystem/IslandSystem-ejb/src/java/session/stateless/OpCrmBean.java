@@ -21,6 +21,7 @@ import entity.ServiceRecordItem;
 import entity.TransactionItem;
 import entity.TransactionRecord;
 import entity.TransactionService;
+import enumerator.CustomerCampaignCat;
 import enumerator.Gender;
 import enumerator.SvcRecStatus;
 import enumerator.SvcCat;
@@ -70,12 +71,12 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
             if (!PromoCodeAlreadyExist(campaign)) {
 //                if (campaign.getTargetActive()==true && campaign.getRfmThreshold() != null) {
 //                    if (campaign.getTargetInactive()==true && campaign.getHighestRfmThreshold() != null) {
-                        System.out.println("Enter if loop");
-                        em.persist(campaign);
-                        System.out.println("em.persist");
-                        em.flush();
-                        addCampaignCustomers(campaign);
-                        return campaign.getId();
+                System.out.println("Enter if loop");
+                em.persist(campaign);
+                System.out.println("em.persist");
+                em.flush();
+                addCampaignCustomers(campaign);
+                return campaign.getId();
 //                    } else {
 //                        throw new DetailsConflictException("Cannot target inactive customers without filling up the threshold for the highest RFM score");
 //                    }
@@ -91,7 +92,8 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
     }
 
     //@Override
-    public void addCampaignCustomers(Campaign campaign) {
+    public Boolean addCampaignCustomers(Campaign campaign) {
+        System.out.println("addCampaignCustomers initialized");
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         try {
@@ -117,6 +119,8 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
             Boolean targetsActiveCust = campaign.getTargetActive();
             Boolean targetsInactiveCust = campaign.getTargetInactive();
             Boolean noCustomer = true;
+            System.out.println("Target Inactive: " + targetsInactiveCust);
+
             for (Customer c : customers) {
                 CustomerMetric cm = getCustomerMetric(customerMetrics, c);
                 //System.out.println("CUST METRIC ID: " + cm.getId());
@@ -124,11 +128,15 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
                 Calendar dob = Calendar.getInstance();
                 dob.setTime(temp);
                 Integer custBornIn = dob.get(Calendar.YEAR);
-               // System.out.println("CUST METRIC ID: " + cm.getId() + " CM HIghest: " + cm.getHighestRfm() + " INACTIVE: " + cm.getInactive());
+                System.out.println("Customer born in: " + custBornIn);
+                System.out.println("Customer Inactive: " + cm.getInactive());
+                System.out.println("LOOKING AT: CUST ID: " + cm.getCustomer().getId() + " BUINESS AREA: " + cm.getBusinessArea() + " CM Highest: " + cm.getHighestRfm() + " INACTIVE: " + cm.getInactive() + " DOB: " + cm.getCustomer().getDob());
 
                 if ((custBornIn <= latestBirthYear && custBornIn >= earliestBirthYear) //and customer born within age range
+
                         && ((targetsInactiveCust && cm.getInactive() && cm.getHighestRfm() >= campaign.getHighestRfmThreshold())
                         || (targetsActiveCust && !cm.getInactive() && cm.getCurrentRfm() >= campaign.getRfmThreshold())) //only if customer is active and target act or cust is inact and target inact
+
                         && ((!targetGender.equals(Gender.ALL) && targetGender.equals(c.getGender())) || targetGender.equals(Gender.ALL))) { //and if cust g is target g or target g is ALL
                     System.out.println("CAMPAIGN CUSTOMER HIT, CUST METRIC ID: " + cm.getId() + " CUST ID: " + c.getId());
                     CustomerCampaignMetric ccm = new CustomerCampaignMetric();
@@ -136,6 +144,11 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
                     ccm.setCampaign(campaign);
                     ccm.setNumHits(0);
                     ccm.setNumPromoCodeUsed(0);
+                    if (!cm.getInactive()) {
+                        ccm.setCustomerCampaignCat(CustomerCampaignCat.ACTIVE);
+                    } else if (cm.getInactive()) {
+                        ccm.setCustomerCampaignCat(CustomerCampaignCat.INACTIVE);
+                    }
                     em.persist(ccm);
                     noCustomer = false;
                 }
@@ -143,9 +156,12 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
             if (noCustomer == true) {
                 campaign.setTargetNew(true);
                 em.merge(campaign);
+                return false;
             }
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -193,6 +209,14 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
         EntityManager em = emf.createEntityManager();
         Query query = em.createNamedQuery("Campaign.findAll");
         return query.getResultList();
+    }
+
+    public List<Campaign> getRegionCampaigns(Region r) {
+        EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
+        EntityManager em = emf.createEntityManager();
+        Query q = em.createNamedQuery("Campaign.findByRegion");
+        q.setParameter("region",r);
+        return q.getResultList();
     }
 
     //@Override

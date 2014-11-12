@@ -16,8 +16,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.RowEditEvent;
-import session.stateless.EComBeanLocal;
-import session.stateless.OpCrmBeanLocal;
+import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 
 /**
@@ -29,7 +28,7 @@ import util.exception.DetailsConflictException;
 public class CustomerBean implements Serializable {
 
     @EJB
-    private OpCrmBeanLocal ocb;
+    private OpCrmBean ocb;
     private String unsubscribeEmail;
     private Customer customer;
     private Long custId;

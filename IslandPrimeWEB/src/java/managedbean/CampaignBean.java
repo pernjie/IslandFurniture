@@ -13,6 +13,7 @@ import enumerator.Gender;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -107,26 +108,38 @@ public class CampaignBean implements Serializable {
         System.out.println("Campaign highestRfmThreshold = " + highestRfmThreshold);
 
         try {
-            newCampaign.setName(name);
-            newCampaign.setStartDate(startDate);
-            newCampaign.setEndDate(endDate);
-            newCampaign.setPromoCode(promoCode);
-            newCampaign.setDescription(description);
-            newCampaign.setPercentDisc(percentDisc);
-            newCampaign.setUpperAge(upperAge);
-            newCampaign.setLowerAge(lowerAge);
-            newCampaign.setTargetGender(targetGender);
-            newCampaign.setTargetActive(targetActive);
-            newCampaign.setTargetInactive(targetInactive);
-            newCampaign.setTargetNew(targetNew);
-            newCampaign.setBusinessArea(businessArea);
-            newCampaign.setRfmThreshold(rfmThreshold);
-            newCampaign.setHighestRfmThreshold(highestRfmThreshold);
-            newCampaign.setRegion(userRegion);
-            newCampaignId = ocb.addNewCampaign(newCampaign);
-            statusMessage = "New Campaign Created Successfully.";
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Campaign Result: "
-                    + statusMessage + " (New Campaign ID is " + newCampaignId + ")", ""));
+            Calendar cal = Calendar.getInstance();
+            Date currDate = cal.getTime();
+            if (startDate.after(endDate)) {
+                statusMessage = "Please ensure that the start date is before the end date.";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Campaign Result: "
+                        + statusMessage, ""));
+            } else if (startDate.before(currDate)) {
+                statusMessage = "Please ensure that the start date is not before today's date.";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Campaign Result: "
+                        + statusMessage, ""));
+            } else {
+                newCampaign.setName(name);
+                newCampaign.setStartDate(startDate);
+                newCampaign.setEndDate(endDate);
+                newCampaign.setPromoCode(promoCode);
+                newCampaign.setDescription(description);
+                newCampaign.setPercentDisc(percentDisc);
+                newCampaign.setUpperAge(upperAge);
+                newCampaign.setLowerAge(lowerAge);
+                newCampaign.setTargetGender(targetGender);
+                newCampaign.setTargetActive(targetActive);
+                newCampaign.setTargetInactive(targetInactive);
+                newCampaign.setTargetNew(targetNew);
+                newCampaign.setBusinessArea(businessArea);
+                newCampaign.setRfmThreshold(rfmThreshold);
+                newCampaign.setHighestRfmThreshold(highestRfmThreshold);
+                newCampaign.setRegion(userRegion);
+                newCampaignId = ocb.addNewCampaign(newCampaign);
+                statusMessage = "New Campaign Created Successfully.";
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Campaign Result: "
+                        + statusMessage + " (New Campaign ID is " + newCampaignId + ")", ""));
+            }
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
             newCampaignId = -1L;

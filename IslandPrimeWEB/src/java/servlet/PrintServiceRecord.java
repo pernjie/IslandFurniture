@@ -7,7 +7,6 @@ package servlet;
 
 import entity.Facility;
 import entity.Region;
-import entity.Service;
 import entity.ServiceRecord;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperRunManager;
-import session.stateless.OpCrmBeanLocal;
+import session.stateless.OpCrmBean;
 
 /**
  *
@@ -35,7 +34,7 @@ public class PrintServiceRecord extends HttpServlet {
     @Resource(name = "islandFurnitureSystemDataSource")
     private DataSource islandFurnitureSystemDataSource;
     @EJB
-    private OpCrmBeanLocal ocb;
+    private OpCrmBean ocb;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
