@@ -155,7 +155,7 @@ public class OpCrmBean {//implements OpCrmBeanLocal {
             }
             if (noCustomer == true) {
                 campaign.setTargetNew(true);
-                em.merge(campaign);
+//                em.merge(campaign);
                 return false;
             }
             return true;

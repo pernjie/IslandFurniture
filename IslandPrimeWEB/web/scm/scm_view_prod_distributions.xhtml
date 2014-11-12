@@ -10,14 +10,9 @@
     <ui:define name="content">
        <h:form id="formMain">
             <p:growl id="msgs" showDetail="true"/>
-            <h1>View All Product Distribution Records</h1>
-            <p:menubar>
-                <p:menuitem value="Home" url="../index.xhtml" />
-                <p:menuitem value="View All Product Distribution Records" url="viewAllDistributions.xhtml"/>
-            </p:menubar>
-            <br/>
 
-            <p:panel header="View All Product Distribution Records">
+            <b:panel>
+                <f:facet name="heading"><h3><b>View All Product Distribution Records</b></h3></f:facet>
 
                 <p:dataTable widgetVar = "distributionMFtoStoreProdTable" editable = "true" id = "distributionMFtoStoreProdTable" var="distributionMFtoStoreProd" value="#{distributionMFtoStoreProdManagerBean.distributionMFtoStoreProds}"
                              paginator="true" rows="10" emptyMessage="No Distribution Record found with given criteria" rowKey="#{distributionMFtoStoreProd.id}"
@@ -41,7 +36,7 @@
                     </p:column>
 
                 </p:dataTable>
-            </p:panel>
+            </b:panel>
         </h:form>
     </ui:define>
 

@@ -9,6 +9,7 @@ import entity.Facility;
 import entity.Material;
 import entity.ProductionOrder;
 import entity.Region;
+import entity.Staff;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.OpCrmBean;
 import util.exception.DetailsConflictException;
 import util.exception.EntityDneException;
@@ -35,6 +37,8 @@ public class CrmProductionOrderBean implements Serializable {
 
     @EJB
     private OpCrmBean opCrmBean;
+    @EJB
+    private CIBeanLocal cib;
     private Long id;
     private String matIdS;
     private String storeIdS;
@@ -84,6 +88,8 @@ public class CrmProductionOrderBean implements Serializable {
             statusMessage = "New ProductionOrder Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New ProductionOrder Result: "
                     + statusMessage + " (New ProductionOrder ID is " + newProductionOrderId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added New Production Order: " + newProductionOrderId);
         } catch (EntityDneException edx) {
             statusMessage = edx.getMessage();
             newProductionOrderId = -1L;
@@ -105,10 +111,13 @@ public class CrmProductionOrderBean implements Serializable {
 
     public void deleteProductionOrder() {
         try {
+            Long PdtnOId = selectedProductionOrder.getId();
             opCrmBean.removeProductionOrder(selectedProductionOrder);
             productionOrders = opCrmBean.getAllProductionOrders();
             FacesMessage msg = new FacesMessage("Production Order Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Production Order: " + PdtnOId);
         } catch (ReferenceConstraintException ex) {
             productionOrders = opCrmBean.getAllProductionOrders();
             statusMessage = ex.getMessage();
@@ -124,6 +133,8 @@ public class CrmProductionOrderBean implements Serializable {
             productionOrders = opCrmBean.getAllProductionOrders();
             FacesMessage msg = new FacesMessage("Production Order Edited", ((ProductionOrder) event.getObject()).getId().toString());
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Edited Production Order: " + ((ProductionOrder) event.getObject()).getId().toString());
         } catch (DetailsConflictException dcx) {
             productionOrders = opCrmBean.getAllProductionOrders();
             statusMessage = dcx.getMessage();
