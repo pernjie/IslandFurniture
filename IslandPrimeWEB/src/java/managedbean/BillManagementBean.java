@@ -18,6 +18,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
@@ -44,6 +45,7 @@ public class BillManagementBean {
     private Date currDate;
     private WeekHelper wh;
     private Long po;
+    private String statusMessage;
     
     public BillManagementBean() {
     }
@@ -61,7 +63,13 @@ public class BillManagementBean {
             System.err.println("no suppliers found!");
         }
         currDate = wh.getCurrDate();
-        unpaidBills = sb.getUnpaidBills();
+        try {
+            unpaidBills = sb.getUnpaidBills();
+        } catch (Exception e) {
+            statusMessage = "New Inventory Ingredient Failed.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Ingredient Record Result: "
+                    + statusMessage, ""));
+        }
     }
 
     public List<Bill> getUnpaidBills() {
