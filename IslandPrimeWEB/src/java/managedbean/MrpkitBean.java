@@ -11,6 +11,7 @@ import entity.Facility;
 import entity.Item;
 import entity.MrpRecord;
 import entity.ProductionRecord;
+import entity.Staff;
 import entity.SuppliesIngrToFac;
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,6 +27,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import session.stateless.CIBeanLocal;
 import session.stateless.MrpBean;
 
 @ManagedBean(name = "mrpkitBean")
@@ -34,6 +36,8 @@ public class MrpkitBean implements Serializable {
 
     @EJB
     private MrpBean mb;
+    @EJB 
+    private CIBeanLocal cib;
     private List<ItemClass> mats;
     private List<MrpItemClass> mrpials;
     private Map<Long, Integer> rawmatReq;
@@ -277,7 +281,9 @@ public class MrpkitBean implements Serializable {
 
         if (persisted) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("../mrp/mrp_home.xhtml");
+                Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+                cib.addLog(staff, "Done Material Planning (Kitchen) for current period.");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("../kitchen/kitchen_Home.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();
             }

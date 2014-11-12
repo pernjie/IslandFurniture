@@ -67,7 +67,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import session.stateless.OpCrmBeanLocal;
+import session.stateless.OpCrmBean;
 /**
  *
  * @author Anna
@@ -88,7 +88,7 @@ public class MarketingMailMB implements Serializable {
     //private static final File LOCATION = new File("../resources/images/");
     
     @EJB
-    OpCrmBeanLocal opcrmBean;
+    OpCrmBean opcrmBean;
 
     @PostConstruct
     public void init() {
@@ -272,7 +272,18 @@ public class MarketingMailMB implements Serializable {
     public void setFile(UploadedFile file) {
         this.file = file;
     }
+
+    public OpCrmBean getOpcrmBean() {
+        return opcrmBean;
+    }
+
+    public void setOpcrmBean(OpCrmBean opcrmBean) {
+        this.opcrmBean = opcrmBean;
+    }
+    
+    
 }
+
 
     
 

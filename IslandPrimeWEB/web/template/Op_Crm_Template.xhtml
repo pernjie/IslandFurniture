@@ -14,7 +14,7 @@
     
 <h:body style="padding: 0px 25px;">
         <b:navBar brand="Island FMS" brandHref="../common/CI_Index_Page.xhtml" inverse="true">
-            <b:navbarLinks>
+            <b:navbarLinks> 
                  <b:navLink href="../mrp/mrp_home.xhtml" value="MRP" rendered="#{roleFunctionsBean.checkMRP}"></b:navLink>
                  <b:navLink href="../scm/scm_home.xhtml" value="SCM" rendered="#{roleFunctionsBean.checkSCM}"></b:navLink>
                  <b:navLink value="User Accounts" rendered="#{roleFunctionsBean.checkSA}" href="../common/CI_System_Admin_Home.xhtml"></b:navLink>
@@ -62,12 +62,12 @@
                     <b:navLink href="../opcrm/op_view_region_transaction_records.xhtml" value="View Region Transaction Records" rendered="#{roleFunctionsBean.checkViewRegionTransacRec}"></b:navLink>
                     <b:navLink></b:navLink>
                     <b:navLink header="Campaigns" rendered="#{roleFunctionsBean.checkCampaigns}"/>
-                    <b:navLink href="../opcrm/Op_Crm_View_Campaign.xhtml" value="View Campaigns" rendered="#{roleFunctionsBean.checkViewCampaigns}"></b:navLink>
-                    <b:navLink href="../opcrm/Op_Crm_Create_Campaign.xhtml" value="Add New Campaign" rendered="#{roleFunctionsBean.checkAddCampaigns}"></b:navLink>
+                    <b:navLink href="../opcrm/op_view_campaigns.xhtml" value="View Campaigns" rendered="#{roleFunctionsBean.checkViewCampaigns}"></b:navLink>
+                    <b:navLink href="../opcrm/op_create_campaign.xhtml" value="Add New Campaign" rendered="#{roleFunctionsBean.checkAddCampaigns}"></b:navLink>
                     <b:navLink></b:navLink>
                     <b:navLink header="Customers" rendered="#{roleFunctionsBean.checkCustomers}"/>
                     <b:navLink href="../opcrm/op_view_customer.xhtml" value="View Customers" rendered="#{roleFunctionsBean.checkViewCustomers}"></b:navLink>
-                    <b:navLink href="../opcrm/createMarketingMail.xhtml" value="Send Marketing Email" rendered="#{roleFunctionsBean.checkSendMktEmail}"></b:navLink>
+                    <b:navLink href="../opcrm/op_create_marketing_mail.xhtml" value="Send Marketing Email" rendered="#{roleFunctionsBean.checkSendMktEmail}"></b:navLink>
                 </b:listLinks>
             </b:panel>
         </b:column> 

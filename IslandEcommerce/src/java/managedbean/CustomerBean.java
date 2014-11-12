@@ -17,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.RowEditEvent;
 import session.stateless.EComBeanLocal;
-import session.stateless.OpCrmBeanLocal;
 import util.exception.DetailsConflictException;
 
 /**

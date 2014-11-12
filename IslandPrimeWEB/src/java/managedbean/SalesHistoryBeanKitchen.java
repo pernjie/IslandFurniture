@@ -92,7 +92,7 @@ public class SalesHistoryBeanKitchen implements Serializable {
         if (valid == true) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("materials", materials);
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.redirect("kit_demand.xhtml");
+            context.redirect("kitchen_demand.xhtml");
         }
     }
 

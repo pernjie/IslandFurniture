@@ -30,7 +30,10 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
 @XmlSeeAlso({
     Material.class,
-    Product.class
+    Product.class,
+    MenuItem.class,
+    SetItem.class,
+    Ingredient.class
 })
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
