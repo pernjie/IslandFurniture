@@ -62,6 +62,7 @@ public class PoMatBean implements Serializable {
     private List<PoItem> piList;
     private PoItem pi;
     private WeekHelper wh = new WeekHelper();
+    private String statusMessage;
 
     String emailServerName = "mailauth.comp.nus.edu.sg";
 // Replace with your real name and unix email address
@@ -113,6 +114,12 @@ public class PoMatBean implements Serializable {
             //System.err.println("function: mat qty " + sb.getMatQty(fac, product, delivery_week, delivery_year));
             poDetail.setDeliveryDate(delivery_date);
             materialPoDetailsClass.add(poDetail);
+        }
+        
+        if(materialPoDetailsClass.isEmpty()) {
+            statusMessage = "There is no pending purchase order to generate for the supplier this week.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Generate Purchase Order Result: "
+                    + statusMessage, ""));
         }
     }
 

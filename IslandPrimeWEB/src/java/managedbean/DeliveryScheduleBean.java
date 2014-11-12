@@ -8,7 +8,9 @@ package managedbean;
 
 import classes.DeliveryScheduleClass;
 import classes.WeekHelper;
+import entity.DeliverySchedule;
 import entity.Facility;
+import entity.InventoryMaterial;
 import entity.Item;
 import entity.ProductionRecord;
 import entity.PurchasePlanningRecord;
@@ -119,6 +121,37 @@ public class DeliveryScheduleBean implements Serializable{
 
     public List<DeliveryScheduleClass> getDelivs2() {
         return delivs2;
+    }
+    
+    public void sendDeliveryGood() {
+        System.out.println("Inventory Update for delivered goods on: " + new Date());
+        currDate = wh.getCurrDate();
+        List<DeliverySchedule> delsch = new ArrayList<DeliverySchedule>();
+        delsch = sb.getDeliverySchedule(mf.getId());
+
+        if (!delsch.isEmpty()) {
+            for (DeliverySchedule ds : delsch) {
+                System.err.println("function: iterate delivery schedule: " + ds.getMat());
+                InventoryMaterial im = new InventoryMaterial();
+                im = sb.getInventoryMat(ds);
+                System.err.println("function: inventorymaterial " + im.getMat() + " at fac " + im.getFac() + " with qty " + im.getQuantity());
+
+                Integer qty = im.getQuantity() - ds.getQuantity();
+
+                System.err.println("new qty: " + qty);
+                if (qty > 0) {
+                    im.setQuantity(qty);
+                    sb.persistInventoryMaterial(im);
+                }
+                if (qty < im.getLowThreshold()) {
+                    System.err.println("Qty below lower threshold");
+                } else {
+                    System.err.println("Insufficient Inventory");
+                }
+            }
+        } else {
+            System.out.println("No delivery schedule found");
+        }
     }
     
 }

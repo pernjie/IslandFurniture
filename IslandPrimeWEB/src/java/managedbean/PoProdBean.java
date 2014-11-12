@@ -126,7 +126,7 @@ public class PoProdBean implements Serializable {
                     productPoDetailsClass.add(poDetail);
                 }
             } else {
-                String statusMessage = "Purchase Order for this supplier has already been generated for the week.";
+                String statusMessage = "There is no pending purchase order to generate for the supplier this week.";
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Generate Purchase Order Result: "
                         + statusMessage, ""));
             }
