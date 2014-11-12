@@ -16,13 +16,14 @@
         <div>
             <a href="index.xhtml"><img src="../images/islandfurniturelogo.gif"  width="224" height="110" alt="Welcome to Island Furniture Singapore" title="Welcome to Island Furniture Singapore"/></a>
         </div>
-        Select your region to proceed:<br/>
+        <h1 style="font-family:Helvetica;">Welcome to Island Furniture!</h1>
+        <h3 style="font-family:Helvetica;">Please select your region to proceed</h3>
                 <h:form id="form">
 
                     <ui:repeat var="region" value="#{selectRegionBean.regions}" >
                         <h:commandLink action="#{selectRegionBean.regionDirect}">
                             <f:setPropertyActionListener target="#{selectRegionBean.regionId}" value="#{region.id}"/>
-                            <h:outputText value="#{region.name}" />
+                            <h:outputText value="#{region.name}" style="font-size:larger;font-family:Helvetica;"/>
                         </h:commandLink>
                         <br />
                     </ui:repeat>

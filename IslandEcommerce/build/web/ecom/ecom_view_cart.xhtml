@@ -12,7 +12,7 @@
         <h:form id="form">
             <p:dataGrid id="carttable" var="furn" value="#{shoppingCartBean.cart}" columns="1" style="text-align:center" emptyMessage="Your shopping list is empty!">
                 <p:panel>
-                        <img src="../resources/images/furn/#{itemDetailsBean.selectedItemId}.gif" height="171" width="200" /><br/>
+                    <img src="../resources/images/furn/#{furn.item.id}.gif" height="171" width="200" /><br/>
                         <h:outputText value="#{furn.item.name}" /><br/>
                         <h:outputText value="#{furn.price}" /><br/>
                         <h:outputText value="Quantity: #{furn.quantity}" />
@@ -33,6 +33,9 @@
                 </p:panel>
 
             </p:dataGrid>
+            <p:panel id="costpanel" style="text-align:center" rendered="#{shoppingCartBean.cart.size()>0}">
+                <h:outputText value="Total Cost: #{shoppingCartBean.costString}"></h:outputText>
+            </p:panel>
             <p:panel id="qrpanel" style="text-align:center" rendered="#{shoppingCartBean.cart.size()>0}">
                 <h:outputText value="Use our Island App to scan this code!"></h:outputText>
                 <img src="http://chart.apis.google.com/chart?cht=qr&amp;chs=100x100&amp;chl=#{shoppingCartBean.qr}&amp;choe=UTF-8"/>

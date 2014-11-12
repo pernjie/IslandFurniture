@@ -10,13 +10,8 @@
     <ui:define name="content">
        <h:form id="formMain">
             <p:growl id="msgs" showDetail="true"/>
-            <h1>View All Production Records</h1>
-            <br/>
-
-            <p:panel header="View All Production Records">
-
-
-
+            <b:panel>
+                <f:facet name="heading"><h3><b>View All Production Records</b></h3></f:facet>
                 <p:dataTable widgetVar = "productionRecordTable" id = "productionRecordTable" var="productionRecord" value="#{productionRecordManagerBean.productionRecords}"
                              paginator="true" rows="10" emptyMessage="No Production Record found with given criteria" rowKey="#{productionRecord.id}"
                              selection="#{productionRecordManagerBean.selectedProductionRecord}" selectionMode="single" filteredValue="#{productionRecordManagerBean.filteredProductionRecords}" >
@@ -62,7 +57,7 @@
                     </p:column>
 
                 </p:dataTable>
-            </p:panel>
+            </b:panel>
         </h:form>
     </ui:define>
 
