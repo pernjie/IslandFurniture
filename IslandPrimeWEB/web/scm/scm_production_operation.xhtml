@@ -10,16 +10,17 @@
     <ui:define name="content">
         <h:form id="form">
             <p:growl id="msgs" showDetail="true"/>
-            <b:panel>   
+            <b:panel id="disablepanel">   
                 <f:facet name="heading"><h1>Production Operation</h1></f:facet>
 
-                <p:commandButton value="Start Production" actionListener="#{productionOperationBean.startProduction()}" 
-                                 disabled="#{productionOperationBean.disable}" update="@form"> 
-                    <f:setPropertyActionListener value="#{false}" target="#{productionOperationBean.disable}"/>   
+                <p:commandButton value="Start Production" actionListener="#{productionOperationBean.startProduction}" 
+                                 disabled="#{productionOperationBean.disable}"> 
+                    <f:setPropertyActionListener value="false" target="#{productionOperationBean.disable}"/>   
                 </p:commandButton> 
                 <br></br>
-                <p:commandButton value="End Production" actionListener="#{productionOperationBean.endProduction()}" disabled="#{!(productionOperationBean.disable)}"> 
-                    <f:setPropertyActionListener value="#{true}" target="#{productionOperationBean.disable}"/>    
+                <p:commandButton value="End Production" actionListener="#{productionOperationBean.endProduction}" 
+                                 disabled="#{!(productionOperationBean.disable)}">
+                    <f:setPropertyActionListener value="true" target="#{productionOperationBean.disable}"/>    
                 </p:commandButton> 
 
             </b:panel>

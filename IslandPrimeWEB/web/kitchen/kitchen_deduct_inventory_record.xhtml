@@ -9,11 +9,11 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <h1>Add New Kitchen Inventory Records</h1>
+            <h1>Deduct Ingredient Inventory Records</h1>
 
             <br/>
  
-            <p:panel id="panel" header="Add New Raw Material Inventory Record" >
+            <p:panel id="panel" header="Deduct Ingredient Inventory Record" >
                 <p:ajaxStatus style="width:16px;height:16px;">
                     <f:facet name="start">
                         <h:graphicImage value="/images/spinner.gif" />
@@ -26,17 +26,17 @@
                <p:panelGrid>
                 <p:row>
                     <p:column>
-                        <p:outputLabel for="rawMat" style="font-weight: bold" value="Raw Material: " />
+                        <p:outputLabel for="Ingredient" style="font-weight: bold" value="Ingredient: " />
                     </p:column>
                     <p:column>
-                        <p:autoComplete id="rawMat" forceSelection="true" value="#{rawMatInventoryMB.rawMat}" 
-                                        completeMethod="#{rawMatInventoryMB.completeText}" var="rawMat" itemLabel="#{rawMat.name}" itemValue="#{rawMat}"
-                                        converter="rawMatAutoConverter" requiredMessage="Raw Material is required." required="true"  style="width:100%"> 
+                        <p:autoComplete id="ingr" forceSelection="true" value="#{rawMatInventoryMB.rawMat}" 
+                                        completeMethod="#{KitchenInventoryMB.completeText}" var="ingr" itemLabel="#{ingr.name}" itemValue="#{ingr}"
+                                        converter="ingrAutoConverter" requiredMessage="Raw Material is required." required="true"  style="width:100%"> 
                             <p:ajax event="itemSelect" process="@this"  listener="#{rawMatInventoryMB.handleSelect}" /> 
                         </p:autoComplete>
                     </p:column>
                     <p:column>
-                        <p:message for="rawMat" />
+                        <p:message for="ingr" />
                     </p:column>
                 </p:row>
 
