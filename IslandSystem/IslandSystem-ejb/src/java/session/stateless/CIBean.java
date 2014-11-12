@@ -292,6 +292,10 @@ public class CIBean implements CIBeanLocal {
         q.setParameter("param", staff.getEmail());
         q.executeUpdate();
         em.flush();
+        q = em.createQuery("DELETE FROM Log s where s.email= :param");
+        q.setParameter("param", staff.getEmail());
+        q.executeUpdate();
+        em.flush();
     }
 
 }
