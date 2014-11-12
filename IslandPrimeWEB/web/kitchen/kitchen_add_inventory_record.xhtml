@@ -31,7 +31,7 @@
                     <p:column>
                         <p:autoComplete id="pdt" forceSelection="true" value="#{kitchenInventoryMB.pdt}" 
                                         completeMethod="#{kitchenInventoryMB.completeText}" var="pdt" itemLabel="#{pdt.name}" itemValue="#{pdt}"
-                                        converter="ingrAutoConverter" requiredMessage="Raw Material is required." required="true"  style="width:100%"> 
+                                        converter="ingrAutoConverter" requiredMessage="Ingredient is required." required="true"  style="width:100%"> 
                             <p:ajax event="itemSelect" process="@this"  listener="#{kitchenInventoryMB.handleSelect}" /> 
                         </p:autoComplete>
                     </p:column>

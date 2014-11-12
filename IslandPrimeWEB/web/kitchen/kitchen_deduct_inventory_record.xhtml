@@ -42,28 +42,28 @@
 
                    <p:row>
                        <p:column>
-                           <p:outputLabel for="invenLoc" style="font-weight: bold" value="Location: " />
+                           <p:outputLabel for="qty" style="font-weight: bold" value="Quantity to deduct: " />
                        </p:column>
                        <p:column>
-                           <p:selectOneMenu label="invenLoc" requiredMessage="Location is required." required="true" id="invenLoc" 
-                                            value="#{rawMatInventoryMB.loc}" style="width:100%" >  
+                           <p:selectOneMenu label="qty" requiredMessage="Location is required." required="true" id="invenLoc" 
+                                            value="#{kitchenInventoryMB.loc}" style="width:100%" >  
                                <f:selectItem itemLabel="Select Location" itemValue="" noSelectionOption="true" />             
                                <f:selectItems value="#{rawMatInventoryMB.rawMatLocValues}" />
                            </p:selectOneMenu>     
                        </p:column>
                        <p:column>
-                           <p:message for="invenLoc" />
+                           <p:message for="qty" />
                        </p:column>
                    </p:row>          
 
                 </p:panelGrid>
-                <p:commandButton id="btn" value="Save New Raw Material Inventory Record" update="panel" actionListener="#{rawMatInventoryMB.saveNewInventory}" ajax="true"/>
+                <p:commandButton id="btn" value="Deduct Ingredient Inventory Record" update="panel" actionListener="#{rawMatInventoryMB.updateInventory}" ajax="true"/>
   
             </p:panel>
         </h:form>
         
           <script type="text/javascript">
-            document.getElementById("form:rawMat_input").value = "";
+            document.getElementById("form:ingr_input").value = "";
         </script>
     </ui:define>
 
