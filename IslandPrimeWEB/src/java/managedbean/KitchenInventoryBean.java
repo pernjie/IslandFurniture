@@ -5,6 +5,8 @@
  */
 package managedbean;
 
+import entity.Facility;
+import entity.Ingredient;
 import entity.InventoryKit;
 import entity.InventoryProduct;
 import entity.Item;
@@ -52,19 +54,14 @@ public class KitchenInventoryBean implements Serializable {
     private Item tempPdt;
     private List<Shelf> zoneShelfEntities;
     private Shelf zoneShelfEntity;
-
     private List<InventoryKit> retails;
-
     private List<Shelf> shelfEntities;
     private Shelf shelfEntity;
-
     private List<ShelfSlot> shelfSlots;
     private ShelfSlot shelfSlot;
-
     private ShelfType shelfTypeSelected;
-
     private InventoryKit selectedRetail;
-
+    private String loggedInEmail;
     private String zon;
     private String shelfValue;
     private String shelfSlotPos;
@@ -78,13 +75,11 @@ public class KitchenInventoryBean implements Serializable {
     private Integer upperThresValue;
     private Integer upperLowerThresValue;
     private Long newInventoryPdtId;
-
+    private Integer quantity;
     private List<InventoryKit> filteredRetail;
-
     private List<InventoryKit> inventoryProds;
-
     private InvenLoc loc;
-
+    private Facility fac;
 
     @EJB
     private KitchenBean kb;
@@ -97,6 +92,9 @@ public class KitchenInventoryBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        loggedInEmail = new String();
+        loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
+        fac = kb.getFac(loggedInEmail);
         pdt = null;
         zoneShelfEntities = kb.getZoneShelfEntitiesFromFac();
         shelfEntities = new ArrayList<Shelf>();
@@ -201,12 +199,12 @@ public class KitchenInventoryBean implements Serializable {
     }
 
     public SelectItem[] getPdtLocValues() {
-    SelectItem[] items = new SelectItem[1];
+        SelectItem[] items = new SelectItem[1];
 
-       InvenLoc il= InvenLoc.getIndex(5);
-       items[0] = new SelectItem(il, il.getLabel());
-    return items;
-  }
+        InvenLoc il = InvenLoc.getIndex(5);
+        items[0] = new SelectItem(il, il.getLabel());
+        return items;
+    }
 
     public void saveNewInventory(ActionEvent event) {
         System.out.println(pdt);
@@ -231,6 +229,36 @@ public class KitchenInventoryBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Ingredient Record Result: "
                     + statusMessage, ""));
             ex.printStackTrace();
+        }
+    }
+
+    public void updateInventory() {
+        InventoryKit ik = new InventoryKit();
+        try {
+            ik = kb.getInventoryKit(pdt, fac);
+            System.out.println("ik: " + ik.getId());
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update Inventory Quantity: "
+                    + "Item not found", ""));
+//            e.printStackTrace();
+        }
+        System.out.println("qty: " + ik.getQuantity());
+        int value = ik.getQuantity() - quantity;
+        System.out.println("value: " + value);
+        if (value >= 0) {
+            ik.setQuantity(value);
+            try {
+                kb.updateInventoryKit(ik);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("error updating inventorykit");
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Update Inventory Quantity: "
+                    + "Successful", ""));
+        }
+        else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update Inventory Quantity: "
+                    + "Unsuccessful", ""));
         }
     }
 
@@ -484,15 +512,23 @@ public class KitchenInventoryBean implements Serializable {
     public void setFilteredRetail(List<InventoryKit> filteredRetail) {
         this.filteredRetail = filteredRetail;
     }
-    
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public String formatDate(Date date) {
-        if (date!=null) {
-        Calendar cal = new GregorianCalendar();
-        cal.setTime(date);
-        SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
-        fmt.setCalendar(cal);
-        String dateFormatted = fmt.format(cal.getTime());
-        return dateFormatted;
+        if (date != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.setTime(date);
+            SimpleDateFormat fmt = new SimpleDateFormat("dd-MMM-yyyy");
+            fmt.setCalendar(cal);
+            String dateFormatted = fmt.format(cal.getTime());
+            return dateFormatted;
         }
         return "";
     }
