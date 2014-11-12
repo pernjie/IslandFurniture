@@ -35,8 +35,6 @@ public interface CIBeanLocal {
 
     public List<Log> getUserLog(String email);
 
-    public List<Log> getAllLog();
-
     public void changeContact(String email, String contact);
 
     List<Facility> getAllFacilities();
@@ -54,4 +52,6 @@ public interface CIBeanLocal {
     public void changePassword(String email, String currpassword, String newpassword) throws DetailsConflictException;
     
     public void remove(Staff staff);
+    
+    public List<Log> getAllLog(Facility fac, Staff staff);
 }

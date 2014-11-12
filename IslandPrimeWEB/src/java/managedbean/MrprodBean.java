@@ -258,7 +258,7 @@ public class MrprodBean {
         if (persisted) {
             try {
                 Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
-                cib.addLog(staff, "Done Material Planning (Retail) for current period.");
+                cib.addLog(staff, "Done Material Planning (Retail) for period " + wh.getPeriod(6));
                 FacesContext.getCurrentInstance().getExternalContext().redirect("../mrp/mrp_home.xhtml");
             } catch (IOException e) {
                 e.printStackTrace();
