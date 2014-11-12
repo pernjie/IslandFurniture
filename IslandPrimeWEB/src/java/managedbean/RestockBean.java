@@ -65,15 +65,15 @@ public class RestockBean implements Serializable {
     private Item tempFurn;
     private List<Shelf> zoneShelfEntities;
     private Shelf zoneShelfEntity;
-    
+
     private List<Shelf> shelfEntities;
     private Shelf shelfEntity;
-    
+
     private List<ShelfSlot> shelfSlots;
     private ShelfSlot shelfSlot;
-    
+
     private ShelfType shelfTypeSelected;
-    
+
     private String zon;
     private String shelfValue;
     private String shelfSlotPos;
@@ -86,15 +86,15 @@ public class RestockBean implements Serializable {
     private Integer upperThresValue;
     private Integer upperLowerThresValue;
     private Long newInvenFurnId;
-    
+
     private InvenLoc loc;
-    
+
     private InventoryMaterial selectedInvenFurn;
     private InventoryMaterial filteredInvenFurn;
     private List<InventoryMaterial> invenFurns;
     private List<Facility> matSuppliers;
     private List<Facility> prodSuppliers;
-    
+
     static {
         statuses = new String[4];
         statuses[0] = "Received";
@@ -106,6 +106,7 @@ public class RestockBean implements Serializable {
         //statuses[6] = "Late Partial";
         //statuses[7] = "Late Rejected";
     }
+
     public RestockBean() {
     }
 
@@ -116,76 +117,83 @@ public class RestockBean implements Serializable {
         loggedInEmail = new String();
         loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
         fac = ib.getFac(loggedInEmail);
-        //suppliers = ib.getMatFacilities(fac);
-        //suppliers.addAll(ib.getProdFacilities(fac));
-        matSuppliers = ib.getMatFacilities(fac);
-        prodSuppliers = ib.getProdFacilities(fac);
+        try {
+            suppliers = ib.getMatFacilities(fac);
+            suppliers.addAll(ib.getProdFacilities(fac));
+        //matSuppliers = ib.getMatFacilities(fac);
+            //prodSuppliers = ib.getProdFacilities(fac);
+        } catch (Exception ex) {
+            statusMessage = "No MF distributor found.";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Receive Inventory from MF Result: "
+                    + statusMessage, ""));
+
+        }
         if (suppliers.isEmpty()) {
             System.err.println("no suppliers found!");
         }
         currDate = wh.getCurrDate();
-        
-        zoneShelfEntities= ib.getZoneShelfEntitiesFromFac();
+
+        zoneShelfEntities = ib.getZoneShelfEntitiesFromFac();
         shelfEntities = new ArrayList<Shelf>();
         shelfSlots = new ArrayList<ShelfSlot>();
         invenFurns = ib.getAllInvenFurns();
-        
+
         resUpperThres = null;
-        
-        for(Shelf s:zoneShelfEntities)
+
+        for (Shelf s : zoneShelfEntities) {
             System.out.println(s.getZone());
-        
-         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("zoneShelfEntities", zoneShelfEntities);
-        
+        }
+
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("zoneShelfEntities", zoneShelfEntities);
+
     }
 
-    
     public List<Item> completeText(String query) {
         List<Item> allFurns = ib.getFurnitures();
         List<Item> filteredResults = new ArrayList<Item>();
-       
+
         for (Item indiv : allFurns) {
-            if(indiv.getName().toLowerCase().contains(query)) {
+            if (indiv.getName().toLowerCase().contains(query)) {
                 filteredResults.add(indiv);
             }
         }
 
         return filteredResults;
     }
-    
- public void onZoneChange() {
-        System.out.println("ZONE: "+zon);
-        if(zon !=null && !zon.equals("")){
+
+    public void onZoneChange() {
+        System.out.println("ZONE: " + zon);
+        if (zon != null && !zon.equals("")) {
             shelfEntities = ib.getShelfEntities(zon);
-           System.out.println("SUCCESS");
-        }
-        else
+            System.out.println("SUCCESS");
+        } else {
             shelfEntities = new ArrayList<Shelf>();
+        }
     }
-    
- public void onShelfChange() throws Exception {
-      furn = (Item) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("furn");
+
+    public void onShelfChange() throws Exception {
+        furn = (Item) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("furn");
       //furn.getClass().getSimpleName();
-      //furn instanceof Material;
-              
-      //if(furn instanceof Material) {
-      System.out.println("In FUNCTION");
-        System.out.println("SHELF: " +shelfValue);
-        if(shelfValue !=null && !shelfValue.equals("")){
+        //furn instanceof Material;
+
+        //if(furn instanceof Material) {
+        System.out.println("In FUNCTION");
+        System.out.println("SHELF: " + shelfValue);
+        if (shelfValue != null && !shelfValue.equals("")) {
             Long shelfNum = Long.valueOf(shelfValue);
             System.out.println(shelfNum);
             shelfSlots = ib.getShelfSlots(shelfNum);
             shelfTypeSelected = ib.getShelfType(shelfNum);
             Double slotLength = shelfTypeSelected.getLength();
-            Double slotBreadth= shelfTypeSelected.getBreadth();
-            Double slotHeight= shelfTypeSelected.getHeight();
-              System.out.println("SUCCESS 2");
-            System.out.println("SlotLength "+slotLength);
-            System.out.println("SlotHeight "+slotHeight);
-            System.out.println("SlotBreadth "+slotBreadth);
-    
+            Double slotBreadth = shelfTypeSelected.getBreadth();
+            Double slotHeight = shelfTypeSelected.getHeight();
+            System.out.println("SUCCESS 2");
+            System.out.println("SlotLength " + slotLength);
+            System.out.println("SlotHeight " + slotHeight);
+            System.out.println("SlotBreadth " + slotBreadth);
+
             System.out.println("FURN" + furn);
-            try{
+            try {
                 Double furnLength = furn.getLength();
                 Double furnBreadth = furn.getBreadth();
                 Double furnHeight = furn.getHeight();
@@ -209,60 +217,58 @@ public class RestockBean implements Serializable {
                 System.out.println("Height to use 2: " + furnHeightRes);
                 System.out.println("Upper Threshold 2: " + resUpperThres);
                 System.out.println("Lower Threshold 2: " + resLowerThres);
-            } catch(Exception ex){
-               
+            } catch (Exception ex) {
+
             }
-            
+
+        } else {
+            shelfSlots = new ArrayList<ShelfSlot>();
         }
-        else
-            shelfSlots = new ArrayList<ShelfSlot>(); 
     }
-    
-   
-   public void handleSelect(SelectEvent event) {
-         tempFurn = (Item) event.getObject();
-         System.out.println("HANDLE_SELECTED: "+tempFurn.getId());
-         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("furn", tempFurn);
-         System.out.println("HANDLE_SELECTED 2: "+ furn);
+
+    public void handleSelect(SelectEvent event) {
+        tempFurn = (Item) event.getObject();
+        System.out.println("HANDLE_SELECTED: " + tempFurn.getId());
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("furn", tempFurn);
+        System.out.println("HANDLE_SELECTED 2: " + furn);
     }
-   
-   
+
     public SelectItem[] getFurnLocValues() {
-    SelectItem[] items = new SelectItem[3];
-    int j=0;
-    int i;
-    for(i=0; i< (InvenLoc.values().length-1); ++i) {
-        InvenLoc il= InvenLoc.getIndex(i);
-       items[j++] = new SelectItem(il, il.getLabel());
+        SelectItem[] items = new SelectItem[3];
+        int j = 0;
+        int i;
+        for (i = 0; i < (InvenLoc.values().length - 1); ++i) {
+            InvenLoc il = InvenLoc.getIndex(i);
+            items[j++] = new SelectItem(il, il.getLabel());
+        }
+        return items;
     }
-    return items;
-  }
-    
+
     public void saveNewInventory(ActionEvent event) {
         System.out.println(furn);
         System.out.println(zon);
         System.out.println(shelfValue);
         System.out.println(shelfSlotPos);
         System.out.println(loc);
-        
+
         Long shelfValueLong = Long.valueOf(shelfValue);
         Integer shelfSlotInt = Integer.valueOf(shelfSlotPos);
-        
+
         try {
             newInvenFurnId = ib.addNewInventoryRawMat(furn, shelfValueLong, shelfSlotInt, loc, zon, resUpperThres, resLowerThres, furnLengthRes, furnBreadthRes, furnHeightRes);
             statusMessage = "New Inventory Furniture Record Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Furniture Record Result: "
-                    + statusMessage + " (New Inventory Furniture Record ID is " + newInvenFurnId  + ")", ""));
+                    + statusMessage + " (New Inventory Furniture Record ID is " + newInvenFurnId + ")", ""));
         } catch (Exception ex) {
-             newInvenFurnId  = -1L;
+            newInvenFurnId = -1L;
             statusMessage = "New Inventory Furniture Failed.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Furniture Record Result: "
                     + statusMessage, ""));
             ex.printStackTrace();
         }
-    } 
-    
-     public void deleteInvenFurn() {
+    }
+
+    public void deleteInvenFurn() {
         try {
             ib.removeFurn(selectedInvenFurn);
             invenFurns = ib.getAllInvenFurns();
@@ -275,16 +281,15 @@ public class RestockBean implements Serializable {
                     + statusMessage, ""));
         }
     }
-     
-         
-    public void onRowEdit(RowEditEvent event) {   
+
+    public void onRowEdit(RowEditEvent event) {
         try {
             ib.updateInvenMat((InventoryMaterial) event.getObject());
             invenFurns = ib.getAllInvenFurns();
             FacesMessage msg = new FacesMessage("Retail Inventory Record Edited", ((InventoryMaterial) event.getObject()).getId().toString());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (DetailsConflictException dcx) {
-             invenFurns = ib.getAllInvenFurns();
+            invenFurns = ib.getAllInvenFurns();
             statusMessage = dcx.getMessage();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Changes not saved: "
                     + statusMessage, ""));
@@ -294,12 +299,16 @@ public class RestockBean implements Serializable {
         }
 
     }
-     
-      public void onRowCancel(RowEditEvent event) {
+
+    public void onRowCancel(RowEditEvent event) {
         FacesMessage msg = new FacesMessage("Edit Cancelled", ((InventoryMaterial) event.getObject()).getId().toString());
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
-        
+
+    public String[] getStatuses() {
+        return statuses;
+    }
+
     public List<Facility> getSuppliers() {
         return suppliers;
     }
@@ -409,10 +418,11 @@ public class RestockBean implements Serializable {
         sup = ib.getFacility(Long.valueOf(supplier));
         //System.err.println("supplier: " + supplier);
         piList = ib.getDeliveryItem(fac, sup);
-        if(piList.isEmpty())
+        if (piList.isEmpty()) {
             System.err.println("no delivery schedule found.");
-        else
+        } else {
             System.err.println("delivery schedule found.");
+        }
         restockmats = piList;
     }
 
@@ -445,8 +455,11 @@ public class RestockBean implements Serializable {
                         ex.printStackTrace();
                     }
                     if (mat == null) {
+                        mat = new InventoryMaterial();
+                        mat.setMat(furn);
                         System.err.println("new mat:" + furn);
-                        ShelfSlot shelfSlot = new ShelfSlot();
+                    }
+                    else {
                         shelfSlot = ib.getAvailableShelfSlot(fac, InvenLoc.BACKEND_WAREHOUSE);
                         if (shelfSlot == null) {
                             il.setMove(false);
@@ -560,7 +573,7 @@ public class RestockBean implements Serializable {
                             mat2.setMatLength(furnLengthRes);
 
                             il.setQty(mat.getUppThreshold() - mat.getQuantity());
-                            if((mat.getUppThreshold() - mat.getQuantity()) > 0) {
+                            if ((mat.getUppThreshold() - mat.getQuantity()) > 0) {
                                 il.setMove(true);
                             }
                             //ilList.add(il);
@@ -698,7 +711,7 @@ public class RestockBean implements Serializable {
                             prod2.setPdtLength(furnLengthRes);
 
                             il.setQty(prod.getUppThreshold() - prod.getQuantity());
-                            if((prod.getUppThreshold() - prod.getQuantity()) > 0) {
+                            if ((prod.getUppThreshold() - prod.getQuantity()) > 0) {
                                 il.setMove(true);
                             }
                             //ilList.add(il);
@@ -721,9 +734,8 @@ public class RestockBean implements Serializable {
             }
         }
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("ilList", ilList);
-        FacesContext.getCurrentInstance().getExternalContext().redirect("../inventory/inventory_confirm_restock.xhtml");
+        FacesContext.getCurrentInstance().getExternalContext().redirect("../inventory/inventory_view_restock_location.xhtml");
         return;
     }
-    
-    
+
 }

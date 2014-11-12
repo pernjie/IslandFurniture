@@ -265,7 +265,7 @@ public class InventoryBean {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         Query query = em.createQuery("SELECT s FROM " + ShelfSlot.class.getName() + " s WHERE "
-                + "im.mat = :mat AND s.shelf.fac = :fac AND s.shelf.location = :location AND s.occupied = '0'");
+                + "s.shelf.fac = :fac AND s.shelf.location = :location AND s.occupied = '0'");
         query.setParameter("fac", fac);
         query.setParameter("location", location);
         if(query.getResultList().isEmpty()) {
