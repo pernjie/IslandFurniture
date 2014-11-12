@@ -51,7 +51,7 @@ public class RestockBean implements Serializable {
     private InventoryBean ib;
     private String loggedInEmail;
     private List<Facility> suppliers;
-    private Long supplier;
+    private String supplier;
     private Date currDate;
     private Facility fac;
     private Facility sup;
@@ -92,6 +92,8 @@ public class RestockBean implements Serializable {
     private InventoryMaterial selectedInvenFurn;
     private InventoryMaterial filteredInvenFurn;
     private List<InventoryMaterial> invenFurns;
+    private List<Facility> matSuppliers;
+    private List<Facility> prodSuppliers;
     
     static {
         statuses = new String[4];
@@ -114,8 +116,10 @@ public class RestockBean implements Serializable {
         loggedInEmail = new String();
         loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
         fac = ib.getFac(loggedInEmail);
-        suppliers = ib.getMatFacilities(fac);
-        suppliers.addAll(ib.getProdFacilities(fac));
+        //suppliers = ib.getMatFacilities(fac);
+        //suppliers.addAll(ib.getProdFacilities(fac));
+        matSuppliers = ib.getMatFacilities(fac);
+        prodSuppliers = ib.getProdFacilities(fac);
         if (suppliers.isEmpty()) {
             System.err.println("no suppliers found!");
         }
@@ -304,11 +308,11 @@ public class RestockBean implements Serializable {
         this.suppliers = suppliers;
     }
 
-    public Long getSupplier() {
+    public String getSupplier() {
         return supplier;
     }
 
-    public void setSupplier(Long supplier) {
+    public void setSupplier(String supplier) {
         this.supplier = supplier;
     }
 
@@ -382,6 +386,22 @@ public class RestockBean implements Serializable {
 
     public void setFilteredInvenFurn(InventoryMaterial filteredInvenFurn) {
         this.filteredInvenFurn = filteredInvenFurn;
+    }
+
+    public List<Facility> getMatSuppliers() {
+        return matSuppliers;
+    }
+
+    public void setMatSuppliers(List<Facility> matSuppliers) {
+        this.matSuppliers = matSuppliers;
+    }
+
+    public List<Facility> getProdSuppliers() {
+        return prodSuppliers;
+    }
+
+    public void setProdSuppliers(List<Facility> prodSuppliers) {
+        this.prodSuppliers = prodSuppliers;
     }
 
     public void updateTable() {

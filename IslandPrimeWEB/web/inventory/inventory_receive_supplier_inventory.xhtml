@@ -18,7 +18,7 @@
 
                     <p:selectOneRadio value="#{supplierRestockBean.supplier}" id="ordersRadio" layout="pageDirection">
                         <p:ajax process="@this" event="change" listener="#{supplierRestockBean.updateTable}" update=":form:table"/>
-                        <f:selectItems value="#{supplierRestockBean.suppliers}" var="s" itemLabel="Record Inventory Supplies from #{s.name} for Year #{restockBean.year} Week #{restockBean.week}" itemValue="#{s.id}"/>
+                        <f:selectItems value="#{supplierRestockBean.suppliers}" var="s" itemLabel="Record Inventory Supplies from #{s.name}" itemValue="#{s.id}"/>
                     </p:selectOneRadio>
 
 

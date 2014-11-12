@@ -34,6 +34,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import session.stateless.ScmBean;
 import util.SMTPAuthenticator;
@@ -70,7 +71,7 @@ public class ProductionOperationBean implements Serializable {
     @PostConstruct
     public void init() {
         System.err.println("function: init()");
-        productionDate = new Date(2014,11,11);
+        productionDate = wh.getDate(2014, 46);
         System.err.println("last production date: " + productionDate);
         loggedInEmail = new String();
         loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
@@ -79,6 +80,8 @@ public class ProductionOperationBean implements Serializable {
         currDate = wh.getCurrDate();
         week = wh.getWeek();
         year = wh.getYear();
+        System.err.println("week: " + week);
+        System.err.println("year: " + year);
         this.disable = false;
         System.err.println("disable: " + disable);
     }
@@ -129,6 +132,7 @@ public class ProductionOperationBean implements Serializable {
         else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "There is no more production for today", ""));
         }
+        RequestContext.getCurrentInstance().update(":form:disablepanel");
     }
 
     public void endProduction() {
@@ -230,6 +234,7 @@ public class ProductionOperationBean implements Serializable {
         } else {
             System.out.println("No production record");
         }
+        RequestContext.getCurrentInstance().update(":form:disablepanel");
     }
 
     public void sendAdHocPurchaseOrder(Facility fac, Item mat) {

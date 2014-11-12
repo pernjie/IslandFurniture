@@ -7,11 +7,13 @@ package managedbean;
 
 import classes.InventoryLocation;
 import classes.WeekHelper;
+import entity.Bill;
 import entity.Facility;
 import entity.InventoryMaterial;
 import entity.InventoryProduct;
 import entity.Item;
 import entity.PoItem;
+import entity.PoRecord;
 import entity.ShelfSlot;
 import entity.ShelfType;
 import entity.Supplier;
@@ -181,6 +183,26 @@ public class ScmRestockBean {
         for (PoItem pi : restockmats) {
             //System.err.println("poitem ID: " + pm.getId());
             sb.persistPoItem(pi);
+            PoRecord po = new PoRecord();
+            po = pi.getPo();
+            List<PoItem> poItems = new ArrayList<PoItem>();
+            poItems = sb.getPoItems(po);
+            Boolean check = true;
+            for(PoItem p : poItems) {
+                if(p.getStatus().equals("Ordered")||p.getStatus().equals("Rejected")) {
+                    check = false;
+                }
+            }
+            if(check == true) {
+                //po.setStatus("Fulfilled");
+                //sb.persistPo(po);
+                Bill bill = new Bill();
+                bill.setPo(po.getId());
+                bill.setStatus("unpaid");
+                bill.setAmount(po.getTotalPrice());
+                bill.setPaymentDate(wh.getDate(wh.getYear(), wh.getWeek()+2));
+                sb.persistBill(bill);
+            }
             if (pi.getStatus().equals("Received") || pi.getStatus().equals("Partial")) {
                 InventoryLocation il = new InventoryLocation();
                 if (sb.getItemType(pi.getItem()) == 1) {
