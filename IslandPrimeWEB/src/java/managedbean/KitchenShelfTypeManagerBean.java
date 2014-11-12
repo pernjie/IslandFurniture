@@ -6,6 +6,7 @@
 package managedbean;
 
 import entity.ShelfType;
+import entity.Staff;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import org.primefaces.event.RowEditEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import util.exception.DetailsConflictException;
 import util.exception.EntityDneException;
@@ -30,6 +32,8 @@ import util.exception.ReferenceConstraintException;
 public class KitchenShelfTypeManagerBean implements Serializable{
     @EJB
     private InventoryBean inventoryBean;
+    @EJB
+    private CIBeanLocal cib;
     
     private String length;
     private String breadth;
@@ -78,6 +82,14 @@ public class KitchenShelfTypeManagerBean implements Serializable{
             statusMessage = "New Shelf Type Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Type Result: "
                     + statusMessage + " (New Shelf Type ID is " + newShelfTypeId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Created new Shelf Type: " + newShelfTypeId);
+            setName(null);
+            setWeight(null);
+            setNumSlot(null);
+            setLength(null);
+            setBreadth(null);
+            setHeight(null);
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
             newShelfTypeId  = -1L;
@@ -97,10 +109,13 @@ public class KitchenShelfTypeManagerBean implements Serializable{
     
     public void deleteShelfType() {
         try {
+            Long shelfTypeId = selectedShelfType.getId();
             inventoryBean.removeShelfType(selectedShelfType);
             shelfTypes = inventoryBean.getAllShelfTypes();
             FacesMessage msg = new FacesMessage("Shelf Type Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Shelf Type: " + shelfTypeId);
         } catch (ReferenceConstraintException ex) {
             shelfTypes = inventoryBean.getAllShelfTypes();
             statusMessage = ex.getMessage();

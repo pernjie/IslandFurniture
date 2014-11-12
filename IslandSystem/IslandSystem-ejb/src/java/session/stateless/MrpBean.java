@@ -540,7 +540,7 @@ public class MrpBean implements MrpBeanRemote {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         List<Integer> values = new ArrayList<Integer>();
-        for (int i = -1; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             Query query = em.createQuery("SELECT p FROM " + ProductionRecord.class.getName() + " p"
                     + " WHERE p.mat = :mat"
                     + " AND p.store = :store"
@@ -568,7 +568,7 @@ public class MrpBean implements MrpBeanRemote {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
         EntityManager em = emf.createEntityManager();
         List<Integer> values = new ArrayList<Integer>();
-        for (int i = -6; i < 0; i++) {
+        for (int i = 0; i < 6; i++) {
             Query query = em.createQuery("SELECT p FROM " + PurchasePlanningRecord.class.getName() + " p"
                     + " WHERE p.prod = :prod"
                     + " AND p.store = :store"

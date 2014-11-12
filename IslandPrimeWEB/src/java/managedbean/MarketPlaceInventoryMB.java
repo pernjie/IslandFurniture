@@ -7,19 +7,20 @@ package managedbean;
 
 import entity.InventoryProduct;
 import entity.Item;
-import java.util.ArrayList;
-import java.util.List;
 import entity.Product;
 import entity.Shelf;
 import entity.ShelfSlot;
 import entity.ShelfType;
+import entity.Staff;
 import enumerator.InvenLoc;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,8 +32,8 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.inject.Inject;
 import org.primefaces.event.RowEditEvent;
-
 import org.primefaces.event.SelectEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
@@ -85,6 +86,8 @@ public class MarketPlaceInventoryMB implements Serializable {
 
     @EJB
     private InventoryBean inventoryBean;
+    @EJB
+    private CIBeanLocal cib;
 
     public MarketPlaceInventoryMB() {
         pdt = null;
@@ -221,6 +224,8 @@ public class MarketPlaceInventoryMB implements Serializable {
             statusMessage = "New Inventory Product Record Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Inventory Product Record Result: "
                     + statusMessage + " (New Inventory Product Record ID is " + newInventoryPdtId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added New Inventory Record (Product): " + newInventoryPdtId);
         } catch (Exception ex) {
             newInventoryPdtId = -1L;
             statusMessage = "New Inventory Product Failed.";
@@ -232,10 +237,13 @@ public class MarketPlaceInventoryMB implements Serializable {
 
     public void deleteRetail() {
         try {
+            Long furnId = selectedRetail.getId();
             inventoryBean.removeRetail(selectedRetail);
             retails = inventoryBean.getAllRetails();
             FacesMessage msg = new FacesMessage("Retail Inventory Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Inventory Record (Retail): " + furnId);
         } catch (ReferenceConstraintException ex) {
             retails = inventoryBean.getAllRetails();
             statusMessage = ex.getMessage();

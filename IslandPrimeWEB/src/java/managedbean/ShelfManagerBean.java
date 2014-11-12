@@ -26,139 +26,141 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import org.primefaces.event.RowEditEvent;
+import session.stateless.CIBeanLocal;
 import session.stateless.InventoryBean;
 import util.exception.DetailsConflictException;
 import util.exception.ReferenceConstraintException;
+
 /**
  *
  * @author Anna
  */
 @ManagedBean(name = "shelfManagerBean")
 @ViewScoped
-public class ShelfManagerBean  implements Serializable{
+public class ShelfManagerBean implements Serializable {
+
     @EJB
-   private InventoryBean inventoryBean;
-    
+    private InventoryBean inventoryBean;
+    @EJB
+    private CIBeanLocal cib;
     private String fac;
     private String zone;
     private InvenLoc location;
     private String shelfId;
     private String shelfTypeId;
-    private Long id; 
+    private Long id;
     private Long newShelfId;
     private String statusMessage;
-    
+
     private Facility facility;
     private ShelfType shelfType;
     private Shelf shelf;
-    
+
     private List<ShelfType> shelfTypes;
     private List<Facility> facilities;
     private Shelf selectedShelf;
     private List<Shelf> filteredShelf;
     private List<Shelf> allShelf;
-    
-    
+
     private List<ShelfSlot> occupied;
-    
-    
-    
+
     @PostConstruct
-    public void init(){
-         facilities = inventoryBean.getAllMFsStores();
-         shelfTypes = inventoryBean.getAllShelfTypes();
-         allShelf = inventoryBean.getAllShelf();
-         
-         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("facilities", facilities);
-         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shelfTypes",shelfTypes);
-         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allshelf",allShelf);
+    public void init() {
+        facilities = inventoryBean.getAllMFsStores();
+        shelfTypes = inventoryBean.getAllShelfTypes();
+        allShelf = inventoryBean.getAllShelf();
+
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("facilities", facilities);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("shelfTypes", shelfTypes);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("allshelf", allShelf);
 
     }
-    
+
     public void saveNewShelf(ActionEvent event) {
         EntityManagerFactory emf = javax.persistence.Persistence.createEntityManagerFactory("IslandSystem-ejbPU");
-       EntityManager em = emf.createEntityManager();
-        
+        EntityManager em = emf.createEntityManager();
+
         String loggedInEmail = (String) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("email");
         Query q = em.createNamedQuery("Staff.findByEmail");
         q.setParameter("email", loggedInEmail);
-        
-         System.out.println("email: "+ loggedInEmail);
-         Staff temp =(Staff) q.getSingleResult();
-          facility = temp.getFac();
-        
+
+        System.out.println("email: " + loggedInEmail);
+        Staff temp = (Staff) q.getSingleResult();
+        facility = temp.getFac();
+
         System.out.println(location);
         System.out.println(zone);
         System.out.println(shelfId);
         System.out.println(shelfTypeId);
-        
+
         Long facLong = facility.getId();
         Integer shelfInt = Integer.valueOf(shelfId);
         Long shelfTypeLong = Long.valueOf(shelfTypeId);
-        
-        
 
         try {
             newShelfId = inventoryBean.addNewShelf(facLong, location, zone, shelfInt, shelfTypeLong);
             statusMessage = "New Shelf Type Saved Successfully.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Status Result: "
                     + statusMessage + " (New Shelf Status ID is " + newShelfId + ")", ""));
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Added new Shelf: " + newShelfId);
             setLocation(null);
             setZone(null);
             setShelfId(null);
             setShelfTypeId(null);
-            
+
         } catch (DetailsConflictException dcx) {
             statusMessage = dcx.getMessage();
-            newShelfId  = -1L;
+            newShelfId = -1L;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Add New Shelf Status Result: "
                     + statusMessage, ""));
         } catch (Exception ex) {
-            newShelfId  = -1L;
+            newShelfId = -1L;
             statusMessage = "New Shelf Status Failed.";
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Add New Shelf Status Result: "
                     + statusMessage, ""));
             ex.printStackTrace();
         }
-    } 
- 
-     
-     
+    }
+
     public List<ShelfSlot> getOccupied(Shelf shelf) {
-      
-       occupied = inventoryBean.getAllShelfSlot(shelf);
-        
+
+        occupied = inventoryBean.getAllShelfSlot(shelf);
+
         return occupied;
 
     }
 
-     public void deleteShelf() {
+    public void deleteShelf() {
         try {
+            Long shelfId = selectedShelf.getId();
             inventoryBean.removeShelf(selectedShelf);
-            allShelf= inventoryBean.getAllShelf();
+            allShelf = inventoryBean.getAllShelf();
             FacesMessage msg = new FacesMessage("Shelf  Record Deleted");
             FacesContext.getCurrentInstance().addMessage(null, msg);
+            Staff staff = (Staff) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("staff");
+            cib.addLog(staff, "Deleted Shelf: " + shelfId);
         } catch (ReferenceConstraintException ex) {
-            allShelf =inventoryBean.getAllShelf();
+            allShelf = inventoryBean.getAllShelf();
             statusMessage = ex.getMessage();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Changes not saved: "
                     + statusMessage, ""));
         }
     }
-     
-      public List<Shelf> getFilteredShelf() {
+
+    public List<Shelf> getFilteredShelf() {
         return filteredShelf;
     }
 
     public void setFilteredShelf(List<Shelf> filteredShelf) {
         this.filteredShelf = filteredShelf;
     }
-     
-       /**
-     * Creates a new instance of InvenotryManagerBean
-     * @return 
-     */
 
+    /**
+     * Creates a new instance of InvenotryManagerBean
+     *
+     * @return
+     */
     public InventoryBean getInventoryBean() {
         return inventoryBean;
     }
@@ -286,28 +288,24 @@ public class ShelfManagerBean  implements Serializable{
     public void setLocation(InvenLoc location) {
         this.location = location;
     }
-    
+
     public SelectItem[] getLocValues() {
         Facility fac = (Facility) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("facility");
-         SelectItem[] items=null;
+        SelectItem[] items = null;
+        System.err.println("Fac type = " + fac.getType());
         if (fac.getType().equals("Manufacturing")) {
             items = new SelectItem[1];
             items[0] = new SelectItem(InvenLoc.getIndex(0), InvenLoc.getIndex(0).getLabel());
-        }
-        else if (fac.getType().equals("Store")) 
-            
+        } else if (fac.getType().equals("Store")) {
             items = new SelectItem[4];
-            int j=0;
+            int j = 0;
             int i;
-            for(i=1; i<5; i++) {
+            for (i = 1; i < 5; i++) {
                 System.out.println("arr =" + i);
-                InvenLoc il= InvenLoc.getIndex(i);
-               items[j++] = new SelectItem(il, il.getLabel());
+                InvenLoc il = InvenLoc.getIndex(i);
+                items[j++] = new SelectItem(il, il.getLabel());
             }
-    return items;
-  }
-
-   
-  
- 
+        }
+            return items;
+        }
 }
