@@ -12,7 +12,7 @@
             <h1>Deduct Ingredient Inventory Records</h1>
 
             <br/>
- 
+
             <p:panel id="panel" header="Deduct Ingredient Inventory Record" >
                 <p:ajaxStatus style="width:16px;height:16px;">
                     <f:facet name="start">
@@ -23,46 +23,45 @@
                     </f:facet>
                 </p:ajaxStatus>
                 <p:messages />
-               <p:panelGrid>
-                <p:row>
-                    <p:column>
-                        <p:outputLabel for="Ingredient" style="font-weight: bold" value="Ingredient: " />
-                    </p:column>
-                    <p:column>
-                        <p:autoComplete id="ingr" forceSelection="true" value="#{kitchenInventoryMB.pdt}" 
-                                        completeMethod="#{kitchenInventoryMB.completeText}" var="ingr" itemLabel="#{ingr.name}" itemValue="#{ingr}"
-                                        converter="ingrAutoConverter" requiredMessage="Ingredient is required." required="true"  style="width:100%"> 
-                            <p:ajax event="itemSelect" process="@this"  listener="#{kitchenInventoryMB.handleSelect}" /> 
-                        </p:autoComplete>
-                    </p:column>
-                    <p:column>
-                        <p:message for="ingr" />
-                    </p:column>
-                </p:row>
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="Ingredient" style="font-weight: bold" value="Ingredient: " />
+                        </p:column>
+                        <p:column>
+                            <p:autoComplete id="ingr" forceSelection="true" value="#{kitchenInventoryMB.pdt}" 
+                                            completeMethod="#{kitchenInventoryMB.completeText}" var="ingr" itemLabel="#{ingr.name}" itemValue="#{ingr}"
+                                            converter="ingrAutoConverter" requiredMessage="Ingredient is required." required="true"  style="width:100%"> 
+                                <p:ajax event="itemSelect" process="@this"  listener="#{kitchenInventoryMB.handleSelect}" /> 
+                            </p:autoComplete>
+                        </p:column>
+                        <p:column>
+                            <p:message for="ingr" />
+                        </p:column>
+                    </p:row>
 
-                   <p:row>
-                       <p:column>
-                           <p:outputLabel for="qty" style="font-weight: bold" value="Quantity to deduct: " />
-                       </p:column>
-                       <p:column>
-                           <p:selectOneMenu label="qty" requiredMessage="Location is required." required="true" id="invenLoc" 
-                                            value="#{kitchenInventoryMB.loc}" style="width:100%" >  
-                               <f:selectItem itemLabel="Select Location" itemValue="" noSelectionOption="true" />             
-                               <f:selectItems value="#{rawMatInventoryMB.rawMatLocValues}" />
-                           </p:selectOneMenu>     
-                       </p:column>
-                       <p:column>
-                           <p:message for="qty" />
-                       </p:column>
-                   </p:row>          
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel for="qty" style="font-weight: bold" value="Quantity to deduct: " />
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="qty" value="#{kitchenInventoryMB.quantity}" required="true" label="contact"
+                                         requiredMessage="Quantity is required.">
+                                <f:validator validatorId ="posIntValueValidator" />
+                            </p:inputText>
+                        </p:column>
+                        <p:column>
+                            <p:message for="qty" />
+                        </p:column>
+                    </p:row>          
 
                 </p:panelGrid>
-                <p:commandButton id="btn" value="Deduct Ingredient Inventory Record" update="panel" actionListener="#{rawMatInventoryMB.updateInventory}" ajax="true"/>
-  
+                <p:commandButton id="btn" value="Deduct Ingredient Inventory Record" update="panel" actionListener="#{kitchenInventoryMB.updateInventory}" ajax="true"/>
+
             </p:panel>
         </h:form>
-        
-          <script type="text/javascript">
+
+        <script type="text/javascript">
             document.getElementById("form:ingr_input").value = "";
         </script>
     </ui:define>

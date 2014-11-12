@@ -246,7 +246,8 @@ public class KitchenInventoryBean implements Serializable {
             }
         }
         else {
-            
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Update Inventory Quantity: "
+                    + "Unsuccessful", ""));
         }
     }
 
