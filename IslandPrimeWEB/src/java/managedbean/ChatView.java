@@ -217,7 +217,7 @@ public class ChatView implements Serializable {
         }
 
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../common/index.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("../common/CI_Index_Page.xhtml");
         } catch (IOException e) {
             e.printStackTrace();
         }
